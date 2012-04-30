@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.github.rafaelfiume.salume.domain.order.Order;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("OrderControllerTest-context.xml")
 public class OrderControllerTest {
@@ -16,7 +18,7 @@ public class OrderControllerTest {
  
     @Test
     public void testFindOrder() {
-        Assert.assertEquals("mortadela", oController.findOrder(1).getOrder());
+        Assert.assertEquals(new Order("mortadela"), oController.findOrder(1));
     }
     
 }
