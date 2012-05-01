@@ -29,5 +29,18 @@ public class OrderController {
         // TODO add order
         return order;
     }
+    @RequestMapping(method = RequestMethod.PUT, value = "/order/{id}")
+    @ResponseBody
+    public Order update(@PathVariable("id") long id, @RequestBody Order order) {
+        return order;
+    }
+    
+    @RequestMapping(method = RequestMethod.DELETE, value = "/order/{id}")
+    @ResponseBody
+    public Order remove(@PathVariable("id") long id) {
+        Order removed = new Order();
+        removed.setProduct("mortadela");
+        return removed;
+    }
 
 }
