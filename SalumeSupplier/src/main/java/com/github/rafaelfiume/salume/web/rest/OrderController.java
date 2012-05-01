@@ -29,6 +29,12 @@ public class OrderController {
         order.setItems(newOrderItems());
         return order;
     }
+    
+    @RequestMapping(method = RequestMethod.GET, value = "/order")
+    @ResponseBody
+    public List<Order> getAllOrders() {
+        return newOrders();
+    }
 
     @RequestMapping(method = RequestMethod.POST, value = "/order")
     @ResponseBody
