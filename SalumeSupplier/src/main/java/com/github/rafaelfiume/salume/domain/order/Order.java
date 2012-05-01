@@ -4,17 +4,17 @@ public class Order {
 
     private final long id = 1;
 
-    private String product;
+    private Product product;
 
     public long getId() {
         return id;
     }
 
-    public String getProduct() {
+    public Product getProduct() {
         return product;
     }
     
-    public void setProduct(String product) {
+    public void setProduct(Product product) {
         this.product = product;
     }
 
