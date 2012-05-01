@@ -9,25 +9,25 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.github.rafaelfiume.salume.domain.order.Order;
 
-/**
- * TODO See about Spring and Rest Content Negotiation:
- * <ul>
- * </ul>
- * 
+/** 
  * @author Rafael Fiume
  */
 @Controller
 public class OrderController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/order/{id}")
-    public @ResponseBody Order findOrder(@PathVariable("id") long id) {
-        return new Order("mortadela");
+    @ResponseBody
+    public Order findOrder(@PathVariable("id") long id) {
+        Order order = new Order();
+        order.setProduct("mortadela");
+        return order;
     }
 
-    @RequestMapping(value = "/order", method = RequestMethod.POST)
-    public String add(@RequestBody Order order) {
+    @RequestMapping(method = RequestMethod.POST, value = "/order")
+    @ResponseBody
+    public Order add(@RequestBody Order order) {
         // TODO add order
-        return "redirect:rest/order/" + order.getId();
+        return order;
     }
 
 }

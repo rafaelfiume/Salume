@@ -18,7 +18,9 @@ public class OrderControllerTest {
  
     @Test
     public void testFindOrder() {
-        Assert.assertEquals(new Order("mortadela"), oController.findOrder(1));
+        Order expected = new Order();
+        expected.setProduct("mortadela");
+        Assert.assertEquals(expected, oController.findOrder(1));
     }
     
 }
