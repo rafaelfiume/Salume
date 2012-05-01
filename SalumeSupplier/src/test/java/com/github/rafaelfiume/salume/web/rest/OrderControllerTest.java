@@ -8,7 +8,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.github.rafaelfiume.salume.domain.order.Order;
-import com.github.rafaelfiume.salume.domain.order.Product;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("OrderControllerTest-context.xml")
@@ -20,7 +19,7 @@ public class OrderControllerTest {
     @Test
     public void testFindOrder() {
         Order expected = new Order();
-        expected.setProduct(new Product());
+        // TODO
         Assert.assertEquals(expected, oController.findOrder(1));
     }
     

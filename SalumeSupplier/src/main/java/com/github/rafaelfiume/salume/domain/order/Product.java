@@ -2,14 +2,12 @@ package com.github.rafaelfiume.salume.domain.order;
 
 import java.math.BigDecimal;
 
-
 public class Product {
 
     private String name;
 
     private String description;
 
-    // TODO Make it 
     private BigDecimal price;
 
     public String getName() {
@@ -37,4 +35,3 @@ public class Product {
     }
 
 }
-

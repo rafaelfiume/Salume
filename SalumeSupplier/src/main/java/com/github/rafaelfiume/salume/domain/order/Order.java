@@ -1,26 +1,33 @@
 package com.github.rafaelfiume.salume.domain.order;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Order {
 
-    private final long id = 1;
+    private long id;
 
-    private Product product;
-
+    private List<Item> items = new ArrayList<Item>();
+    
     public long getId() {
         return id;
     }
+    
+    public void setId(long id) {
+        this.id = id;
+    }
 
-    public Product getProduct() {
-        return product;
+    public List<Item> getItems() {
+        return items;
     }
     
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 
     @Override
     public String toString() {
-        return "Order [id=" + id + ", product=" + product + "]";
+        return "Order [id=" + id + ", items=" + items + "]";
     }
 
 }
