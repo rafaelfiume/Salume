@@ -20,9 +20,8 @@ import com.github.rafaelfiume.salume.util.test.IntegrationTest;
 
 @Category(IntegrationTest.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-// @ContextConfiguration defaults to OrderControllerTest-context.xml in the same package
 @ContextConfiguration("OrderControllerTest-context.xml")
-public class OrderControllerIntegrationTest {
+public class OrderControllerIT {
 
     private static final String REST_SERVICE = "http://localhost:8080/Salume/restService/order";
 
