@@ -19,9 +19,10 @@ import com.github.rafaelfiume.salume.domain.order.Product;
  * @author Rafael Fiume
  */
 @Controller
+@RequestMapping("/order")
 public class OrderController {
 
-    @RequestMapping(method = RequestMethod.GET, value = "/order/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
     public Order findOrder(@PathVariable("id") long id) {
         Order order = new Order();
@@ -30,26 +31,26 @@ public class OrderController {
         return order;
     }
     
-    @RequestMapping(method = RequestMethod.GET, value = "/order")
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<Order> getAllOrders() {
         return newOrders();
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/order")
+    @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public Order add(@RequestBody Order order) {
         // TODO add order
         return order;
     }
     
-    @RequestMapping(method = RequestMethod.PUT, value = "/order/{id}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
     @ResponseBody
     public Order update(@PathVariable("id") long id, @RequestBody Order order) {
         return order;
     }
     
-    @RequestMapping(method = RequestMethod.DELETE, value = "/order/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     @ResponseBody
     public Order remove(@PathVariable("id") long id) {
         Order removed = new Order();
