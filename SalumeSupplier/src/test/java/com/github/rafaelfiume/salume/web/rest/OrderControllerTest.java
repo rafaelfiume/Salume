@@ -7,12 +7,22 @@ import static org.springframework.test.web.server.result.MockMvcResultMatchers.j
 import static org.springframework.test.web.server.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.server.setup.MockMvcBuilders.standaloneSetup;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+/**
+ * @author Rafael Fiume
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 // @ContextConfiguration defaults to OrderControllerTest-context.xml in the same package
 @ContextConfiguration
@@ -20,16 +30,36 @@ public class OrderControllerTest {
 
     @Test
     public void testFindOrder() throws Exception {
+        //@formatter:off
         standaloneSetup(new OrderController())
                 .build()
                 .perform(get("/order/2").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().type(MediaType.APPLICATION_JSON))
-                .andExpect(
-                        content()
-                                .string("{\"id\":1,\"items\":[{\"quantity\":2,\"product\":{\"name\":\"Mortadela\",\"description\":\"Carne defumada\",\"price\":23.4}},{\"quantity\":5,\"product\":{\"name\":\"Salume Speciale\",\"description\":\"Gusto Incredibile\",\"price\":53.9}}]}"))
+                .andExpect(content().string(findOrderJsonResult()))
                 .andExpect(jsonPath("$.id").value(1)).andDo(print());
+        //@formatter:on
     }
 
+    ////
+    ////
+    ////// EXPECTATIONS
+    ////
+    ////
+    
+    private String findOrderJsonResult() throws IOException {
+        return jsonResultFromFile("expectation/OrderControllerTest-findOrder-json.txt");
+    }
+    
+    private String jsonResultFromFile(String filePath) throws IOException {
+        URL url = getClass().getResource(filePath);
+        String fullyQualifiedFilename = url.getFile();
+        final List<String> lines = FileUtils.readLines(new File(fullyQualifiedFilename));
+        final StringBuilder builder = new StringBuilder();
+        for (String line : lines) {
+            builder.append(StringUtils.trim(line));
+        }
+        return builder.toString();
+    }
 
 }

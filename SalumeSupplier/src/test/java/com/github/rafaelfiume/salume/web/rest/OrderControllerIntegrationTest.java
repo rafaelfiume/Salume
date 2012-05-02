@@ -31,7 +31,6 @@ public class OrderControllerIntegrationTest {
 
     @Test
     public void testFindOrder() {
-        // TODO This duplication will be removed in a further step
         Order expected = new Order();
         expected.setId(1);
         expected.setItems(newOrderItems());
