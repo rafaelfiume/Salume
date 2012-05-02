@@ -62,7 +62,44 @@
             <version>${org.springframework.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- Spring Mvc Test -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test-mvc</artifactId>
+            <version>1.0.0.BUILD-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Needed for Spring Mvc Test -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+        </dependency>
+
+        <!-- Needed for Spring Mvc Test -->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+
+        <!-- Needed for Spring Mvc Test -->
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>0.5.5</version>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>org.springframework.maven.snapshot</id>
+            <name>Maven Central Compatible Spring Snapshot Repository</name>
+            <url>http://maven.springframework.org/snapshot</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
