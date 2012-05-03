@@ -54,9 +54,8 @@ public class OrderControllerTest {
     }
     
     private String jsonResultFromFile(String filePath) throws IOException {
-        URL url = getClass().getResource(filePath);
-        String fullyQualifiedFilename = url.getFile();
-        final List<String> lines = FileUtils.readLines(new File(fullyQualifiedFilename));
+        final URL url = getClass().getResource(filePath);
+        final List<String> lines = FileUtils.readLines(new File(url.getFile()));
         final StringBuilder builder = new StringBuilder();
         for (String line : lines) {
             builder.append(StringUtils.trim(line));

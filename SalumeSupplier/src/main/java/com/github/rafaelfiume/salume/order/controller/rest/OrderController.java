@@ -33,7 +33,7 @@ public class OrderController {
     
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public List<Order> getAllOrders() {
+    public List<Order> findAllOrders() {
         return newOrders();
     }
 
