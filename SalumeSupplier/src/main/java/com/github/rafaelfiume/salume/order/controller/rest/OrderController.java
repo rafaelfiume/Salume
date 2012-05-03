@@ -1,4 +1,4 @@
-package com.github.rafaelfiume.salume.web.rest;
+package com.github.rafaelfiume.salume.order.controller.rest;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.github.rafaelfiume.salume.domain.order.Item;
-import com.github.rafaelfiume.salume.domain.order.Order;
-import com.github.rafaelfiume.salume.domain.order.Product;
+import com.github.rafaelfiume.salume.order.domain.Item;
+import com.github.rafaelfiume.salume.order.domain.Order;
+import com.github.rafaelfiume.salume.order.domain.Product;
 
 /** 
  * @author Rafael Fiume
@@ -103,5 +103,15 @@ public class OrderController {
         orders.add(second);
         return orders;
     }
+
+    /*
+     * TODO Implement it. See 18.2.6 Exception Handling on
+     * http://static.springsource.org/spring/docs
+     * /3.0.0.M3/spring-framework-reference/html/ch18s02.html
+     */
+    // @ExceptionHandler(IOException.class)
+    // public String handleIOException(IOException ex, HttpServletRequest request) {
+    // throw new UnsupportedOperationException("not yet implemented");
+    // }
 
 }

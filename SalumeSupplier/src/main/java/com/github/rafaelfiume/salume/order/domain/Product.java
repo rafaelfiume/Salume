@@ -1,4 +1,4 @@
-package com.github.rafaelfiume.salume.domain.order;
+package com.github.rafaelfiume.salume.order.domain;
 
 import java.math.BigDecimal;
 

@@ -1,4 +1,4 @@
-package com.github.rafaelfiume.salume.web.rest;
+package com.github.rafaelfiume.salume.order.controller.rest;
 
 import static org.springframework.test.web.server.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.server.result.MockMvcResultHandlers.print;
@@ -19,6 +19,8 @@ import org.junit.runner.RunWith;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.github.rafaelfiume.salume.order.controller.rest.OrderController;
 
 /**
  * @author Rafael Fiume

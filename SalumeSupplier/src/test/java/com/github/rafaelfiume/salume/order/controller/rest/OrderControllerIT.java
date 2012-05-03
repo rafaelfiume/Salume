@@ -1,4 +1,4 @@
-package com.github.rafaelfiume.salume.web.rest;
+package com.github.rafaelfiume.salume.order.controller.rest;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,9 +13,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
-import com.github.rafaelfiume.salume.domain.order.Item;
-import com.github.rafaelfiume.salume.domain.order.Order;
-import com.github.rafaelfiume.salume.domain.order.Product;
+import com.github.rafaelfiume.salume.order.domain.Item;
+import com.github.rafaelfiume.salume.order.domain.Order;
+import com.github.rafaelfiume.salume.order.domain.Product;
 import com.github.rafaelfiume.salume.util.test.IntegrationTest;
 
 @Category(IntegrationTest.class)
