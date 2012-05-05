@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.rafaelfiume</groupId>
     <artifactId>SalumeSupplier</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Salume Supplier</name>
     <description>Server-side application to help sell mortadelas</description>
@@ -15,23 +15,27 @@
     </properties>
 
     <dependencies>
+        <!-- (Json) Jackson Mapper -->
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
             <version>1.9.5</version>
         </dependency>
+        
+        <!-- Apache Commons -->
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.1</version>
         </dependency>
-
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.3</version>
         </dependency>
+        
+        <!-- JUnit -->
 
         <dependency>
             <groupId>junit</groupId>
@@ -45,6 +49,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+        <!-- Spring -->
 
         <!-- Check how to obtain Spring 3 artifacts at http://blog.springsource.org/2009/12/02/obtaining-spring-3-artifacts-with-maven/ -->
         <dependency>
@@ -52,22 +58,16 @@
             <artifactId>spring-context</artifactId>
             <version>${org.springframework.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
             <version>${org.springframework.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>${org.springframework.version}</version>
         </dependency>
-
-        <!-- Support for testing Spring applications with tools such as JUnit 
-            and TestNG This artifact is generally always defined with a 'test' scope 
-            for the integration testing framework and unit testing stubs -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
@@ -76,12 +76,12 @@
         </dependency>
 
         <!-- Spring Mvc Test -->
+        
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test-mvc</artifactId>
             <version>1.0.0.BUILD-SNAPSHOT</version>
         </dependency>
-
         <!-- Needed for Spring Mvc Test -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -89,14 +89,12 @@
             <version>2.5</version>
             <scope>provided</scope>
         </dependency>
-
         <!-- Needed for Spring Mvc Test -->
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
             <version>1.2.1</version>
         </dependency>
-
         <!-- Needed for Spring Mvc Test -->
         <dependency>
             <groupId>com.jayway.jsonpath</groupId>
@@ -107,6 +105,7 @@
     </dependencies>
 
     <repositories>
+        <!-- Needed for Spring Mvc Test -->
         <repository>
             <id>org.springframework.maven.snapshot</id>
             <name>Maven Central Compatible Spring Snapshot Repository</name>
@@ -140,6 +139,7 @@
                 </configuration>
             </plugin>
 
+            <!-- Jetty 7+ -->
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
@@ -177,6 +177,7 @@
                 </executions>
             </plugin>
 
+            <!-- Unit Tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -186,6 +187,7 @@
                 </configuration>
             </plugin>
 
+            <!-- Integration Tests -->
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.9</version>

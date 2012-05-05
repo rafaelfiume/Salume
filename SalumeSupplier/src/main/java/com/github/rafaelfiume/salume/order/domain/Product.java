@@ -6,12 +6,22 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Product {
+    
+    private long id;
 
     private String name;
 
     private String description;
 
     private BigDecimal price;
+    
+    public long getId() {
+        return id;
+    }
+    
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -50,13 +60,12 @@ public class Product {
         }
 
         final Product other = (Product) obj;
-        return new EqualsBuilder().append(name, other.name).append(description, other.description)
-                .append(price, price).isEquals();
+        return new EqualsBuilder().append(id, other.id).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(3, 7).append(name).append(description).append(price).hashCode();
+        return new HashCodeBuilder(3, 7).append(id).hashCode();
     }
 
 }

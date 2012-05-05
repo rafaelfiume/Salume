@@ -9,8 +9,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class Order {
 
     private long id;
-
+    
     private List<Item> items = new ArrayList<Item>();
+    
+    private String shippingAddress;
 
     public long getId() {
         return id;
@@ -27,6 +29,14 @@ public class Order {
     public void setItems(List<Item> items) {
         this.items = items;
     }
+    
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
+    
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -41,13 +51,12 @@ public class Order {
         }
 
         final Order other = (Order) obj;
-        return new EqualsBuilder().append(id, other.id).append(items, other.items)
-                .isEquals();
+        return new EqualsBuilder().append(id, other.id).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(11, 13).append(id).append(items).hashCode();
+        return new HashCodeBuilder(11, 13).append(id).hashCode();
     }
 
     @Override
