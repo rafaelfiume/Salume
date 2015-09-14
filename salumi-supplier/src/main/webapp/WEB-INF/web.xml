@@ -5,7 +5,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core" 
 	xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
 
-	<display-name>ble</display-name>
+	<display-name>salumi</display-name>
 
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
@@ -25,7 +25,7 @@
 
 	<servlet-mapping>
 		<servlet-name>webDispatcher</servlet-name>
-		<url-pattern>/ble/*</url-pattern>
+		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
 </web-app>
