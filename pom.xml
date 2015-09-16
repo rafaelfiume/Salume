@@ -1,0 +1,98 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.rafaelfiume</groupId>
+    <artifactId>salume</artifactId>
+    <version>DEV-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>supplier</module>
+        <module>supplier-acceptance-tests</module>
+    </modules>
+
+    <properties>
+        <jetty.version>9.3.3.v20150827</jetty.version>
+        <yatspec.version>1.11</yatspec.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.4</version>
+            </dependency>
+
+            <!-- Test stuff -->
+
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>1.3</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.yatspec</groupId>
+                <artifactId>yatspec</artifactId>
+                <version>${yatspec.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.googlecode.totallylazy</groupId>
+                <artifactId>totallylazy</artifactId>
+                <version>1.77</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jdom</groupId>
+                <artifactId>jdom</artifactId>
+                <version>1.1.3</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.sourceforge.plantuml</groupId>
+                <artifactId>plantuml</artifactId>
+                <version>8030</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>repo.bodar.com</id>
+            <url>http://repo.bodar.com</url>
+        </repository>
+    </repositories>
+
+    <build>
+        <finalName>$module</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <target>1.8</target>
+                    <source>1.8</source>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
