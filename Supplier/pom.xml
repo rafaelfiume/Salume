@@ -9,9 +9,10 @@
         <groupId>com.rafaelfiume</groupId>
         <artifactId>salume</artifactId>
         <version>DEV-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>supplier</artifactId>
+    <artifactId>Supplier</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>

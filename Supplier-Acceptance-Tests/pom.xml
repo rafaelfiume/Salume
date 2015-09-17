@@ -9,9 +9,10 @@
         <groupId>com.rafaelfiume</groupId>
         <artifactId>salume</artifactId>
         <version>DEV-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>supplier-acceptance-tests</artifactId>
+    <artifactId>Supplier-Acceptance-Tests</artifactId>
     <packaging>jar</packaging>
 
     <description>Acceptance Tests for Salume Server App</description>
@@ -20,7 +21,7 @@
         <!-- Test dependencies -->
         <dependency>
             <groupId>com.rafaelfiume</groupId>
-            <artifactId>supplier</artifactId>
+            <artifactId>Supplier</artifactId>
             <version>DEV-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>

@@ -9,8 +9,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>supplier</module>
-        <module>supplier-acceptance-tests</module>
+        <module>Supplier</module>
+        <module>Supplier-Acceptance-Tests</module>
     </modules>
 
     <properties>
@@ -74,6 +74,25 @@
         </dependencies>
     </dependencyManagement>
 
+    <scm>
+        <url>http://github.com/rafaelfiume/Salume/</url>
+        <connection>scm:git:git://github.com/rafaelfiume/Salume.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/rafaelfiume/Salume.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>http://github.com/rafaelfiume/Salume/issues</url>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>Apache 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
     <repositories>
         <repository>
             <id>repo.bodar.com</id>
@@ -91,6 +110,22 @@
                 <configuration>
                     <target>1.8</target>
                     <source>1.8</source>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.2</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-provider-gitexe</artifactId>
+                        <version>1.9</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
             </plugin>
         </plugins>
