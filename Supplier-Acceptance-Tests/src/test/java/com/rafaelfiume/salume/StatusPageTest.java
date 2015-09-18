@@ -79,7 +79,7 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
 
             HttpAppResponse appResponse = getHttpAppResponse(STATUS_PAGE_URI);
             // this is what makes the sequence diagram magic happens
-            capturedInputAndOutputs.add("status page request from client to Supplier", STATUS_PAGE_URI);
+            capturedInputAndOutputs.add("Status Page Request from client to Supplier", STATUS_PAGE_URI);
             capturedInputAndOutputs.add(HTTP_RESPONSE, appResponse);
 
             return capturedInputAndOutputs;
@@ -90,7 +90,7 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
         return inputAndOutputs -> {
             HttpAppResponse appResponse = inputAndOutputs.getType(HTTP_RESPONSE, HttpAppResponse.class);
 
-            capturedInputAndOutputs.add("status page response from Supplier to client", appResponse.body());
+            capturedInputAndOutputs.add("Status Page Response from Supplier to client", appResponse.body());
 
             return appResponse;
         };
