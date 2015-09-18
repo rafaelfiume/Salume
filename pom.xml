@@ -101,7 +101,7 @@
     </repositories>
 
     <build>
-        <finalName>$module</finalName>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
