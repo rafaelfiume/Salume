@@ -14,10 +14,13 @@ public class SupplierApplication {
 
         Server server = new Server();
 
+        String webPort = System.getenv("PORT");
+        if(webPort == null || webPort.isEmpty()) {
+            webPort = "8080";
+        }
+
         ServerConnector http = new ServerConnector(server);
-        http.setHost("localhost");
-        http.setPort(8080); // TODO Get port from resource
-        http.setIdleTimeout(30000); // TODO Get idleTimeout from resource
+        http.setPort(Integer.parseInt(webPort)); // TODO Get port from resource
 
         // Set the connector
         server.addConnector(http);
