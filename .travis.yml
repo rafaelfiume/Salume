@@ -11,7 +11,5 @@ deploy:
   provider: heroku
   api_key:
     secure: zxS4+O/SeOogoW1qQpUHAuAE+Wb1ZHznyHeYn0vqvj0CUYsw/y4jKw+beGU51WmYjHRrQpFU+/+MghMcPotzfBMzwX9ASjQ/I64T4yGrrUcoiM/AjKnti8OfBZQbP1bN5R8CcNKMYpnqqRu5P490LEOPz2QTAiCPQJexss9Hkzb60x6n4IXFjxhTsmuPy5J6DG2L1llcxLF//KIeNssi6mFHIyPRAzswjNMpZgr5bQsAZIX3M9MOHczX+PjNtsFz7iCQnp+NCwz5HQpzCeww6G7B2zmCwqFyHyJKuH9JSwTqGC4z5jsHA3Z/mbJhU+hLYi1VLHNi+ZhW80cF94s8amJDRm/+9FfQUwT5YmOLRCWhdFA8FrQnQLi9nJ16ZFu5MuM+mMCrvcjcxkAoKOQauHMdAw8ZcNiUrg1Go+y2j79Moau43OAWxBF1z8uoSe2NZizF4wVN4IUv1sSReEI48fN3iDzyZm8gkUnhzSuG1lESjvsQbPl6cKF8W2otl3EGHtKpJzlwxwyzIMF3QpIbgHQXO7cFTYVSykCbLkkXXdW0ZOFU/4NY0ls4TWuQ/45VkCIuX9m9exJgLJJqAgveW8LvIP8hxKgXcqWg6/Vao0xAoYzOnVgQe6DgtmOQ3e64nfpmZ67AwYQEZqtxYiXa03j9YXnqJUf7wcawzWkNtQM=
-  app:
-     master: Salume-Production
-  on:
-    repo: rafaelfiume/Salume
+  app: frozen-mountain-3180
+  on: master
