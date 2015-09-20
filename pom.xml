@@ -81,6 +81,19 @@
         <tag>HEAD</tag>
     </scm>
 
+    <distributionManagement>
+        <repository>
+            <id>internal.repo</id>
+            <name>Temporary Staging Repository</name>
+            <url>file://${project.build.directory}/mvn-repo</url>
+        </repository>
+    </distributionManagement>
+
+    <ciManagement>
+        <system>Travis CI</system>
+        <url>https://travis-ci.org/rafaelfiume/Salume</url>
+    </ciManagement>
+
     <issueManagement>
         <system>GitHub Issues</system>
         <url>http://github.com/rafaelfiume/Salume/issues</url>
