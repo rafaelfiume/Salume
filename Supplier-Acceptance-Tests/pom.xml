@@ -7,7 +7,6 @@
         <groupId>com.rafaelfiume</groupId>
         <artifactId>Salume-Parent</artifactId>
         <version>DEV-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>Supplier-Acceptance-Tests</artifactId>

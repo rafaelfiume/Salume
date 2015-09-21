@@ -16,6 +16,7 @@ import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
+import com.rafaelfiume.salume.web.controllers.StatusPageController;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpGet;
@@ -29,6 +30,7 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.jar.Manifest;
 
 import static com.googlecode.totallylazy.Sequences.sequence;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
@@ -63,8 +65,13 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
         given(salumeSupplierAppIsUpAndRunning());
         when(aClientRequestsStatusPage());
         then(theStatusPage(), hasHttpStatusCode(200));
-        then(theStatusPage(), showsThatAppIsOk());
-        then(theStatusPage(), showsCorrectAppVersion());
+        then(theStatusOfTheApp(), is("OK"));
+        then(theAppVersionInTheStatusPage(), is(theImplementationVersionInTheManifest()));
+    }
+
+    private String theImplementationVersionInTheManifest() {
+        Manifest manifest = StatusPageController.getManifest(new StatusPageController().getClass());
+        return (manifest == null) ? "DEV-SNAPSHOT" : manifest.getMainAttributes().getValue("Implementation-Version");
     }
 
     private GivensBuilder salumeSupplierAppIsUpAndRunning() {
@@ -87,56 +94,51 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
         };
     }
 
-    private StateExtractor<HttpAppResponse> theStatusPage() {
+    private StateExtractor<Integer> theStatusPage() {
         return inputAndOutputs -> {
             HttpAppResponse appResponse = inputAndOutputs.getType(HTTP_RESPONSE, HttpAppResponse.class);
 
             capturedInputAndOutputs.add("Status Page Response from Supplier to client", appResponse.body());
 
-            return appResponse;
+            return appResponse.statusCode();
         };
     }
 
-    private Matcher<HttpAppResponse> showsThatAppIsOk() {
-        return new TypeSafeMatcher<HttpAppResponse>() {
+    private StateExtractor<String> theStatusOfTheApp() {
+        return inputAndOutputs -> {
+            HttpAppResponse appResponse = inputAndOutputs.getType(HTTP_RESPONSE, HttpAppResponse.class);
+            return appResponse.body();
+        };
+    }
+
+    private StateExtractor<String> theAppVersionInTheStatusPage() {
+        return theStatusOfTheApp();
+    }
+
+    private Matcher<Integer> hasHttpStatusCode(Integer expected) {
+        return new TypeSafeMatcher<Integer>() {
             @Override
-            protected boolean matchesSafely(HttpAppResponse result) {
-                String body = result.body();
-                return isNoneEmpty(body) && body.contains("OK");
+            protected boolean matchesSafely(Integer result) {
+                return expected.equals(result);
             }
 
             @Override
             public void describeTo(Description description) {
-                description.appendText("app is failing");
+                description.appendValue(expected);
             }
         };
     }
 
-    private Matcher<HttpAppResponse> hasHttpStatusCode(Integer expected) {
-        return new TypeSafeMatcher<HttpAppResponse>() {
-            @Override
-            protected boolean matchesSafely(HttpAppResponse result) {
-                return result.statusCode().equals(expected);
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("wrong http status code");
-            }
-        };
-    }
-
-    private Matcher<HttpAppResponse> showsCorrectAppVersion() {
-            return new TypeSafeMatcher<HttpAppResponse>() {
+    private Matcher<String> is(String expected) {
+            return new TypeSafeMatcher<String>() {
                 @Override
-                protected boolean matchesSafely(HttpAppResponse result) {
-                    String body = result.body();
-                    return isNoneEmpty(body) && body.contains("Version: DEV-SNAPSHOT");
+                protected boolean matchesSafely(String result) {
+                    return isNoneEmpty(result) && result.contains(expected);
                 }
 
                 @Override
                 public void describeTo(Description description) {
-                    description.appendText("wrong app version");
+                    description.appendText(expected);
                 }
             };
     }
