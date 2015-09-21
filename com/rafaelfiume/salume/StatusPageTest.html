@@ -334,7 +334,8 @@ dl.index-result {
 Given salume supplier app is up and running
 When a client requests status page
 Then the status page has http status code 200
-Then the status page shows that app is ok</pre>
+Then the status of the app is &quot;OK&quot;
+Then the app version in the status page is &quot;DEV-SNAPSHOT&quot;</pre>
                             <h3 class="logKey">Test results:</h3>
                                     <pre class='highlight results test-passed'>
 Test passed</pre>
@@ -354,9 +355,9 @@ Test passed</pre>
                                                                             <h3 class="logKey" logkey="HTTP_RESPONSE">HTTP_RESPONSE</h3>
                                         <div class="logValue highlight HttpAppResponse" >com.rafaelfiume.salume.StatusPageTest$HttpAppResponse@4ce1d6d0</div>
                                                                             <h3 class="logKey" logkey="Status_Page_Response_from_Supplier_to_client">Status Page Response from Supplier to client</h3>
-                                        <div class="logValue highlight String" >Status Page
+                                        <div class="logValue highlight String" >Salume Supplier is: OK
 
-Salume Supplier is: OK
+Version: DEV-SNAPSHOT
 </div>
                                                                             <h3 class="logKey" logkey="Sequence_Diagram">Sequence Diagram</h3>
                                         <div class="logValue highlight SvgWrapper" ><div class='nohighlight'><?xml version="1.0" encoding="UTF-8"?>
