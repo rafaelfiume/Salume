@@ -1,1 +1,1 @@
-Implementation-Version: DEV-SNAPSHOT
+Implementation-Version: ${project.version}

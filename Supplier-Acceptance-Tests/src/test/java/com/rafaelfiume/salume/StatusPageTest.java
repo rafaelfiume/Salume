@@ -66,7 +66,7 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
         when(aClientRequestsStatusPage());
         then(theStatusPage(), hasHttpStatusCode(200));
         then(theStatusOfTheApp(), is("OK"));
-        then(theAppVersionInTheStatusPage(), is(theImplementationVersionInTheManifest()));
+        then(theAppVersionInTheStatusPage(), is(theImplementationVersionInTheManifest())); // It may not work when running directly using an IDE.
     }
 
     private String theImplementationVersionInTheManifest() {

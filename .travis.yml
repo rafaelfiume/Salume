@@ -1,8 +1,8 @@
 language: java
 jdk:
-- oraclejdk8
+  - oraclejdk8
 before_install:
-- chmod 755 ./update-gh-pages.sh
+  - chmod 755 ./update-gh-pages.sh
 after_success: ./update-gh-pages.sh
 env:
   global:
