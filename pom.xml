@@ -4,7 +4,7 @@
 
     <groupId>com.rafaelfiume</groupId>
     <artifactId>Salume-Parent</artifactId>
-    <version>0.1.1</version>
+    <version>DEV-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -76,7 +76,7 @@
         <url>http://github.com/rafaelfiume/Salume/</url>
         <connection>scm:git:git://github.com/rafaelfiume/Salume.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/rafaelfiume/Salume.git</developerConnection>
-        <tag>0.1.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
