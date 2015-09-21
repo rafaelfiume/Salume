@@ -5,9 +5,9 @@ jdk:
 
 # Update project documentation page only when changing production
 before_install:
-  - if [ "$TRAVIS_BRANCH" == "master" ] then; chmod 755 ./update-gh-pages.sh
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then chmod 755 ./update-gh-pages.sh; fi
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "master"] then; ./update-gh-pages.sh
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then ./update-gh-pages.sh; fi
 
 env:
   global:
