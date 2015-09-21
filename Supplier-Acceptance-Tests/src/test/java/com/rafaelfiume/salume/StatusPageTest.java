@@ -64,6 +64,7 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
         when(aClientRequestsStatusPage());
         then(theStatusPage(), hasHttpStatusCode(200));
         then(theStatusPage(), showsThatAppIsOk());
+        then(theStatusPage(), showsCorrectAppVersion());
     }
 
     private GivensBuilder salumeSupplierAppIsUpAndRunning() {
@@ -106,7 +107,7 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
 
             @Override
             public void describeTo(Description description) {
-                // TODO
+                description.appendText("app is failing");
             }
         };
     }
@@ -120,9 +121,24 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
 
             @Override
             public void describeTo(Description description) {
-                // TODO
+                description.appendText("wrong http status code");
             }
         };
+    }
+
+    private Matcher<HttpAppResponse> showsCorrectAppVersion() {
+            return new TypeSafeMatcher<HttpAppResponse>() {
+                @Override
+                protected boolean matchesSafely(HttpAppResponse result) {
+                    String body = result.body();
+                    return isNoneEmpty(body) && body.contains("Version: DEV-SNAPSHOT");
+                }
+
+                @Override
+                public void describeTo(Description description) {
+                    description.appendText("wrong app version");
+                }
+            };
     }
 
     private HttpAppResponse getHttpAppResponse(String uri) throws IOException {

@@ -20,9 +20,13 @@ public class StatusPageController extends AbstractHandler {
 
         PrintWriter out = response.getWriter();
 
-        out.println("Status Page\n");
-        out.println("Salume Supplier is: OK"); // TODO Retrieve the app name from properties
+        out.println("Salume Supplier is: OK\n"); // TODO Retrieve the app name from properties
+        out.println("Version: " + appVersion());
 
         baseRequest.setHandled(true);
+    }
+
+    private String appVersion() {
+        return this.getClass().getPackage().getImplementationVersion();
     }
 }
