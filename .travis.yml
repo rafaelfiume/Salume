@@ -1,12 +1,18 @@
 language: java
+
 jdk:
   - oraclejdk8
+
+# Update project documentation page only when changing production
 before_install:
-  - chmod 755 ./update-gh-pages.sh
-after_success: ./update-gh-pages.sh
+  - if [ "$TRAVIS_BRANCH" == "master" ] then; chmod 755 ./update-gh-pages.sh
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master"] then; ./update-gh-pages.sh
+
 env:
   global:
   - secure: AanbVsRGmMQnNolKxIL9p2zHLo59fXcrmRhZG+T1neTBJjlclQSwfwcdNTooNZQaxuJlTaRxWi7J8eTKQnpdjMnun9o1l9K/1NLOxBjlR7/9579p4tV4SLfKcR4OWUDJAs1vv8pXd9CmQpp8ihekXL9yR4Fo8pTbwj6CjnI9J9/5bFrBecU2oxm309qTzGaSofjiO9qEtzNW47ZDtexrpF8DM44rCo05OdysoPav1pVh2s/j9xMXWGKDO8RxkPSTr70rtX7W2OR6JZkz1PaEWrCj1n8SVVoe/Qn946y784BQ7WdlBZDDvwFezqBrLiXhAuuWh0GUI+varRn6MuRbUeujiMhgKkYWPI7GWyPLcgk7xy5hNU3yAy7UTDdnyrXw63l+ClfMuW4TzYU36Mz3DaVVxrNTjX35OBM0j1ZzFTeDJzt3AyfTgicw11IAIi5C/9T1PY4MjShvgC15UDmdZmtHLwJf6Q6OQot4/AcNZffW+/FjDxZ3kap7x1pZe+WhUVvALwEdd5FKLmeql8vydtWeuZKEQromqPR2Y8XcV7fYg4Q+1qwos+pfL9YKDOqamZXu/YIMmiduxFrQMiQhGx2qQFM2AP06QSEc94zhPrEoFoeqetMCSqRm4VEF3R23QGOE2V3H6NZEWgdFRuJduDGNpQvaghxQMYVLIyk1RuI=
+
 deploy:
   provider: heroku
   api_key:

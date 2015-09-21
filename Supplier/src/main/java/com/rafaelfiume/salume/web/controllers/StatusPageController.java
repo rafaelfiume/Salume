@@ -3,7 +3,6 @@ package com.rafaelfiume.salume.web.controllers;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +11,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.jar.Manifest;
+
 
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
@@ -35,7 +35,7 @@ public class StatusPageController extends AbstractHandler {
     }
 
     public static Manifest getManifest(Class<?> clz) {
-        // Boring code... Glad I found it in the web! This is really boring stuff to code! Source: http://stackoverflow.com/questions/1272648/reading-my-own-jars-manifest/29103019#29103019
+        // Really boring stuff to code! Glad I found it in the web... Source: http://stackoverflow.com/questions/1272648/reading-my-own-jars-manifest/29103019#29103019
         String resource = "/" + clz.getName().replace(".", "/") + ".class";
         String fullPath = clz.getResource(resource).toString();
         String archivePath = fullPath.substring(0, fullPath.length() - resource.length());
@@ -46,9 +46,7 @@ public class StatusPageController extends AbstractHandler {
         try (InputStream input = new URL(archivePath + "/META-INF/MANIFEST.MF").openStream()) {
             return new Manifest(input);
         } catch (Exception e) {
-            // TODO Log this error
-//            throw new RuntimeException("Loading MANIFEST for class " + clz + " failed!", e);
-            return null;
+            throw new RuntimeException("Loading MANIFEST for class " + clz + " failed!", e);
         }
     }
 }

@@ -11,7 +11,6 @@ import com.googlecode.yatspec.plugin.sequencediagram.SvgWrapper;
 import com.googlecode.yatspec.rendering.html.DontHighlightRenderer;
 import com.googlecode.yatspec.rendering.html.HtmlResultRenderer;
 import com.googlecode.yatspec.rendering.html.index.HtmlIndexRenderer;
-import com.googlecode.yatspec.rendering.html.tagindex.HtmlTagIndexRenderer;
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
@@ -39,11 +38,12 @@ import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 public class StatusPageTest extends TestState implements WithCustomResultListeners {
 
     public static final String STATUS_PAGE_URI = "http://localhost:8080/salume/supplier/status";
-    public static final String HTTP_RESPONSE = "HTTP_RESPONSE";
+
+    private static final SupplierApplication SUPPLIER_APPLICATION = new SupplierApplication();
 
     private SequenceDiagramGenerator sequenceDiagramGenerator;
 
-    private static final SupplierApplication SUPPLIER_APPLICATION = new SupplierApplication();
+    private HttpAppResponse statusPageResponse;
 
     @Before
     public void setUp() {
@@ -70,8 +70,8 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
     }
 
     private String theImplementationVersionInTheManifest() {
-        Manifest manifest = StatusPageController.getManifest(new StatusPageController().getClass());
-        return (manifest == null) ? "DEV-SNAPSHOT" : manifest.getMainAttributes().getValue("Implementation-Version");
+        Manifest manifest = StatusPageController.getManifest(SUPPLIER_APPLICATION.getClass());
+        return manifest.getMainAttributes().getValue("Implementation-Version");
     }
 
     private GivensBuilder salumeSupplierAppIsUpAndRunning() {
@@ -84,11 +84,10 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
 
     private ActionUnderTest aClientRequestsStatusPage() {
         return (givens, capturedInputAndOutputs) -> {
+            this.statusPageResponse = getHttpAppResponse(STATUS_PAGE_URI);
 
-            HttpAppResponse appResponse = getHttpAppResponse(STATUS_PAGE_URI);
             // this is what makes the sequence diagram magic happens
             capturedInputAndOutputs.add("Status Page Request from client to Supplier", STATUS_PAGE_URI);
-            capturedInputAndOutputs.add(HTTP_RESPONSE, appResponse);
 
             return capturedInputAndOutputs;
         };
@@ -96,23 +95,19 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
 
     private StateExtractor<Integer> theStatusPage() {
         return inputAndOutputs -> {
-            HttpAppResponse appResponse = inputAndOutputs.getType(HTTP_RESPONSE, HttpAppResponse.class);
+            // this is what makes the sequence diagram magic happens
+            capturedInputAndOutputs.add("Status Page Response from Supplier to client", statusPageResponse.body());
 
-            capturedInputAndOutputs.add("Status Page Response from Supplier to client", appResponse.body());
-
-            return appResponse.statusCode();
+            return this.statusPageResponse.statusCode();
         };
     }
 
     private StateExtractor<String> theStatusOfTheApp() {
-        return inputAndOutputs -> {
-            HttpAppResponse appResponse = inputAndOutputs.getType(HTTP_RESPONSE, HttpAppResponse.class);
-            return appResponse.body();
-        };
+        return inputAndOutputs -> this.statusPageResponse.body();
     }
 
     private StateExtractor<String> theAppVersionInTheStatusPage() {
-        return theStatusOfTheApp();
+        return inputAndOutputs -> this.statusPageResponse.body();
     }
 
     private Matcher<Integer> hasHttpStatusCode(Integer expected) {
