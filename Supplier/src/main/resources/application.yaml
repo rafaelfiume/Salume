@@ -1,0 +1,3 @@
+server:
+    contextPath: /salume/supplier
+    port: ${PORT}

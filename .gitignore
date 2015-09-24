@@ -1,9 +1,13 @@
-*/target
-.classpath
-.project
-*/.settings
-.idea
-*/.idea
-*.iml
+# Operating System Files
 nohup.out
+
+# Build Artifacts
+*/target
+*.releaseBackup
+release.properties
+
+# IntelliJ
+.idea
+*.iml
+
 

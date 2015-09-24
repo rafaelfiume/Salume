@@ -1,33 +1,29 @@
 package com.rafaelfiume.salume.web.controllers;
 
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.util.jar.Manifest;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
-import static javax.servlet.http.HttpServletResponse.SC_OK;
+@Controller
+public class StatusPageController {
 
-public class StatusPageController extends AbstractHandler {
+    @RequestMapping(value = "/status", method = GET)
+    public ResponseEntity<String> handle() {
 
-    @Override
-    public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        response.setContentType("text/plain; charset=utf-8");
-        response.setStatus(SC_OK);
+        final String body = new StringBuilder("Salume Supplier is: OK\n") // TODO Retrieve the app name from properties
+                .append("Version: ").append(appVersion()).toString();
 
-        PrintWriter out = response.getWriter();
-
-        out.println("Salume Supplier is: OK\n"); // TODO Retrieve the app name from properties
-        out.println("Version: " + appVersion());
-
-        baseRequest.setHandled(true);
+        final HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", "text/plain; charset=utf-8");
+        return new ResponseEntity<>(body, HttpStatus.OK);
     }
 
     private String appVersion() {
