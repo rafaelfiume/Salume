@@ -11,39 +11,39 @@ import com.googlecode.yatspec.plugin.sequencediagram.SvgWrapper;
 import com.googlecode.yatspec.rendering.html.DontHighlightRenderer;
 import com.googlecode.yatspec.rendering.html.HtmlResultRenderer;
 import com.googlecode.yatspec.rendering.html.index.HtmlIndexRenderer;
-import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
-import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
-import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
-import com.googlecode.yatspec.state.givenwhenthen.TestState;
+import com.googlecode.yatspec.state.givenwhenthen.*;
 import com.rafaelfiume.salume.web.controllers.StatusPageController;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.*;
 import org.junit.runner.RunWith;
+import org.springframework.boot.test.TestRestTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 
-import java.io.IOException;
 import java.util.jar.Manifest;
 
 import static com.googlecode.totallylazy.Sequences.sequence;
-import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
+import static java.lang.System.lineSeparator;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.parseMediaType;
 
 @RunWith(SpecRunner.class)
 public class StatusPageTest extends TestState implements WithCustomResultListeners {
 
     public static final String STATUS_PAGE_URI = "http://localhost:8080/salume/supplier/status";
 
+    public static final MediaType TEXT_PLAIN_CHARSET_UTF8 = parseMediaType("text/plain;charset=utf-8");
+
     private static final SupplierApplication SUPPLIER_APPLICATION = new SupplierApplication();
 
     private SequenceDiagramGenerator sequenceDiagramGenerator;
 
-    private HttpAppResponse statusPageResponse;
+    private ResponseEntity<String> statusPageResponse;
 
     @Before
     public void setUp() {
@@ -63,15 +63,18 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
     @Test
     public void statusPageIsThere() throws Exception {
         given(salumeSupplierAppIsUpAndRunning());
+
         when(aClientRequestsStatusPage());
-        then(theStatusPage(), hasHttpStatusCode(200));
-        then(theStatusOfTheApp(), is("OK"));
-        then(theAppVersionInTheStatusPage(), is(theImplementationVersionInTheManifest())); // It may not work when running directly using an IDE.
+
+        then(theStatusPage(), hasHttpStatusCode(OK));
+        then(theStatusOfTheApp(), containsString("OK"));
+        then(theAppVersionInTheStatusPage(), is(theImplementationVersionInTheManifest()));
+        then(theContentType(), is(TEXT_PLAIN_CHARSET_UTF8));
     }
 
     private String theImplementationVersionInTheManifest() {
         Manifest manifest = StatusPageController.getManifest(SUPPLIER_APPLICATION.getClass());
-        return manifest.getMainAttributes().getValue("Implementation-Version");
+        return "Version: " + manifest.getMainAttributes().getValue("Implementation-Version");
     }
 
     private GivensBuilder salumeSupplierAppIsUpAndRunning() {
@@ -84,7 +87,7 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
 
     private ActionUnderTest aClientRequestsStatusPage() {
         return (givens, capturedInputAndOutputs) -> {
-            this.statusPageResponse = getHttpAppResponse(STATUS_PAGE_URI);
+            this.statusPageResponse = new TestRestTemplate().getForEntity(STATUS_PAGE_URI, String.class);
 
             // this is what makes the sequence diagram magic happens
             capturedInputAndOutputs.add("Status Page Request from client to Supplier", STATUS_PAGE_URI);
@@ -93,28 +96,32 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
         };
     }
 
-    private StateExtractor<Integer> theStatusPage() {
+    private StateExtractor<HttpStatus> theStatusPage() {
         return inputAndOutputs -> {
             // this is what makes the sequence diagram magic happens
-            capturedInputAndOutputs.add("Status Page Response from Supplier to client", statusPageResponse.body());
+            capturedInputAndOutputs.add("Status Page Response from Supplier to client", statusPageResponse.getBody());
 
-            return this.statusPageResponse.statusCode();
+            return this.statusPageResponse.getStatusCode();
         };
     }
 
     private StateExtractor<String> theStatusOfTheApp() {
-        return inputAndOutputs -> this.statusPageResponse.body();
+        return inputAndOutputs -> this.statusPageResponse.getBody().split(lineSeparator())[0];
     }
 
     private StateExtractor<String> theAppVersionInTheStatusPage() {
-        return inputAndOutputs -> this.statusPageResponse.body();
+        return inputAndOutputs -> this.statusPageResponse.getBody().split(lineSeparator())[1];
     }
 
-    private Matcher<Integer> hasHttpStatusCode(Integer expected) {
-        return new TypeSafeMatcher<Integer>() {
+    private StateExtractor<MediaType> theContentType() {
+        return inputAndOutputs -> statusPageResponse.getHeaders().getContentType();
+    }
+
+    private Matcher<HttpStatus> hasHttpStatusCode(HttpStatus expected) {
+        return new TypeSafeMatcher<HttpStatus>() {
             @Override
-            protected boolean matchesSafely(Integer result) {
-                return expected.equals(result);
+            protected boolean matchesSafely(HttpStatus result) {
+                return expected == result;
             }
 
             @Override
@@ -122,61 +129,6 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
                 description.appendValue(expected);
             }
         };
-    }
-
-    private Matcher<String> is(String expected) {
-            return new TypeSafeMatcher<String>() {
-                @Override
-                protected boolean matchesSafely(String result) {
-                    return isNoneEmpty(result) && result.contains(expected);
-                }
-
-                @Override
-                public void describeTo(Description description) {
-                    description.appendText(expected);
-                }
-            };
-    }
-
-    private HttpAppResponse getHttpAppResponse(String uri) throws IOException {
-        HttpAppResponse appResponse;
-
-        try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
-            HttpGet httpget = new HttpGet(uri);
-            httpget.addHeader("accept", "text/text; charset=utf-8");
-
-            System.out.println("Executing request " + httpget.getRequestLine());
-
-            // Create a custom response handler
-            ResponseHandler<HttpAppResponse> responseHandler = response -> {
-                int status = response.getStatusLine().getStatusCode();
-                HttpEntity entity = response.getEntity();
-                return new HttpAppResponse(status, entity != null ? EntityUtils.toString(entity) : null);
-            };
-
-            appResponse = httpclient.execute(httpget, responseHandler);
-        }
-        return appResponse;
-    }
-
-    public static class HttpAppResponse {
-
-        private final Integer statusCode;
-
-        private final String body;
-
-        HttpAppResponse(Integer statusCode, String body) {
-            this.statusCode = statusCode;
-            this.body = body;
-        }
-
-        public Integer statusCode() {
-            return statusCode;
-        }
-
-        public String body() {
-            return body;
-        }
     }
 
     //////////////////// Test Infrastructure Stuff //////////////

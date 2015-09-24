@@ -15,7 +15,6 @@
     <description>Acceptance Tests for Salume Server App</description>
 
     <dependencies>
-        <!-- Test dependencies -->
         <dependency>
             <groupId>com.rafaelfiume</groupId>
             <artifactId>Supplier</artifactId>
@@ -37,6 +36,7 @@
         </dependency>
 
         <!-- Test stuff -->
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

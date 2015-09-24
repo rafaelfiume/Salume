@@ -38,6 +38,37 @@
                 <version>3.4</version>
             </dependency>
 
+            <!-- Logging : bridging Spring to SLF4J, and binding from SLF4J to Log4J -->
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${sl4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${sl4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${sl4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <!-- Database coming soon -->
+            <!--<dependency>-->
+            <!--<groupId>org.postgresql</groupId>-->
+            <!--<artifactId>postgresql</artifactId>-->
+            <!--<version>9.4-1201-jdbc41</version>-->
+            <!--<scope>runtime</scope>-->
+            <!--</dependency>-->
+
             <!-- Spring Boot-->
 
             <dependency>
@@ -52,6 +83,14 @@
                     <exclusion>
                         <groupId>org.hibernate</groupId>
                         <artifactId>hibernate-validator</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-core</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -109,45 +148,8 @@
                 <version>${spring.version}</version>
             </dependency>
 
-            <!-- Logging : bridging Spring to SLF4J, and binding from SLF4J to Log4J -->
-
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>jcl-over-slf4j</artifactId>
-                <version>${sl4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${sl4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>${sl4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>${log4j.version}</version>
-            </dependency>
-
-            <!-- Database coming soon -->
-            <!--<dependency>-->
-                <!--<groupId>org.postgresql</groupId>-->
-                <!--<artifactId>postgresql</artifactId>-->
-                <!--<version>9.4-1201-jdbc41</version>-->
-                <!--<scope>runtime</scope>-->
-            <!--</dependency>-->
-
             <!-- Test stuff -->
 
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>${spring.version}</version>
-                <scope>test</scope>
-            </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
