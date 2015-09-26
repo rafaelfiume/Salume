@@ -327,15 +327,19 @@ dl.index-result {
                 <div class="section-body">
 
 
-                        <div class="scenario" id="1213367860_1078448857">
+                        <div class="scenario" id="688722159_1682828548">
                             <a id=""></a>
                             <h2>Specification</h2>
                             <pre class="highlight specification">
 Given salume supplier app is up and running
+
 When a client requests status page
-Then the status page has http status code 200
+
+Then the status page has http status code OK
+Then the applicantion name and version is &quot;Salume Supplier DEV&quot;
 Then the status of the app is &quot;OK&quot;
-Then the app version in the status page is the implementation version in the manifest it may not work when running directly using an IDE.</pre>
+Then the app version in the status page is the implementation version in the manifest
+Then the content type is TEXT_PLAIN_CHARSET_UTF8</pre>
                             <h3 class="logKey">Test results:</h3>
                                     <pre class='highlight results test-passed'>
 Test passed</pre>
@@ -353,8 +357,8 @@ Test passed</pre>
                                         <h3 class="logKey" logkey="Status_Page_Request_from_client_to_Supplier">Status Page Request from client to Supplier</h3>
                                         <div class="logValue highlight String" >http://localhost:8080/salume/supplier/status</div>
                                                                             <h3 class="logKey" logkey="Status_Page_Response_from_Supplier_to_client">Status Page Response from Supplier to client</h3>
-                                        <div class="logValue highlight String" >Salume Supplier is: OK
-Version: 0.1.3</div>
+                                        <div class="logValue highlight String" >Salume Supplier DEV is: OK
+Version: 0.1.4</div>
                                                                             <h3 class="logKey" logkey="Sequence_Diagram">Sequence Diagram</h3>
                                         <div class="logValue highlight SvgWrapper" ><div class='nohighlight'><?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="154px" style="width:245px;height:154px;" version="1.1" viewBox="0 0 245 154" width="245px">
