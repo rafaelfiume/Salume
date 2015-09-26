@@ -1,5 +1,6 @@
 package com.rafaelfiume.salume.web.controllers;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,10 +17,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @SuppressWarnings("unused")
 public class StatusPageController {
 
+    @Value("${app.name}")
+    private String appName;
+
     @RequestMapping(value = "/status", method = GET, produces = "text/plain")
     public ResponseEntity<String> handle() {
 
-        final String body = new StringBuilder("Salume Supplier is: OK") // TODO Retrieve the app name from properties
+        final String body = new StringBuilder(appName).append(" is: OK")
                 .append(lineSeparator())
                 .append("Version: ").append(appVersion())
                 .toString();
