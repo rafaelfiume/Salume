@@ -32,11 +32,13 @@ public class StatusPageController {
     @RequestMapping(value = "/status", method = GET, produces = "text/plain")
     public ResponseEntity<String> handle() {
 
-        final String body = new StringBuilder(appName).append(" is: OK")
+        final String dbStatus = databaseProbe.connectionStatus();
+
+        final String body = new StringBuilder(appName).append(" is: ").append(dbStatus)
                 .append(lineSeparator())
                 .append("Version: ").append(appVersion())
                 .append(lineSeparator())
-                .append("Database connections is: ").append(databaseProbe.connectionStatus())
+                .append("Database connections is: ").append(dbStatus)
                 .toString();
 
         return new ResponseEntity<>(body, OK);

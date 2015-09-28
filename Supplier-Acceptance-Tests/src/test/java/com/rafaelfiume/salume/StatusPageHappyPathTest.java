@@ -15,19 +15,23 @@ import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
+import com.rafaelfiume.salume.test.support.ShutdownJettyTestExecutionListener;
 import com.rafaelfiume.salume.web.controllers.StatusPageController;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.*;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
@@ -39,12 +43,17 @@ import static org.apache.commons.lang3.StringUtils.trim;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.parseMediaType;
+import static org.springframework.test.context.TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS;
 
 @RunWith(SpecRunner.class)
 @SpringApplicationConfiguration(classes = SupplierApplication.class)
 @WebIntegrationTest("debug=true")
+@TestExecutionListeners(
+        listeners = ShutdownJettyTestExecutionListener.class,
+        mergeMode = MERGE_WITH_DEFAULTS
+)
 @ActiveProfiles("dev")
-public class StatusPageTest extends TestState implements WithCustomResultListeners {
+public class StatusPageHappyPathTest extends TestState implements WithCustomResultListeners {
 
     public static final String STATUS_PAGE_URI = "http://localhost:8080/salume/supplier/status";
 
@@ -61,13 +70,16 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
 
     private ResponseEntity<String> statusPageResponse;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
     @Before
     public void setUp() {
         this.sequenceDiagramGenerator = new SequenceDiagramGenerator();
     }
 
     @Test
-    public void statusPageIsThere() throws Exception {
+    public void appIsOk() throws Exception {
         given(salumeSupplierAppIsUpAndRunning());
 
         when(aClientRequestsStatusPage());
