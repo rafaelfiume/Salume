@@ -1,6 +1,8 @@
 # Salume
 
-A Jetty embedded web application
+Check the application spec [here](http://rafaelfiume.github.io/Salume/).
+
+You can access the [status page](http://frozen-mountain-3180.herokuapp.com/salume/supplier/status/) in production.
 
 ## Running the application locally
 
@@ -10,6 +12,6 @@ First build with:
 
 Then run it with:
 
-    $java $JAVA_OPTS -cp Supplier/target/classes:Supplier/target/dependency/* com.rafaelfiume.salume.SupplierApplication
+    $java -Dprofile=dev $JAVA_OPTS -cp Supplier/target/classes:Supplier/target/dependency/* com.rafaelfiume.salume.SupplierApplication
 
 You can also use the --debug flag to see DEBUG level messages.

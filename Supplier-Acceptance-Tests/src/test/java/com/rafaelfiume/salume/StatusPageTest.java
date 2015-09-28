@@ -21,15 +21,15 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.context.config.DelegatingApplicationContextInitializer;
-import org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
-import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.context.support.StandardServletEnvironment;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.rules.SpringClassRule;
+import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import java.util.jar.Manifest;
 
@@ -41,6 +41,9 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.parseMediaType;
 
 @RunWith(SpecRunner.class)
+@SpringApplicationConfiguration(classes = SupplierApplication.class)
+@WebIntegrationTest("debug=true")
+@ActiveProfiles("dev")
 public class StatusPageTest extends TestState implements WithCustomResultListeners {
 
     public static final String STATUS_PAGE_URI = "http://localhost:8080/salume/supplier/status";
@@ -51,14 +54,16 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
 
     private ResponseEntity<String> statusPageResponse;
 
+    // Check http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#testcontext-junit4-rules
+    @ClassRule
+    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
+
+    @Rule
+    public final SpringMethodRule springMethodRule = new SpringMethodRule();
+
     @Before
     public void setUp() {
         this.sequenceDiagramGenerator = new SequenceDiagramGenerator();
-    }
-
-    @AfterClass
-    public static void stopApps() {
-        // TODO
     }
 
     @Test
@@ -83,7 +88,8 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
         return givens -> {
             givens.add("Supplier Status Page:", STATUS_PAGE_URI);
 
-            SupplierApplication.main(new String[]{"--debug", "--profile=dev"});
+//          App initialized by Spring Boot. Check http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html#boot-features-testing-spring-boot-applications
+//          SupplierApplication.main(new String[]{"--debug", "--profile=dev"});
 
             return givens;
         };
