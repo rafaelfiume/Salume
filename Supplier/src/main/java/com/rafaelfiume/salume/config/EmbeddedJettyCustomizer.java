@@ -1,4 +1,4 @@
-package com.rafaelfiume.salume.spring;
+package com.rafaelfiume.salume.config;
 
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;

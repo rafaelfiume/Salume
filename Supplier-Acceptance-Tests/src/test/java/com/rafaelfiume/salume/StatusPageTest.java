@@ -50,16 +50,16 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
 
     public static final MediaType TEXT_PLAIN_CHARSET_UTF8 = parseMediaType("text/plain;charset=utf-8");
 
-    private SequenceDiagramGenerator sequenceDiagramGenerator;
-
-    private ResponseEntity<String> statusPageResponse;
-
     // Check http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#testcontext-junit4-rules
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
 
     @Rule
     public final SpringMethodRule springMethodRule = new SpringMethodRule();
+
+    private SequenceDiagramGenerator sequenceDiagramGenerator;
+
+    private ResponseEntity<String> statusPageResponse;
 
     @Before
     public void setUp() {
@@ -72,11 +72,12 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
 
         when(aClientRequestsStatusPage());
 
+        then(theContentType(), is(TEXT_PLAIN_CHARSET_UTF8));
         then(theStatusPage(), hasHttpStatusCode(OK));
         then(theApplicantionNameAndVersion(), is("Salume Supplier DEV"));
         then(theStatusOfTheApp(), is("OK"));
         then(theAppVersionInTheStatusPage(), is(theImplementationVersionInTheManifest()));
-        then(theContentType(), is(TEXT_PLAIN_CHARSET_UTF8));
+        then(theDatabaseStatus(), is("OK"));
     }
 
     private String theImplementationVersionInTheManifest() {
@@ -131,6 +132,13 @@ public class StatusPageTest extends TestState implements WithCustomResultListene
 
     private StateExtractor<String> theAppVersionInTheStatusPage() {
         return inputAndOutputs -> this.statusPageResponse.getBody().split(lineSeparator())[1];
+    }
+
+    private StateExtractor<String> theDatabaseStatus() {
+        return inputAndOutputs -> {
+            String thirdLine = this.statusPageResponse.getBody().split(lineSeparator())[2];
+            return trim(thirdLine.split("is:")[1]);
+        };
     }
 
     private StateExtractor<MediaType> theContentType() {

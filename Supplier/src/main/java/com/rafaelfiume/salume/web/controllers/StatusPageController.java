@@ -1,5 +1,7 @@
 package com.rafaelfiume.salume.web.controllers;
 
+import com.rafaelfiume.salume.integration.DatabaseProbe;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,12 +22,21 @@ public class StatusPageController {
     @Value("${app.name}")
     private String appName;
 
+    private final DatabaseProbe databaseProbe;
+
+    @Autowired
+    public StatusPageController(DatabaseProbe databaseProbe) {
+        this.databaseProbe = databaseProbe;
+    }
+
     @RequestMapping(value = "/status", method = GET, produces = "text/plain")
     public ResponseEntity<String> handle() {
 
         final String body = new StringBuilder(appName).append(" is: OK")
                 .append(lineSeparator())
                 .append("Version: ").append(appVersion())
+                .append(lineSeparator())
+                .append("Database connections is: ").append(databaseProbe.connectionStatus())
                 .toString();
 
         return new ResponseEntity<>(body, OK);
