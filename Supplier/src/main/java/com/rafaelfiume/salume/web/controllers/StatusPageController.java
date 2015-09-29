@@ -19,13 +19,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @SuppressWarnings("unused")
 public class StatusPageController {
 
-    @Value("${app.name}")
-    private String appName;
+    private final String appName;
 
     private final DatabaseProbe databaseProbe;
 
     @Autowired
-    public StatusPageController(DatabaseProbe databaseProbe) {
+    public StatusPageController(@Value("${app.name}") String appName, DatabaseProbe databaseProbe) {
+        this.appName = appName;
         this.databaseProbe = databaseProbe;
     }
 

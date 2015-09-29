@@ -1,6 +1,11 @@
 spring:
   profiles:
     active: ${profile}
+
 server:
   contextPath: /salume/supplier
   port: ${PORT}
+
+probe:
+  database:
+    query: SELECT;

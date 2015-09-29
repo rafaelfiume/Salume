@@ -1,2 +1,8 @@
 app:
-    name: Salume Supplier DEV
+  name: Salume Supplier DEV
+
+probe:
+  db:
+    query: SELECT * FROM DUAL;
+
+

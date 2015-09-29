@@ -10,8 +10,8 @@ import javax.sql.DataSource;
 import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
 
 // TODO RF 28/09/15 Create an embedded profile so running in the dev mode will also be possible using PostgreSQL for instance
-@Profile("dev")
 @Configuration
+@Profile("dev")
 public class EmbeddedDataSourceConfig {
 
     @Bean
