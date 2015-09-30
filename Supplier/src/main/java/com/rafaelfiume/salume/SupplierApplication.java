@@ -11,4 +11,5 @@ public class SupplierApplication {
         app.setShowBanner(false);
         app.run(args);
     }
+
 }

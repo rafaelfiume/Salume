@@ -1,4 +1,4 @@
-package com.rafaelfiume.salume.test.config;
+package com.rafaelfiume.salume.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

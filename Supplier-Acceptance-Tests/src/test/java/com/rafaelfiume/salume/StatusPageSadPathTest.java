@@ -15,8 +15,8 @@ import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
-import com.rafaelfiume.salume.test.config.MisconfiguredDataSourceConfig;
-import com.rafaelfiume.salume.test.support.ShutdownJettyTestExecutionListener;
+import com.rafaelfiume.salume.config.MisconfiguredDataSourceConfig;
+import com.rafaelfiume.salume.config.ShutdownJettyTestExecutionListener;
 import com.rafaelfiume.salume.web.controllers.StatusPageController;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -119,7 +119,7 @@ public class StatusPageSadPathTest extends TestState implements WithCustomResult
             this.statusPageResponse = new TestRestTemplate().getForEntity(STATUS_PAGE_URI, String.class);
 
             // this is what makes the sequence diagram magic happens
-            capturedInputAndOutputs.add("Status Page Request from client to Supplier", STATUS_PAGE_URI);
+            capturedInputAndOutputs.add("Status Page request from client to Supplier", STATUS_PAGE_URI);
 
             return capturedInputAndOutputs;
         };
@@ -128,7 +128,7 @@ public class StatusPageSadPathTest extends TestState implements WithCustomResult
     private StateExtractor<HttpStatus> theStatusPage() {
         return inputAndOutputs -> {
             // this is what makes the sequence diagram magic happens
-            capturedInputAndOutputs.add("Status Page Response from Supplier to client", statusPageResponse.getBody());
+            capturedInputAndOutputs.add("Status Page response from Supplier to client", statusPageResponse.getBody());
 
             return this.statusPageResponse.getStatusCode();
         };
