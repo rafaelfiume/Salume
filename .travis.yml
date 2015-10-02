@@ -3,14 +3,8 @@ language: java
 jdk: oraclejdk8
 
 after_success:
-- if [ "$TRAVIS_BRANCH" == "master" ]; then
-    chmod 755 ./update-gh-pages.sh
-    ./update-gh-pages.sh
-  fi
-- if [ "$TRAVIS_BRANCH" == "staging" ]; then
-    chmod 755 ./trigger-rainbow.sh
-    ./trigger-rainbow.sh
-  fi
+- if [ "$TRAVIS_BRANCH" == "master" ]; then chmod 755 ./update-gh-pages.sh; ./update-gh-pages.sh; fi
+- if [ "$TRAVIS_BRANCH" == "staging" ]; then chmod 755 ./trigger-rainbow.sh; ./trigger-rainbow.sh; fi
 
 env:
   global:
