@@ -1,13 +1,16 @@
 language: java
 
-jdk:
-  - oraclejdk8
+jdk: oraclejdk8
 
-# Update project documentation page only when changing production
-before_install:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then chmod 755 ./update-gh-pages.sh; fi
 after_success:
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then ./update-gh-pages.sh; fi
+- if [ "$TRAVIS_BRANCH" == "master" ]; then
+    chmod 755 ./update-gh-pages.sh
+    ./update-gh-pages.sh
+  fi
+- if [ "$TRAVIS_BRANCH" == "staging" ]; then
+    chmod 755 ./trigger-rainbow.sh
+    ./trigger-rainbow.sh
+  fi
 
 env:
   global:
@@ -20,3 +23,6 @@ deploy:
   app:
     master: frozen-mountain-3180
     staging: sheltered-river-1312
+
+dd:
+  secure: pO2ISNqHJ6HO3f753zcHYvczs6KUwJY7iTSZrXtKtqW9ner6dCjeyE8qsGXLy065gou9aHE6/kxcVe1GIrwbnOWzkTL+F90nKmLjZ2K0t8ur+3+Lo/9GkZ5/rYXrzd6vb4aKZFsdzAXo8cW9kUE9Gi25ZsgYI1I0QeIB89NH74lEk0g72kdsNIyPRduesh37XZ4DEBDKHYzj2EAHkyK69m2iGRcGPmDRj5B/fbHYQCBgrE+VgKDpUyaGzCDYgxLBTJebJ0i/kzXeyeaEOfR3Xe7DHe5vfOVgB3XTqejYVJl9DVGAlMdQ30OMJ0s0+JCVH602Tc7BWpQg5bRvVV3ekviXxTON60SPD6McT6ykalfZVPszNlYs+ls3pPoRmPC6c9a3T4lw5LX4dZNzIsPGisBQXYkCB+WU9llWoz7FHHewgyOCsvcs9FFpGA0YBTZGx2ij6EDR1mcwjgD9C/Cej+y6u2QuHoQam0LJQnI9JRGy7HaiTvUaHlV21016ofHFdDpXTkEhqazClUpGHa6MnNlVk7UFbNjhU3+bqsIBUJU7nQr8szlNNWpUx7IPDdczlrvtbBa5DZe0ZjMvXU98WLxKnWqIbnjhSy+KwgXIN/pq1v6ikqmFZGrULUvLrfdU8u9v9H9MeF+bpR6nAKTldieyKKOxoOk3sq2jU0q/yus=
