@@ -1,26 +1,15 @@
 package com.rafaelfiume.salume;
 
-import com.googlecode.totallylazy.Sequence;
-import com.googlecode.yatspec.junit.SpecResultListener;
 import com.googlecode.yatspec.junit.SpecRunner;
-import com.googlecode.yatspec.junit.WithCustomResultListeners;
-import com.googlecode.yatspec.plugin.sequencediagram.ByNamingConventionMessageProducer;
-import com.googlecode.yatspec.plugin.sequencediagram.SequenceDiagramGenerator;
-import com.googlecode.yatspec.plugin.sequencediagram.SequenceDiagramMessage;
-import com.googlecode.yatspec.plugin.sequencediagram.SvgWrapper;
-import com.googlecode.yatspec.rendering.html.DontHighlightRenderer;
-import com.googlecode.yatspec.rendering.html.HtmlResultRenderer;
-import com.googlecode.yatspec.rendering.html.index.HtmlIndexRenderer;
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
-import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import com.rafaelfiume.salume.config.ShutdownJettyTestExecutionListener;
 import com.rafaelfiume.salume.web.controllers.StatusPageController;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.*;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
@@ -30,12 +19,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.junit4.rules.SpringClassRule;
-import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import java.util.jar.Manifest;
 
-import static com.googlecode.totallylazy.Sequences.sequence;
 import static java.lang.System.lineSeparator;
 import static org.apache.commons.lang3.StringUtils.trim;
 import static org.hamcrest.Matchers.is;
@@ -51,27 +37,13 @@ import static org.springframework.test.context.TestExecutionListeners.MergeMode.
         mergeMode = MERGE_WITH_DEFAULTS
 )
 @ActiveProfiles("dev")
-public class StatusPageHappyPathTest extends TestState implements WithCustomResultListeners {
+public class StatusPageHappyPathTest extends AbstractSequenceDiagramTestState {
 
-    public static final String STATUS_PAGE_URI = "http://localhost:8080/salume/supplier/status";
+    private static final String STATUS_PAGE_URI = "http://localhost:8080/salume/supplier/status";
 
-    public static final MediaType TEXT_PLAIN_CHARSET_UTF8 = parseMediaType("text/plain;charset=utf-8");
-
-    // Check http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#testcontext-junit4-rules
-    @ClassRule
-    public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
-
-    @Rule
-    public final SpringMethodRule springMethodRule = new SpringMethodRule();
-
-    private SequenceDiagramGenerator sequenceDiagramGenerator;
+    private static final MediaType TEXT_PLAIN_CHARSET_UTF8 = parseMediaType("text/plain;charset=utf-8");
 
     private ResponseEntity<String> statusPageResponse;
-
-    @Before
-    public void setUp() {
-        this.sequenceDiagramGenerator = new SequenceDiagramGenerator();
-    }
 
     @Test
     public void appIsOk() throws Exception {
@@ -164,24 +136,6 @@ public class StatusPageHappyPathTest extends TestState implements WithCustomResu
                 description.appendValue(expected);
             }
         };
-    }
-
-    //////////////////// Test Infrastructure Stuff //////////////
-
-    @After
-    public void generateSequenceDiagram() {
-        Sequence<SequenceDiagramMessage> messages = sequence(new ByNamingConventionMessageProducer().messages(capturedInputAndOutputs));
-        capturedInputAndOutputs.add("Sequence Diagram", sequenceDiagramGenerator.generateSequenceDiagram(messages));
-    }
-
-    @Override
-    public Iterable<SpecResultListener> getResultListeners() throws Exception {
-        return sequence(
-                new HtmlResultRenderer().
-                        withCustomHeaderContent(SequenceDiagramGenerator.getHeaderContentForModalWindows()).
-                        withCustomRenderer(SvgWrapper.class, new DontHighlightRenderer()),
-                new HtmlIndexRenderer()).
-                safeCast(SpecResultListener.class);
     }
 
 }
