@@ -5,8 +5,3 @@ server:
   contextPath: /salume/supplier
   port: 8081
 
-probe:
-  db:
-    query: SELECT * FROM DUAL;
-
-

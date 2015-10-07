@@ -10,10 +10,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Configuration
-@Profile({
-        "staging",
-        "prod"
-})
 public class DataSourceConfig {
 
     @Bean
