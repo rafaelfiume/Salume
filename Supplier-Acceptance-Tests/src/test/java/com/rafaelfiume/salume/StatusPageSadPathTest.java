@@ -30,7 +30,7 @@ public class StatusPageSadPathTest extends AbstractSequenceDiagramTestState {
 
     private static final MediaType TEXT_PLAIN_CHARSET_UTF8 = parseMediaType("text/plain;charset=utf-8");
 
-    private ResponseEntity<String> statusPageResponse;
+    private ResponseEntity<String> response;
 
     @Test
     public void databaseConnectionFailure() throws Exception {
@@ -74,7 +74,7 @@ public class StatusPageSadPathTest extends AbstractSequenceDiagramTestState {
 
     private ActionUnderTest aClientRequestsStatusPage() {
         return (givens, capturedInputAndOutputs) -> {
-            this.statusPageResponse = new TestRestTemplate().getForEntity(STATUS_PAGE_URI, String.class);
+            this.response = new TestRestTemplate().getForEntity(STATUS_PAGE_URI, String.class);
 
             // this is what makes the sequence diagram magic happens
             capturedInputAndOutputs.add("Status Page request from client to Supplier", STATUS_PAGE_URI);
@@ -86,39 +86,39 @@ public class StatusPageSadPathTest extends AbstractSequenceDiagramTestState {
     private StateExtractor<HttpStatus> theStatusPage() {
         return inputAndOutputs -> {
             // this is what makes the sequence diagram magic happens
-            capturedInputAndOutputs.add("Status Page response from Supplier to client", statusPageResponse.getBody());
+            capturedInputAndOutputs.add("Status Page response from Supplier to client", response.getBody());
 
-            return this.statusPageResponse.getStatusCode();
+            return this.response.getStatusCode();
         };
     }
 
     private StateExtractor<String> theApplicantionNameAndVersion() {
         return inputAndOutputs -> {
-            String firstLine = this.statusPageResponse.getBody().split(lineSeparator())[0];
+            String firstLine = this.response.getBody().split(lineSeparator())[0];
             return trim(firstLine.split("is:")[0]);
         };
     }
 
     private StateExtractor<String> theStatusOfTheApp() {
         return inputAndOutputs -> {
-            String firstLine = this.statusPageResponse.getBody().split(lineSeparator())[0];
+            String firstLine = this.response.getBody().split(lineSeparator())[0];
             return trim(firstLine.split("is:")[1]);
         };
     }
 
     private StateExtractor<String> theAppVersionInTheStatusPage() {
-        return inputAndOutputs -> this.statusPageResponse.getBody().split(lineSeparator())[1];
+        return inputAndOutputs -> this.response.getBody().split(lineSeparator())[1];
     }
 
     private StateExtractor<String> theDatabaseStatus() {
         return inputAndOutputs -> {
-            String thirdLine = this.statusPageResponse.getBody().split(lineSeparator())[2];
+            String thirdLine = this.response.getBody().split(lineSeparator())[2];
             return trim(thirdLine.split("is:")[1]);
         };
     }
 
     private StateExtractor<MediaType> theContentType() {
-        return inputAndOutputs -> statusPageResponse.getHeaders().getContentType();
+        return inputAndOutputs -> response.getHeaders().getContentType();
     }
 
     private Matcher<HttpStatus> hasHttpStatusCode(HttpStatus expected) {

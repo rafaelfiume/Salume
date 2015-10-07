@@ -30,7 +30,7 @@ import static org.springframework.test.context.TestExecutionListeners.MergeMode.
 
 @RunWith(SpecRunner.class)
 @SpringApplicationConfiguration(classes = SupplierApplication.class)
-@WebIntegrationTest("debug=true")
+@WebIntegrationTest(/*"debug=true"*/)
 @TestExecutionListeners(
         listeners = ShutdownJettyTestExecutionListener.class,
         mergeMode = MERGE_WITH_DEFAULTS
