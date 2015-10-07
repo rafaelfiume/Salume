@@ -26,7 +26,7 @@ import static org.springframework.http.MediaType.parseMediaType;
 @SpringApplicationConfiguration(classes = { SupplierApplication.class, MisconfiguredDataSourceConfig.class})
 public class StatusPageSadPathTest extends AbstractSequenceDiagramTestState {
 
-    private static final String STATUS_PAGE_URI = "http://localhost:8080/salume/supplier/status";
+    public static final String STATUS_PAGE_URI = "http://localhost:8081/salume/supplier/status";
 
     private static final MediaType TEXT_PLAIN_CHARSET_UTF8 = parseMediaType("text/plain;charset=utf-8");
 
