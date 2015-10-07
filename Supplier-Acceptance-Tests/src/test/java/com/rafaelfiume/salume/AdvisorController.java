@@ -12,7 +12,7 @@ public class AdvisorController {
     @RequestMapping(value = "/advise/for/{profile}", method = GET, produces = "application/json")
     public String handle(@PathVariable String profile) {
 
-        return "cheapest";
+        return "cheap";
     }
 
 }
