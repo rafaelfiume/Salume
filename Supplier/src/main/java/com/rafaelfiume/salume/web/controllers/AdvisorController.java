@@ -1,4 +1,4 @@
-package com.rafaelfiume.salume;
+package com.rafaelfiume.salume.web.controllers;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

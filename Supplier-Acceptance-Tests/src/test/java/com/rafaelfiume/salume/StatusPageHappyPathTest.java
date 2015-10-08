@@ -1,24 +1,18 @@
 package com.rafaelfiume.salume;
 
-import com.googlecode.yatspec.junit.SpecRunner;
+import com.googlecode.yatspec.junit.Notes;
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
-import com.rafaelfiume.salume.config.ShutdownJettyTestExecutionListener;
 import com.rafaelfiume.salume.web.controllers.StatusPageController;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
-import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestExecutionListeners;
 
 import java.util.jar.Manifest;
 
@@ -27,16 +21,28 @@ import static org.apache.commons.lang3.StringUtils.trim;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.parseMediaType;
-import static org.springframework.test.context.TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS;
 
-@RunWith(SpecRunner.class)
-@SpringApplicationConfiguration(classes = SupplierApplication.class)
-@WebIntegrationTest("debug=true")
-@TestExecutionListeners(
-        listeners = ShutdownJettyTestExecutionListener.class,
-        mergeMode = MERGE_WITH_DEFAULTS
+@Notes("<h3>What Is an Acceptance Test (not a stupid question), And How Is This Supposed to Work?</h3>" +
+        "" +
+        "Before implementing a feature, we write a test that will both:\n" +
+        "a) describe the feature being implemented in an human readable and understandable way, which will help close the gaps between business and developers, and\n" +
+        "b) work as a regression test suit.\n\n" +
+        "" +
+        "We start writing a business focused happy path test, from the input to the output.\n" +
+        "At first, we don't mind if the code compile, and write a meaningful business point-of-view description of what the app should do.\n\n" +
+        "" +
+        "Then we do the necessary job to see the test failing, and assure that the failing messages are meaningful.\n" +
+        "(Very helpful since it will help us catch problems quickly as they happen in the future.)\n\n" +
+        "" +
+        "The test will keep failing till the feature it describes is implemented, when it will be ready to be deployed into the staging environment(s).\n" +
+        "If business is happy and the new feature is bug free, it's ready to be deployed into production (there may be additional steps depending on the work environment).\n" +
+        "" +
+        "<h3>Walking Skeleton</h3>" +
+        "Besides being the acceptance test for the status page, this test was also part of a walking skeleton for this app (more details about what that means <a href=\"https://rafaelfiume.wordpress.com/2015/09/30/iteration-0/\" target=\"blank\">here</a>).\n\n\"" +
+        "" +
+        "The more experience I have, the more I focus on the way we work instead of the technologies we use.\n" +
+        "I recommend reading the excellent <a href=\"http://www.growing-object-oriented-software.com\" target=\"blank\">Growing Object-Oriented Software Guided by Tests</a>."
 )
-@ActiveProfiles("dev")
 public class StatusPageHappyPathTest extends AbstractSequenceDiagramTestState {
 
     public static final String STATUS_PAGE_URI = "http://localhost:8081/salume/supplier/status";
