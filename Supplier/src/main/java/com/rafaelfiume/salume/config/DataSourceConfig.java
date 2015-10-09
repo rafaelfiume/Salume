@@ -2,6 +2,7 @@ package com.rafaelfiume.salume.config;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,7 @@ import javax.sql.DataSource;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static java.lang.System.getenv;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 
 @Configuration
@@ -19,9 +21,13 @@ public class DataSourceConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataSourceConfig.class);
 
+    private static final String DATABASE_URL = "DATABASE_URL";
+
     @Bean
     public DataSource dataSource() throws URISyntaxException {
-        final URI dbUri = new URI(System.getenv("DATABASE_URL"));
+        Validate.notNull(getenv(DATABASE_URL), "missing %s environment variable", DATABASE_URL);
+
+        final URI dbUri = new URI(getenv(DATABASE_URL));
 
         final StringBuilder dbUriBuilder = new StringBuilder("jdbc:postgresql://")
                 .append(dbUri.getHost())
