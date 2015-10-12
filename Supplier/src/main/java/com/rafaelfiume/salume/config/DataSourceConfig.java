@@ -1,13 +1,11 @@
 package com.rafaelfiume.salume.config;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import javax.sql.DataSource;
 import java.net.URI;
@@ -22,6 +20,8 @@ public class DataSourceConfig {
     private static final Logger LOG = LoggerFactory.getLogger(DataSourceConfig.class);
 
     private static final String DATABASE_URL = "DATABASE_URL";
+
+    // TODO RF 10/10/2015 Replace Commons Dbcp by a more robust one (HikariCP? Tomcat DataSource (tomcat-jdbc)?)
 
     @Bean
     public DataSource dataSource() throws URISyntaxException {

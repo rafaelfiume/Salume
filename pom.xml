@@ -11,8 +11,9 @@
 
     <modules>
         <module>Supplier</module>
-        <module>Supplier-Acceptance-Tests</module>
         <module>Db-Integrator</module>
+        <module>Salume-Db</module>
+        <module>Supplier-Acceptance-Tests</module>
     </modules>
 
     <properties>
@@ -20,6 +21,7 @@
 
         <java.version>1.8</java.version>
         <jetty.version>9.3.3.v20150827</jetty.version>
+        <postgresql.version>9.4-1203-jdbc42</postgresql.version>
         <spring.boot.version>1.2.6.RELEASE</spring.boot.version>
         <spring.version>4.2.1.RELEASE</spring.version>
         <sl4j.version>1.7.12</sl4j.version>
@@ -69,7 +71,7 @@
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>9.4-1203-jdbc42</version>
+                <version>${postgresql.version}</version>
                 <scope>runtime</scope>
             </dependency>
 

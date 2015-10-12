@@ -70,25 +70,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-       <!-- Consider to have a module to specify the order of execution of Db-Integrator -->
-
-        <!-- Only updates the database if everything is correct -->
-        <plugins>
-            <plugin>
-                <groupId>com.rafaelfiume</groupId>
-                <artifactId>Db-Integrator</artifactId>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <inherited>true</inherited>
-                        <goals>
-                            <goal>updatedb</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>

@@ -23,6 +23,52 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+        <!-- Logging : binding from SLF4J to Log4J -->
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+
+        <!-- Database -->
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-dbcp2</artifactId>
+        </dependency>
+
+        <!-- Spring -->
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+
+        <!-- Maven stuff -->
+
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
@@ -38,13 +84,6 @@
             <groupId>org.codehaus.plexus</groupId>
             <artifactId>plexus-utils</artifactId>
             <version>3.0.8</version>
-        </dependency>
-
-        <!-- Test dependency -->
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
 
@@ -111,7 +150,6 @@
                         </executions>
                     </plugin>
                 </plugins>
-
             </build>
         </profile>
     </profiles>
