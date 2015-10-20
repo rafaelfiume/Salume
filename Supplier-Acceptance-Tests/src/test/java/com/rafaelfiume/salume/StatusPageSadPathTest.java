@@ -11,9 +11,11 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.TestRestTemplate;
+import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.jar.Manifest;
 
@@ -23,10 +25,13 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.parseMediaType;
 
-@SpringApplicationConfiguration(classes = { SupplierApplication.class, MisconfiguredDataSourceConfig.class})
+
+@SpringApplicationConfiguration(classes = {SupplierApplication.class, MisconfiguredDataSourceConfig.class})
+@WebIntegrationTest(value = "server.port=8282") // It requires another container to run since it's using different configs
+@DirtiesContext
 public class StatusPageSadPathTest extends AbstractSequenceDiagramTestState {
 
-    public static final String STATUS_PAGE_URI = "http://localhost:8081/salume/supplier/status";
+    public static final String STATUS_PAGE_URI = "http://localhost:8282/salume/supplier/status";
 
     private static final MediaType TEXT_PLAIN_CHARSET_UTF8 = parseMediaType("text/plain;charset=utf-8");
 

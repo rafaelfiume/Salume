@@ -22,19 +22,20 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.parseMediaType;
 
-@Notes("<h3>What Is an Acceptance Test (not a stupid question), And How Is This Supposed to Work?</h3>" +
+@Notes("<h3>What Is an Acceptance Test (not a stupid question)?</h3>" +
         "" +
         "Before implementing a feature, we write a test that will both:\n" +
-        "a) describe the feature being implemented in an human readable and understandable way, which will help close the gaps between business and developers, and\n" +
+        "a) describe the feature being implemented in an human readable and understandable way to help close the gaps between business and developers, and\n" +
         "b) work as a regression test suit.\n\n" +
         "" +
-        "We start writing a business focused happy path test, from the input to the output.\n" +
-        "At first, we don't mind if the code compile, and write a meaningful business point-of-view description of what the app should do.\n\n" +
+        "This is and end-to-end test that shouldn't need to change if a database is replaced by another, if a broker is introduced in a messaging layer,\n" +
+        "and so on (even if those changes would probably break the test) because it describes a feature from a high level business point-of-view.\n\n" +
         "" +
-        "Then we do the necessary job to see the test failing, and assure that the failing messages are meaningful.\n" +
-        "(Very helpful since it will help us catch problems quickly as they happen in the future.)\n\n" +
+        "At first, we don't mind if the code compile, and start writing a consistent business focused happy path test, from the input to the output.\n" +
+        "Then we do the necessary job to see the test failing, and assure that the failing messages are meaningful\n" +
+        "(very helpful since it will help us catch problems quickly as they happen in the future.)\n\n" +
         "" +
-        "The test will keep failing till the feature it describes is implemented, when it will be ready to be deployed into the staging environment(s).\n" +
+        "The test will keep failing till the feature it describes is implemented, when the app will be ready to be deployed into the staging environment(s).\n" +
         "If business is happy and the new feature is bug free, it's ready to be deployed into production (there may be additional steps depending on the work environment).\n" +
         "" +
         "<h3>Walking Skeleton</h3>" +

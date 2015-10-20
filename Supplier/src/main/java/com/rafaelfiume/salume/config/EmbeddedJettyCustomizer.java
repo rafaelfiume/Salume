@@ -10,6 +10,7 @@ public class EmbeddedJettyCustomizer implements EmbeddedServletContainerCustomiz
 
     @Override
     public void customize(ConfigurableEmbeddedServletContainer container) {
+        // Customize Jetty embedded container
     }
 
 }

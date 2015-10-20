@@ -12,28 +12,19 @@ import com.googlecode.yatspec.rendering.html.DontHighlightRenderer;
 import com.googlecode.yatspec.rendering.html.HtmlResultRenderer;
 import com.googlecode.yatspec.rendering.html.index.HtmlIndexRenderer;
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
-import com.rafaelfiume.salume.config.ShutdownJettyTestExecutionListener;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import static com.googlecode.totallylazy.Sequences.sequence;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.springframework.test.context.TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS;
 
 @RunWith(SpecRunner.class)
 @SpringApplicationConfiguration(classes = SupplierApplication.class)
 @WebIntegrationTest(/*"debug=true"*/)
-@TestExecutionListeners(
-        listeners = ShutdownJettyTestExecutionListener.class,
-        mergeMode = MERGE_WITH_DEFAULTS
-)
 @ActiveProfiles("dev")
 public class AbstractSequenceDiagramTestState extends TestState implements WithCustomResultListeners {
 
