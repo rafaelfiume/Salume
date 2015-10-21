@@ -23,6 +23,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.*;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -41,11 +42,12 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
 
     private ResponseEntity<String> response;
 
-    @Notes("Gioseppo select the customer profile when serving his customers")
+    @Notes("Gioseppo select the customer profile when serving his customers.\n\n" +
+            "After showing a previous version of the acceptance test and having some conversation, it was clear that the\n" +
+            "result should be a list of (3) products instead of a single one.")
     @Test
     @Table({
             @Row({"Magic"  , "Cheap Salume"       , "15.55", "49.99", "special"})
-              // TODO Coming soon (wip)
 //            @Row({"Healthy", "Light Salume"       , "29.55", "31.00", "special"}),
 //            @Row({"Expert" , "Traditional Salume" , "41.60", "37.00", "traditional"}),
 //            @Row({"Gourmet", "Premium Salume"     , "73.23", "38.00", "traditional"})
@@ -55,10 +57,11 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
 
         when(requestingBestOfferFor(aCustomerConsidered(profile)));
 
+        then(numberOfAdvisedProducts(), is(3));
         then(adviseCustomerTo(), buy(product, salume()));
-        then(product(), hasPrice(price));
-        then(product(), hasFatPercentage(fatPercentage));
-        then(product(), isSeenAs(traditional));
+        then(firstSuggestedProduct(), hasPrice(price));
+        then(firstSuggestedProduct(), hasFatPercentage(fatPercentage));
+        then(firstSuggestedProduct(), isRegardedAs(traditional));
         then(theContentType(), is(APPLICATION_XML_CHARSET_UTF8));
     }
 
@@ -85,7 +88,18 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
         };
     }
 
-    private StateExtractor<Document> adviseCustomerTo() {
+    private StateExtractor<Integer> numberOfAdvisedProducts() {
+        return inputAndOutputs -> {
+            final Document xml = toDocument(response.getBody());
+
+            // TODO RF 20/10/2015 Extract it to a method in the abstract class
+            capturedInputAndOutputs.add("Salume advice response from Supplier to customer", prettyPrint(xml));
+
+            return ((Double) xpath().evaluate("count(//product)", xml, XPathConstants.NUMBER)).intValue();
+        };
+    }
+
+    private StateExtractor<Node> adviseCustomerTo() {
         return inputAndOutputs -> {
             final Document xml = toDocument(response.getBody());
 
@@ -96,7 +110,7 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
         };
     }
 
-    private StateExtractor<Document> product() {
+    private StateExtractor<Node> firstSuggestedProduct() {
         return inputAndOutputs -> toDocument(response.getBody());
     }
 
@@ -121,19 +135,19 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
     //
 
     private Matcher<Node> buy(String expected, @SuppressWarnings("unused") String salume) {
-        return hasXPath("/product/name[text() = \"" + expected + "\"]");
+        return hasXPath("//product[1]/name[text() = \"" + expected + "\"]");
     }
 
     private Matcher<Node> hasPrice(String expected) {
-        return hasXPath("/product/price[text() = \"" + expected + "\"]");
+        return hasXPath("//product[1]/price[text() = \"" + expected + "\"]");
     }
 
     private Matcher<Node> hasFatPercentage(String expected) {
-        return hasXPath("/product/fat-percentage[text() = \"" + expected + "\"]");
+        return hasXPath("//product[1]/fat-percentage[text() = \"" + expected + "\"]");
     }
 
-    private Matcher<Node> isSeenAs(String expected) {
-        return hasXPath("/product/reputation[text() = \"" + expected + "\"]");
+    private Matcher<Node> isRegardedAs(String expected) {
+        return hasXPath("//product[1]/reputation[text() = \"" + expected + "\"]");
     }
 
     // TODO RF 07/10 I'm already triplicating this method...
@@ -154,7 +168,7 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
     }
 
     //
-    // Others
+    // Xml related
     //
 
     private static Document toDocument(String xml) throws Exception {
@@ -171,15 +185,18 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
         return xmlDoc;
     }
 
-    private static String prettyPrint(Document xml) throws Exception {
+    private static String prettyPrint(Node xml) throws Exception {
         final Transformer transformer = TransformerFactory.newInstance().newTransformer();
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
         final Writer out = new StringWriter();
         transformer.transform(new DOMSource(xml), new StreamResult(out));
-        System.out.println(out.toString());
         return out.toString();
+    }
+
+    private XPath xpath() {
+        return XPathFactory.newInstance().newXPath();
     }
 
 }

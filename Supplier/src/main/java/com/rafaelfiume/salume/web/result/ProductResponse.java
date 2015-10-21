@@ -1,4 +1,4 @@
-package com.rafaelfiume.salume.web.views;
+package com.rafaelfiume.salume.web.result;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -7,7 +7,7 @@ import com.rafaelfiume.salume.domain.Product;
 import static com.rafaelfiume.salume.domain.Product.Reputation.TRADITIONAL;
 
 @JacksonXmlRootElement(localName = "product")
-public class MobileAppProductView {
+public class ProductResponse {
 
     private final long id;
     private final String name;
@@ -15,7 +15,7 @@ public class MobileAppProductView {
     private final String fatPercentage;
     private final String reputation;
 
-    public MobileAppProductView(Product product) {
+    public ProductResponse(Product product) {
         this.id = product.getId();
         this.name = product.getName();
         this.price = product.getPrice();

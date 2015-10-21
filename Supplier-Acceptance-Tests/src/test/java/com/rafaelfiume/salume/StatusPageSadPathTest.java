@@ -25,13 +25,12 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.parseMediaType;
 
-
 @SpringApplicationConfiguration(classes = {SupplierApplication.class, MisconfiguredDataSourceConfig.class})
-@WebIntegrationTest(value = "server.port=8282") // It requires another container to run since it's using different configs
-@DirtiesContext
+@WebIntegrationTest(value = "server.port=8282") // It requires another container to run since it's using different configs (see line above)
+@DirtiesContext // Closes the context and stops the container
 public class StatusPageSadPathTest extends AbstractSequenceDiagramTestState {
 
-    public static final String STATUS_PAGE_URI = "http://localhost:8282/salume/supplier/status";
+    public static final String STATUS_PAGE_URI = "http://localhost:8282/salume/supplier/status"; // using different port
 
     private static final MediaType TEXT_PLAIN_CHARSET_UTF8 = parseMediaType("text/plain;charset=utf-8");
 
