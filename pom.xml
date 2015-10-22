@@ -9,6 +9,8 @@
     <version>DEV-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <url>http://rafaelfiume.com</url>
+
     <modules>
         <module>Supplier</module>
         <module>Db-Integrator</module>

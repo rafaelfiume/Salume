@@ -23,6 +23,12 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+        </dependency>
+
         <!-- Database -->
 
         <dependency>
@@ -91,35 +97,5 @@
             <artifactId>plantuml</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <!-- Consider to have a module to specify the order of execution of Db-Integrator -->
-
-        <!-- Only updates the database if everything is correct -->
-        <plugins>
-            <plugin>
-                <groupId>com.rafaelfiume</groupId>
-                <artifactId>Db-Integrator</artifactId>
-                <version>${project.version}</version>
-                <executions>
-                    <execution>
-                        <phase>verify</phase>
-                        <inherited>true</inherited>
-                        <goals>
-                            <goal>recreatedb</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
-                        <version>${postgresql.version}</version>
-                        <scope>runtime</scope>
-                    </dependency>
-                </dependencies>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

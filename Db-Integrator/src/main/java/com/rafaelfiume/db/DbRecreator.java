@@ -1,19 +1,18 @@
 package com.rafaelfiume.db;
 
-import com.rafaelfiume.db.config.DataSourceConfig;
-import org.apache.commons.io.FileUtils;
+import com.rafaelfiume.salume.db.SimpleDatabaseSupport;
+import com.rafaelfiume.salume.db.config.DataSourceConfig;
+import com.rafaelfiume.salume.db.support.ScriptsSource;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static org.apache.commons.io.FileUtils.readFileToString;
-import static org.apache.maven.plugins.annotations.LifecyclePhase.VERIFY;
+import static org.apache.maven.plugins.annotations.LifecyclePhase.TEST_COMPILE;
 
 /**
  * This a very simplistic version of a plugin to update the database in dev, staging and prod environments.
@@ -21,43 +20,63 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.VERIFY;
  * <p/>
  * It should change the db according with the scripts it finds in the scripts directory.
  */
-@Mojo(name = "recreatedb", aggregator = true, defaultPhase = VERIFY)
+@Mojo(name = "recreatedb", aggregator = true, defaultPhase = TEST_COMPILE)
 public class DbRecreator extends AbstractMojo {
 
     // TODO RF 12/10/2015 pass this as a maven property e.g. ${db.schema.name}
     private static final String SCHEMA = "salumistore";
 
-    private final SimpleDatabaseSupport dbSupport;
+    private final ScriptsSource scriptsSource;
 
-    @Parameter(property = "sql.scripts.dir", required = true)
-    private File sqlScript;
+    @Parameter(property = "databaseUrl", required = false)
+    private String databaseUrl;
 
-    @Autowired
-    public DbRecreator() throws URISyntaxException {
-        this.dbSupport = new SimpleDatabaseSupport(new DataSourceConfig().dataSource());
+    public DbRecreator() {
+        this.scriptsSource = new ScriptsSource();
     }
 
     public void execute() throws MojoExecutionException {
-        getLog().warn("Recreating db now... ");
+        if (StringUtils.isEmpty(databaseUrl)) {
+            getLog().warn("Skipping db recreation because databaseUrl was not set");
+            return;
+        } else {
+            getLog().warn("Recreating db now...");
+            getLog().warn("Database URL is: " + databaseUrl);
+        }
 
-        getLog().info("First, dropping schema " + SCHEMA);
-        dbSupport.dropDb(SCHEMA);
+        final SimpleDatabaseSupport dbSupport;
+        try {
+            dbSupport = new SimpleDatabaseSupport(new DataSourceConfig().dataSource(databaseUrl));
+        } catch (URISyntaxException e) {
+            getLog().error("failed to load sql scripts from scripts dir");
+            throw new RuntimeException(e);
+        }
 
-        getLog().info("Second, loading statement from " + sqlScript);
+        getLog().info("First, dropping schema " + SCHEMA + "...");
+        try {
+            dbSupport.dropDb(SCHEMA);
+        } catch (Exception e) {
+            getLog().warn("Failed to drop schema " + SCHEMA + ". (Maybe the schema was ever created?) Trying to proceed with db recreation anyway...", e);
+        }
+        getLog().info("Done dropping schema " + SCHEMA + "...");
+
+        getLog().info("Second, loading statements...");
         final String script;
         try {
-            script = getScript();
-        } catch (IOException e) {
+            script = scriptsSource.getScripts();
+        } catch (IOException | URISyntaxException e) {
             getLog().error("failed to load sql scripts from scripts dir");
             throw new RuntimeException(e);
         }
         getLog().info("Script is: " + script);
-        dbSupport.execute(script);
+        try {
+            dbSupport.execute(script);
+        } catch (Exception e) {
+            getLog().warn("Failed to execute statements", e);
+            throw e;
+        }
 
         getLog().warn("Done recreating db :-)");
     }
 
-    public String getScript() throws IOException {
-        return readFileToString(sqlScript);
-    }
 }
