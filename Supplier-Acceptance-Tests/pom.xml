@@ -70,40 +70,47 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <!-- Consider to have a module to specify the order of execution of Db-Integrator -->
+    <profiles>
+        <profile>
+            <id>dbRecreate</id>
+            <build>
+                <plugins>
+                    <!-- Consider to have a module to specify the order of execution of Db-Integrator -->
 
-            <!-- Only updates the database if everything is correct -->
-            <plugin>
-                <groupId>com.rafaelfiume</groupId>
-                <artifactId>Db-Integrator</artifactId>
-                <version>${project.version}</version>
-                <executions>
-                    <execution>
-                        <!-- Recreate remote (staging or production depending on the environment) after a success build -->
-                        <!-- If $DATABASE_RELEASE_URL is not set, the execution will be ignored. -->
-                        <id>recreating-release-db</id>
-                        <phase>test</phase>
-                        <inherited>true</inherited>
-                        <goals>
-                            <goal>recreatedb</goal>
-                        </goals>
-                        <configuration>
-                            <databaseUrl>${env.DATABASE_RELEASE_URL}</databaseUrl>
-                        </configuration>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
-                        <version>${postgresql.version}</version>
-                        <scope>runtime</scope>
-                    </dependency>
-                </dependencies>
-            </plugin>
-        </plugins>
-    </build>
+                    <!-- Only updates the database if everything is correct -->
+                    <plugin>
+                        <groupId>com.rafaelfiume</groupId>
+                        <artifactId>Db-Integrator</artifactId>
+                        <version>${project.version}</version>
+                        <executions>
+                            <execution>
+                                <!-- Recreate remote (staging or production depending on the environment) after a success build -->
+                                <!-- If $DATABASE_RELEASE_URL is not set, the execution will be ignored. -->
+                                <id>recreating-release-db</id>
+                                <phase>test</phase>
+                                <inherited>true</inherited>
+                                <goals>
+                                    <goal>recreatedb</goal>
+                                </goals>
+                                <configuration>
+                                    <databaseUrl>${env.DATABASE_RELEASE_URL}</databaseUrl>
+                                    <!--<currentBranch>${env.TRAVIS_BRANCH}</currentBranch>-->
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.postgresql</groupId>
+                                <artifactId>postgresql</artifactId>
+                                <version>${postgresql.version}</version>
+                                <scope>runtime</scope>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 
 </project>

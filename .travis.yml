@@ -2,15 +2,20 @@ language: java
 
 jdk: oraclejdk8
 
-install: /bin/true
+before_script:
+  - if [ "$TRAVIS_BRANCH" == "staging" ]; then export DATABASE_RELEASE_URL="$DATABASE_STAGING_URL"; fi
 
 script:
-  - mvn clean install
+  - mvn clean install -PdbRecreate
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then chmod 755 ./update-gh-pages.sh; ./update-gh-pages.sh; fi
 after_deploy:
   - if [ "$TRAVIS_BRANCH" == "staging" ]; then chmod 755 ./trigger-rainbow.sh; ./trigger-rainbow.sh; fi
+
+cache:
+  directories:
+  - $HOME/.m2
 
 # The following global varables are encrypted:
 env:
