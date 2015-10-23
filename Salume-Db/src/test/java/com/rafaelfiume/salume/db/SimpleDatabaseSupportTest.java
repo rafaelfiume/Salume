@@ -14,25 +14,34 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 
 @RunWith(SpecRunner.class)
 @ContextConfiguration(classes = DbApplication.class)
 @Transactional
 public class SimpleDatabaseSupportTest extends TestState {
 
-    private String dbStatement;
-
-    private SimpleDatabaseSupport dbSupport;
-
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
 
     @Rule
     public final SpringMethodRule springMethodRule = new SpringMethodRule();
+
+    private String dbStatement;
+
+    private SimpleDatabaseSupport dbSupport;
 
     @Autowired
     public void setSimpleDatabaseSupport(SimpleDatabaseSupport dbSupport) {
@@ -58,6 +67,15 @@ public class SimpleDatabaseSupportTest extends TestState {
         when(executingThatStatement());
 
         then(theTable(withSchema("moviestore"), andTableName("films")), exists());
+    }
+
+    @Test
+    public void cleanTable() throws Exception {
+        given(aCustomerTableWithThreeEntries());
+        then(customerTable(), hasSize(3));
+
+        when(cleaningTheCustomerTable());
+        then(customerTable(), is(empty()));
     }
 
     private GivensBuilder aStatement(final String statement) {
@@ -110,6 +128,40 @@ public class SimpleDatabaseSupportTest extends TestState {
 
     private String andTableName(String name) {
         return name;
+    }
+
+    private GivensBuilder aCustomerTableWithThreeEntries() {
+        return givens -> {
+            dbSupport.execute("CREATE TABLE moviestore.customers (id int CONSTRAINT firstkey PRIMARY KEY, name varchar(40) NOT NULL);");
+            dbSupport.execute("INSERT INTO moviestore.customers VALUES (1, 'Zen Kiwi');");
+            dbSupport.execute("INSERT INTO moviestore.customers VALUES (2, 'Banana Pereira');");
+            dbSupport.execute("INSERT INTO moviestore.customers VALUES (3, 'Watermelown Dias');");
+            return givens;
+        };
+    }
+
+    private ActionUnderTest cleaningTheCustomerTable() {
+        return (givens, capturedInputAndOutputs) -> {
+            dbSupport.cleanTable("moviestore.customers");
+            return capturedInputAndOutputs;
+        };
+    }
+
+    private StateExtractor<List<Customer>> customerTable() {
+        return inputAndOutputs -> dbSupport.query("SELECT * FROM moviestore.customers", new CustomerRowMapper());
+    }
+
+    private static class Customer {
+        private final String name;
+        private Customer(String name) { this.name = name; }
+        public String getName() { return name; }
+    }
+
+    private static class CustomerRowMapper implements RowMapper<Customer> {
+        @Override
+        public Customer mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Customer(rs.getString("name"));
+        }
     }
 
 }

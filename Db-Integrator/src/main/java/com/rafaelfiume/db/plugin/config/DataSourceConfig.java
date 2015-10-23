@@ -1,9 +1,7 @@
-package com.rafaelfiume.salume.db.config;
+package com.rafaelfiume.db.plugin.config;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.lang3.Validate;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
 import java.net.URI;
@@ -12,14 +10,12 @@ import java.net.URISyntaxException;
 import static java.lang.System.getenv;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 
-@Configuration
 public class DataSourceConfig {
 
     private static final String DATABASE_URL = "DATABASE_URL";
 
-    // TODO RF 10/10/2015 Replace Commons Dbcp by a more robust one (HikariCP? Tomcat DataSource (tomcat-jdbc)?)
+    // TODO RF 23/10/2015 Duplicated from Salume-Db
 
-    @Bean
     public DataSource dataSource() throws URISyntaxException {
         return dataSource(getenv(DATABASE_URL));
     }

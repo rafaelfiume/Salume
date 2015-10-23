@@ -81,18 +81,6 @@
                 <version>${project.version}</version>
                 <executions>
                     <execution>
-                        <!-- Recreate local (dev) database before acceptance tests -->
-                        <id>recreating-local-db</id>
-                        <phase>test-compile</phase>
-                        <inherited>true</inherited>
-                        <goals>
-                            <goal>recreatedb</goal>
-                        </goals>
-                        <configuration>
-                            <databaseUrl>${env.DATABASE_URL}</databaseUrl>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <!-- Recreate remote (staging or production depending on the environment) after a success build -->
                         <!-- If $DATABASE_RELEASE_URL is not set, the execution will be ignored. -->
                         <id>recreating-release-db</id>

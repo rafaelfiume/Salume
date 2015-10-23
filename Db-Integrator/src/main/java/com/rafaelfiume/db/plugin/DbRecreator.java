@@ -1,8 +1,8 @@
-package com.rafaelfiume.db;
+package com.rafaelfiume.db.plugin;
 
-import com.rafaelfiume.salume.db.SimpleDatabaseSupport;
-import com.rafaelfiume.salume.db.config.DataSourceConfig;
-import com.rafaelfiume.salume.db.support.ScriptsSource;
+import com.rafaelfiume.db.plugin.config.DataSourceConfig;
+import com.rafaelfiume.db.plugin.support.ScriptsSource;
+import com.rafaelfiume.db.plugin.support.SimpleDatabaseSupport;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;

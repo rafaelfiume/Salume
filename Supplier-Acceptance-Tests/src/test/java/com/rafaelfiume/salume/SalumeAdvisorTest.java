@@ -8,6 +8,7 @@ import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
 import com.rafaelfiume.salume.domain.Product;
 import org.hamcrest.Matcher;
+import org.javamoney.moneta.Money;
 import org.junit.Test;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.MediaType;
@@ -16,6 +17,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
+import javax.money.MonetaryAmount;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -28,7 +30,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import static com.rafaelfiume.salume.domain.Product.Reputation.NOT_TRADITIONAL;
+import static com.rafaelfiume.salume.domain.Product.Reputation.NORMAL;
 import static com.rafaelfiume.salume.domain.Product.Reputation.TRADITIONAL;
 import static org.hamcrest.Matchers.hasXPath;
 import static org.hamcrest.Matchers.is;
@@ -43,14 +45,17 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
     private ResponseEntity<String> response;
 
     @Notes("Gioseppo select the customer profile when serving his customers.\n\n" +
+            "" +
             "After showing a previous version of the acceptance test and having some conversation, it was clear that the\n" +
-            "result should be a list of (3) products instead of a single one.")
+            "result should be a list of (3) products instead of a single one.\n\n" +
+            "" +
+            "Special is another word for \"ordinary non tradition product\".")
     @Test
     @Table({
-            @Row({"Magic"  , "Cheap Salume"       , "15.55", "49.99", "special"})
-//            @Row({"Healthy", "Light Salume"       , "29.55", "31.00", "special"}),
-//            @Row({"Expert" , "Traditional Salume" , "41.60", "37.00", "traditional"}),
-//            @Row({"Gourmet", "Premium Salume"     , "73.23", "38.00", "traditional"})
+            @Row({"Magic"  , "Cheap Salume"       , "EUR 15,55", "49,99", "special"})
+//            @Row({"Healthy", "Light Salume"       , "EUR 29,55", "31,00", "special"}),
+//            @Row({"Expert" , "Traditional Salume" , "EUR 41,60", "37,00", "traditional"}),
+//            @Row({"Gourmet", "Premium Salume"     , "EUR 73,23", "38,00", "traditional"})
     })
     public void adviceSalume(String profile, String product, String price, String fatPercentage, String traditional) throws Exception {
         given(availableProductsAre(cheap(), light(), traditional(), andPremium()));
@@ -115,19 +120,19 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
     }
 
     Product cheap() {
-        return new Product(1L, "Cheap Salume", "15.55", "49.99", NOT_TRADITIONAL);
+        return new Product(1L, "Cheap Salume", moneyOf(15.55), "49,99", NORMAL);
     }
 
     Product light() {
-        return new Product(2L, "Light Salume", "29.55", "31.00", NOT_TRADITIONAL);
+        return new Product(2L, "Light Salume", moneyOf(29.55), "31,00", NORMAL);
     }
 
     Product traditional() {
-        return new Product(3L, "Traditional Salume", "41.60", "37.00", TRADITIONAL);
+        return new Product(3L, "Traditional Salume", moneyOf(41.60), "37,00", TRADITIONAL);
     }
 
     Product andPremium() {
-        return new Product(4L, "Premium Salume", "73.23", "38.00", TRADITIONAL);
+        return new Product(4L, "Premium Salume", moneyOf(73.23), "38,00", TRADITIONAL);
     }
 
     //
@@ -153,6 +158,10 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
     // TODO RF 07/10 I'm already triplicating this method...
     private StateExtractor<MediaType> theContentType() {
         return inputAndOutputs -> response.getHeaders().getContentType();
+    }
+
+    private MonetaryAmount moneyOf(Number money) {
+        return Money.of(money, "EUR");
     }
 
     //

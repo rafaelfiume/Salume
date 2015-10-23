@@ -1,17 +1,19 @@
 package com.rafaelfiume.salume.domain;
 
+import javax.money.MonetaryAmount;
+
 public class Product {
 
-    public enum Reputation { NOT_TRADITIONAL, TRADITIONAL }
+    public enum Reputation { NORMAL, TRADITIONAL }
 
-    private final long id;
+    private final Long id;
     private final String name;
-    private final String price;
+    private final MonetaryAmount price;
     private final String fatPercentage;
     private final Reputation reputation;
 
     // TODO RF 20/10/2015
-    public Product(long id, String name, String price, String fatPercentage, Reputation reputation) {
+    public Product(Long id, String name, MonetaryAmount price, String fatPercentage, Reputation reputation) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -19,7 +21,7 @@ public class Product {
         this.reputation = reputation;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -27,7 +29,7 @@ public class Product {
         return name;
     }
 
-    public String getPrice() {
+    public MonetaryAmount getPrice() {
         return price;
     }
 

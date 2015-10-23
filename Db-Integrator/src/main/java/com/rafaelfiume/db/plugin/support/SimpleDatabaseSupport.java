@@ -1,19 +1,16 @@
-package com.rafaelfiume.salume.db;
+package com.rafaelfiume.db.plugin.support;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.util.List;
 
-@Component
+// TODO RF 23/10/2015 Duplicated from Salume-Db (test remains in Salume-Db only)
 public class SimpleDatabaseSupport {
 
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
     public SimpleDatabaseSupport(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }

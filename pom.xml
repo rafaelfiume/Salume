@@ -13,6 +13,7 @@
 
     <modules>
         <module>Supplier</module>
+        <module>Salume-Domain</module>
         <module>Db-Integrator</module>
         <module>Salume-Db</module>
         <module>Supplier-Acceptance-Tests</module>
@@ -43,6 +44,12 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>3.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.javamoney</groupId>
+                <artifactId>moneta</artifactId>
+                <version>1.0</version>
             </dependency>
 
             <dependency>

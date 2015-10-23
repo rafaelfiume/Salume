@@ -21,14 +21,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.rafaelfiume</groupId>
-            <artifactId>Salume-Db</artifactId>
-            <version>DEV-SNAPSHOT</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
         </dependency>
 
         <!-- Logging : binding from SLF4J to Log4J -->
@@ -53,21 +53,6 @@
             <artifactId>commons-dbcp2</artifactId>
         </dependency>
 
-        <!-- Spring -->
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-        </dependency>
-
         <!-- Maven stuff -->
 
         <dependency>
@@ -86,6 +71,31 @@
             <artifactId>plexus-utils</artifactId>
             <version>3.0.8</version>
         </dependency>
+
+        <!-- Spring -->
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+
+        <!-- Spring test -->
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+
+        <!-- Test -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -93,7 +103,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.2</version>
+                <version>3.4</version>
                 <configuration>
                     <goalPrefix>Db-Integrator</goalPrefix>
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>

@@ -1,4 +1,4 @@
-package com.rafaelfiume.salume.db.support;
+package com.rafaelfiume.db.plugin.support;
 
 import org.apache.commons.io.IOUtils;
 
