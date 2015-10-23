@@ -41,7 +41,7 @@ public class DbRecreator extends AbstractMojo {
             return;
         } else {
             getLog().warn("Recreating db now...");
-            getLog().warn("Database URL is: " + databaseUrl);
+            getLog().warn("Database URL is: ############"); // Can't let the URL to appear in the logs.
         }
 
         final SimpleDatabaseSupport dbSupport;

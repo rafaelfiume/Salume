@@ -84,7 +84,7 @@
                         <!-- Recreate remote (staging or production depending on the environment) after a success build -->
                         <!-- If $DATABASE_RELEASE_URL is not set, the execution will be ignored. -->
                         <id>recreating-release-db</id>
-                        <phase>install</phase>
+                        <phase>test</phase>
                         <inherited>true</inherited>
                         <goals>
                             <goal>recreatedb</goal>
