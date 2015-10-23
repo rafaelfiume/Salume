@@ -2,10 +2,12 @@ language: java
 
 jdk: oraclejdk8
 
+before_install:
+  - chmod 755 ./config-db-release-url.sh; ./config-db-release-url.sh;
 after_success:
-- if [ "$TRAVIS_BRANCH" == "master" ]; then chmod 755 ./update-gh-pages.sh; ./update-gh-pages.sh; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then chmod 755 ./update-gh-pages.sh; ./update-gh-pages.sh; fi
 after_deploy:
-- if [ "$TRAVIS_BRANCH" == "staging" ]; then chmod 755 ./trigger-rainbow.sh; ./trigger-rainbow.sh; fi
+  - if [ "$TRAVIS_BRANCH" == "staging" ]; then chmod 755 ./trigger-rainbow.sh; ./trigger-rainbow.sh; fi
 
 # The following global varables are encrypted:
 env:
@@ -16,6 +18,8 @@ env:
   - secure: jdRYR3VUlWR8yxC+BQQsrL3E5myGnL4CxTuBEz26taAhcdJGvQoFvutb+LCH0r0WNZ9Ca0DCc32+ocCyTPuArHAanCiNZl8C5MoeC2pMJZbwQeHIAUy+kJJ7TScardKh/FPMRL01O2PxGAh3gm9zCeUglfaQdZfCLU5qDxQxU2iQ49PexWP3sNAUBhN+U+03WWUn4OQorIZQWzGbUv1UYBXguzv6EbXR+iIVZ9Bq6JWo0P0/u+Fp87p4RxhohBrpDEuDhkBb9s77KLO3A7FB/5Cq6du2WlqUSI+ivS9oU9jCqZjZgQPjdQwEP2d+325ESLOMRl6X6lyTeQRZfpkf65m7FEG1g7iIG/v344I01DqF9hgT6hhNSbklS535IITySMeKU/RR6otanSdXWUNK1IowNLkg++gj/8XW3z8JwfTpOqP2WY7CYezomYxLz1C2LkEevH6SMY23vEJRnR3fTmKJWJcujWcq6ZAEO2ja8Lg4VAwKBPijQ3t8QBoywgnmJte9lS5xw881dfkCRuBX8q16dsPBV9I0xyRtREzr0vtTPTPoXJRCaXTRVwaAnpq9L0idNfVpsbitvGmB17NnO0pWzUpuk5jpVMdDGMvXXa+ixbFZr1ivnIq5y0YBaIwKO9jsPAm6aREUpL5ZsOooekTpiXVbs2he18voiqqIAh8=
   # DATABASE_URL
   - secure: bFgK63DoYGifwyv9IK4xAHYx8qkmcvnOU/DpmdhYufH5PB/2Fqpb8xbfb+AFiWGGzqDxC/iLyZg4zdsNlTZtXk7DKcC9PQBAjoJteSDFtco+jrgHt73IJxn8l/LM4MKUYf4AqGIcyVRPTeCeiDtdk+Qp2r2oQ83r+kIpzzboQqMtyfX+5R2NAwsDSDkfNVYqfOBA4vqOvZlblFTJpd8TCwBMKbEWruSxXMCZHXzUGX5zl+EpcU7pQs6+dCUjhO+tTWxv03NlZqDcQN672ZguH2NkbTPhIrZ4l99z4txfjTusIzvOC/bt6iwjgeHqaztQ2uVgnnxMXNFxiVV7/RtRL1f93UOeYy3tHg6mXSx9UHNbBx6evOsiEwtFYhJL+mRU/cvX8k2iNFG6nTGgvdoiVcsVkNvduDqGHK3MG+viaqJ6KD47Y4tYfWq6Yq9TVa0wrvYL6Ey/YVnV6VH7AApnXKhIBeLrhdTIFXTNwM533H8VL+y/wLVhx/Wi4q+VKMXy9AZ2JMvebSoDaUutdanx+qOFYsLOKZMDxWQmKSsAXM4rl0VE1eUd+3FfBMl7UW1zhz+B0yxwOu9Tm5+KQhqwsY8SxjCZNG2SRGF13gYCCRSvBgy0SB1bpBe4FWrb6d3VCSTDpzLZj/P4d2pDR1u31ZjyQ3jPtTrF8fYJqnT3r6E=
+  # $DATABASE_STAGING_URL
+  - secure: eYydnvQrT1Esmkg1bWMzkyCFXHgJxi2Z5TXYefWbvHiYQKBzJqIXRigDRmMsk4sh+mYJIxd8W1vASDZ+VAY4wPc2k1DHoCZfILWMj9+qGNK12nwZCcuRH0LV95nowePly+fsxHJOOp/+aaXY+aTdT6qwhScTB7U48qkaYoomCiOkekBGwe4ShZDyUyW39JOtN3p7o2VPL4ZhzNWbSes/kr4l1q/MRhVeCUyIb39Rw5ecmECuIQt8uThOlj4qthYPGkGrnOLYFzp3j2B2n7r5BPiOagkHM0C923KEvfDIM1ouKGteuLwKHx9z2I6ShhMkAhclmvxXDmFcgjVg7bV7O7zs+tTlb4ejOk+FygGxKjhWF4zsofxH6OZrAO/CuvAvPaEk6XJBwpCrQ8Xu1QcmlbU7xAOWm3060QypDGhieoLVY2sp2neZhB2BWX2xfHWNIU09f04K+/WeGyT1xebgN7QFlC3+X0HUt0IhQqJgxekYkNAMFwEV3toclcpFbuGcACDiTgfWFHy/MajWU7UTa6F1S22xqCzTNNYnsxXfVZoqezaUF2NogdFQ+jt9kKm6dxrojIp9uZw0g1KFlnpOGfhnDwc+7/odqX/SzaoRhnxh3aEF8BtPZUGF3Q1k5tnV/BNDKRoR2ItWQAvzTFT6hPhJiDEzNBc2zOeHwVD/J+c=
 
 deploy:
   provider: heroku
