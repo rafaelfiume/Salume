@@ -12,7 +12,6 @@ public class Product {
     private final String fatPercentage;
     private final Reputation reputation;
 
-    // TODO RF 20/10/2015
     public Product(Long id, String name, MonetaryAmount price, String fatPercentage, Reputation reputation) {
         this.id = id;
         this.name = name;

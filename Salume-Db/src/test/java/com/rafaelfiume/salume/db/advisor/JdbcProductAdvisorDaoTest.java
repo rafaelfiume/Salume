@@ -16,9 +16,11 @@ import javax.money.MonetaryAmount;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Locale;
 
 import static com.rafaelfiume.salume.domain.Product.Reputation.NORMAL;
 import static com.rafaelfiume.salume.domain.Product.Reputation.TRADITIONAL;
+import static java.util.Locale.ITALY;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -127,7 +129,8 @@ public class JdbcProductAdvisorDaoTest {
     }
 
     private MonetaryAmount theAmountOf(String value) throws ParseException {
-        return Money.of(NumberFormat.getNumberInstance().parse(value), "EUR");
+        // TODO RF 22/10/2015 Pass the locale as an app configuration
+        return Money.of(NumberFormat.getNumberInstance(ITALY).parse(value), "EUR");
     }
 
 }
