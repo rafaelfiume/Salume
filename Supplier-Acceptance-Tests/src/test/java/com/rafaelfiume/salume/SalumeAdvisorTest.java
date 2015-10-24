@@ -6,15 +6,19 @@ import com.googlecode.yatspec.junit.Table;
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
+import com.rafaelfiume.salume.db.SimpleDatabaseSupport;
 import com.rafaelfiume.salume.domain.Product;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import javax.money.MonetaryAmount;
@@ -25,15 +29,17 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.*;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathFactory;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 
 import static com.rafaelfiume.salume.domain.Product.Reputation.NORMAL;
 import static com.rafaelfiume.salume.domain.Product.Reputation.TRADITIONAL;
+import static javax.xml.xpath.XPathConstants.NODESET;
+import static javax.xml.xpath.XPathConstants.NUMBER;
 import static org.hamcrest.Matchers.hasXPath;
-import static org.hamcrest.Matchers.is;
 import static org.springframework.http.MediaType.parseMediaType;
 
 @Notes("A customer can have whatever they want as long as it is salume. At least for now...\n\n" +
@@ -42,7 +48,14 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
 
     private static final MediaType APPLICATION_XML_CHARSET_UTF8 = parseMediaType("application/xml;charset=utf-8");
 
+    private SimpleDatabaseSupport db;
+
     private ResponseEntity<String> response;
+
+    @Autowired
+    public void setDb(SimpleDatabaseSupport db) {
+        this.db = db;
+    }
 
     @Notes("Gioseppo select the customer profile when serving his customers.\n\n" +
             "" +
@@ -52,10 +65,9 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
             "Special is another word for \"ordinary non tradition product\".")
     @Test
     @Table({
-            @Row({"Magic"  , "Cheap Salume"       , "EUR 15,55", "49,99", "special"})
-//            @Row({"Healthy", "Light Salume"       , "EUR 29,55", "31,00", "special"}),
-//            @Row({"Expert" , "Traditional Salume" , "EUR 41,60", "37,00", "traditional"}),
-//            @Row({"Gourmet", "Premium Salume"     , "EUR 73,23", "38,00", "traditional"})
+            @Row({"Magic", "Cheap Salume", "EUR 15,55", "49,99", "special"}),
+            @Row({"Healthy", "Not Light In Your Pocket", "EUR 57,37", "31,00", "special"}),
+            @Row({"Gourmet", "Premium Salume", "EUR 73,23", "38,00", "traditional"})
     })
     public void adviceSalume(String profile, String product, String price, String fatPercentage, String traditional) throws Exception {
         given(availableProductsAre(cheap(), light(), traditional(), andPremium()));
@@ -70,8 +82,32 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
         then(theContentType(), is(APPLICATION_XML_CHARSET_UTF8));
     }
 
+    @Notes("Expert clients are more demanding and won't accept anything that is not considered traditional long-honored products.\n" +
+            "The number of suggested products is 2 because there are .")
+    @Test
+    public void onlySuggestTraditionalProductsToExperts() throws Exception {
+        given(availableProductsAre(cheap(), light(), traditional(), andPremium()));
+
+        when(requestingBestOfferFor(aCustomerConsidered("Expert")));
+
+        then(numberOfAdvisedProducts(), is(2)); // because there are only two products considered traditional in the db
+
+        then(adviseCustomerTo(), buy("Traditional Salume", salume()));
+        then(firstSuggestedProduct(), hasPrice("EUR 41,60"));
+        then(firstSuggestedProduct(), hasFatPercentage("37,00"));
+        then(firstSuggestedProduct(), isRegardedAs("traditional"));
+
+        then(secondSuggestedProduct(), is("Premium Salume", salume()));
+        then(secondSuggestedProduct(), isRegardedAs("traditional"));
+
+        then(theContentType(), is(APPLICATION_XML_CHARSET_UTF8));
+    }
+
     private GivensBuilder availableProductsAre(Product... products) {
         return givens -> {
+            // Data added using sql scripts. See: 01.create-table.sql
+
+            // Consider doing something like the following in the future...
             // DatabaseUtilities.cleanAll();
             // DatabaseUtilities.addProducts(products);
 
@@ -94,29 +130,24 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
     }
 
     private StateExtractor<Integer> numberOfAdvisedProducts() {
-        return inputAndOutputs -> {
-            final Document xml = toDocument(response.getBody());
-
-            // TODO RF 20/10/2015 Extract it to a method in the abstract class
-            capturedInputAndOutputs.add("Salume advice response from Supplier to customer", prettyPrint(xml));
-
-            return ((Double) xpath().evaluate("count(//product)", xml, XPathConstants.NUMBER)).intValue();
-        };
+        return inputAndOutputs -> ((Double)
+                xpath().evaluate("count(//product)", xmlFrom(response.getBody()), NUMBER)
+        ).intValue();
     }
 
-    private StateExtractor<Node> adviseCustomerTo() {
-        return inputAndOutputs -> {
-            final Document xml = toDocument(response.getBody());
+    private StateExtractor<Node> adviseCustomerTo() throws Exception {
+        // TODO RF 20/10/2015 Extract it to a method in the abstract class
+        capturedInputAndOutputs.add("Salume advice response from Supplier to customer", prettyPrint(xmlFrom(response.getBody())));
 
-            // TODO RF 20/10/2015 Extract it to a method in the abstract class
-            capturedInputAndOutputs.add("Salume advice response from Supplier to customer", prettyPrint(xml));
-
-            return xml;
-        };
+        return firstSuggestedProduct();
     }
 
     private StateExtractor<Node> firstSuggestedProduct() {
-        return inputAndOutputs -> toDocument(response.getBody());
+        return inputAndOutputs -> ((NodeList) xpath().evaluate("//product", xmlFrom(response.getBody()), NODESET)).item(0);
+    }
+
+    private StateExtractor<Node> secondSuggestedProduct() {
+        return inputAndOutputs -> ((NodeList) xpath().evaluate("//product", xmlFrom(response.getBody()), NODESET)).item(1);
     }
 
     Product cheap() {
@@ -140,19 +171,27 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
     //
 
     private Matcher<Node> buy(String expected, @SuppressWarnings("unused") String salume) {
-        return hasXPath("//product[1]/name[text() = \"" + expected + "\"]");
+        return hasXPath("//product/name[text() = \"" + expected + "\"]");
     }
 
     private Matcher<Node> hasPrice(String expected) {
-        return hasXPath("//product[1]/price[text() = \"" + expected + "\"]");
+        return hasXPath("//product/price[text() = \"" + expected + "\"]");
     }
 
     private Matcher<Node> hasFatPercentage(String expected) {
-        return hasXPath("//product[1]/fat-percentage[text() = \"" + expected + "\"]");
+        return hasXPath("//product/fat-percentage[text() = \"" + expected + "\"]");
     }
 
     private Matcher<Node> isRegardedAs(String expected) {
-        return hasXPath("//product[1]/reputation[text() = \"" + expected + "\"]");
+        return hasXPath("//product/reputation[text() = \"" + expected + "\"]");
+    }
+
+    private <T> Matcher<T> is(T expected) {
+        return Matchers.is(expected);
+    }
+
+    private Matcher<Node> is(String expected, @SuppressWarnings("unused") String salume) {
+        return hasXPath("//product/name[text() = \"" + expected + "\"]");
     }
 
     // TODO RF 07/10 I'm already triplicating this method...
@@ -180,8 +219,8 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
     // Xml related
     //
 
-    private static Document toDocument(String xml) throws Exception {
-        Document xmlDoc= DocumentBuilderFactory
+    private static Document xmlFrom(String xml) throws Exception {
+        Document xmlDoc = DocumentBuilderFactory
                 .newInstance()
                 .newDocumentBuilder()
                 .parse(new InputSource(new StringReader(xml)));

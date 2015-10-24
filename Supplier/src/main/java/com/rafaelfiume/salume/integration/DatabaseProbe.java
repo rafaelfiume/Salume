@@ -10,8 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 
+// // TODO RF 24/10/15 Move it to Salume-Db?
 @Repository
-public class DatabaseProbe { // TODO RF 28/09/15 An interface would not be bad
+public class DatabaseProbe {
 
     private static final Logger LOG = LoggerFactory.getLogger(DatabaseProbe.class);
 
@@ -26,7 +27,7 @@ public class DatabaseProbe { // TODO RF 28/09/15 An interface would not be bad
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public String connectionStatus() { // TODO RF 28/09/15 Returning an enum representing possible status would not be bad either
+    public String connectionStatus() {
         try {
             jdbcTemplate.execute(probeDbQuery);
             return "OK";

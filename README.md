@@ -1,10 +1,10 @@
-# Salume
+# Salume [![Build Status](https://travis-ci.org/rafaelfiume/Salume.svg?branch=master)](https://travis-ci.org/rafaelfiume/Salume)
 
-Check the application spec [here](http://rafaelfiume.github.io/Salume/). Access the [status page](http://frozen-mountain-3180.herokuapp.com/salume/supplier/status/) in production.
+Check the application spec [here](http://rafaelfiume.github.io/Salume/). Access the [status page](http://app.rafaelfiume.com/salume/supplier/status/) in production.
 
 ## Running the application locally
 
-The following environment variable must be set: $DATABASE_URL
+The following environment variable must be set: $DATABASE_URL.
 
 Build with:
 
