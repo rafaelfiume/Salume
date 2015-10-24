@@ -16,12 +16,10 @@
         <dependency>
             <groupId>com.rafaelfiume</groupId>
             <artifactId>Salume-Domain</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.rafaelfiume</groupId>
             <artifactId>Salume-Db</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
