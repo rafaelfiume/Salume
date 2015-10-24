@@ -20,7 +20,7 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.TEST_COMPILE;
  * <p/>
  * It should change the db according with the scripts it finds in the scripts directory.
  */
-@Mojo(name = "recreatedb", aggregator = true, defaultPhase = TEST_COMPILE)
+@Mojo(name = "recreatedb", threadSafe = false, aggregator = true, defaultPhase = TEST_COMPILE)
 public class DbRecreator extends AbstractMojo {
 
     // TODO RF 12/10/2015 pass this as a maven property e.g. ${db.schema.name}
@@ -28,7 +28,7 @@ public class DbRecreator extends AbstractMojo {
 
     private final ScriptsSource scriptsSource;
 
-    @Parameter(property = "databaseUrl", required = false)
+    @Parameter(property = "databaseUrl", readonly = true, required = false)
     private String databaseUrl;
 
     public DbRecreator() {
