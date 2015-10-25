@@ -309,62 +309,139 @@ dl.index-result {
     </head>
     <body>
 
-        <h1>Status page sad path</h1>
+        <h1>Salume advisor</h1>
 
+        <pre class="notes">A customer can have whatever they want as long as it is salume. At least for now...
+
+See an explanation about this story <a href="https://rafaelfiume.wordpress.com/2013/04/07/dragons-unicorns-and-titans-an-agile-software-developer-tail/" target="blank">here</a>.</pre>
+        
 
         <div class="contents">
             <h2>Contents</h2>
 
             <ul class="contents">
-                    <li class='test-passed'><a href="#databaseConnectionFailure">Database connection failure</a></li>
+                    <li class='test-passed'><a href="#adviceSalume">Advice salume</a></li>
+                                    <li class='test-passed'><a href="#onlySuggestTraditionalProductsToExperts">Only suggest traditional products to experts</a></li>
                 
             </ul>
         </div>
 
             <div class="testmethod section">
-                <a id="databaseConnectionFailure"></a>
-                <h2 class="section-header">Database connection failure</h2>
+                <a id="adviceSalume"></a>
+                <h2 class="section-header">Advice salume</h2>
                 <div class="section-body">
+                        <pre class="notes">Gioseppo select the customer profile when serving his customers.
 
+After showing a previous version of the acceptance test and having some conversation, it was clear that the
+result should be a list of (3) products instead of a single one.
 
-                        <div class="scenario" id="1087712231_598569407">
-                            <a id=""></a>
+Special is another word for "ordinary non tradition product".</pre>
+                    
+
+                        <h3>Scenarios</h3>
+
+                        <table class="scenarios">
+                            <thead>
+                            <tr>
+<th>Profile</th> <th>Product</th> <th>Price</th> <th>Fat percentage</th> <th>Traditional</th> 
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                        <td class='test-passed'><a href="#adviceSalume(Magic, Cheap Salume, EUR 15,55, 49,99, special)">
+Magic
+                                        </a></td>                                         <td class='test-passed'><a href="#adviceSalume(Magic, Cheap Salume, EUR 15,55, 49,99, special)">
+Cheap Salume
+                                        </a></td>                                         <td class='test-passed'><a href="#adviceSalume(Magic, Cheap Salume, EUR 15,55, 49,99, special)">
+EUR 15,55
+                                        </a></td>                                         <td class='test-passed'><a href="#adviceSalume(Magic, Cheap Salume, EUR 15,55, 49,99, special)">
+49,99
+                                        </a></td>                                         <td class='test-passed'><a href="#adviceSalume(Magic, Cheap Salume, EUR 15,55, 49,99, special)">
+special
+                                        </a></td> 
+                                </tr>
+                                                             <tr>
+                                        <td class='test-passed'><a href="#adviceSalume(Healthy, Not Light In Your Pocket, EUR 57,37, 31,00, special)">
+Healthy
+                                        </a></td>                                         <td class='test-passed'><a href="#adviceSalume(Healthy, Not Light In Your Pocket, EUR 57,37, 31,00, special)">
+Not Light In Your Pocket
+                                        </a></td>                                         <td class='test-passed'><a href="#adviceSalume(Healthy, Not Light In Your Pocket, EUR 57,37, 31,00, special)">
+EUR 57,37
+                                        </a></td>                                         <td class='test-passed'><a href="#adviceSalume(Healthy, Not Light In Your Pocket, EUR 57,37, 31,00, special)">
+31,00
+                                        </a></td>                                         <td class='test-passed'><a href="#adviceSalume(Healthy, Not Light In Your Pocket, EUR 57,37, 31,00, special)">
+special
+                                        </a></td> 
+                                </tr>
+                                                             <tr>
+                                        <td class='test-passed'><a href="#adviceSalume(Gourmet, Premium Salume, EUR 73,23, 38,00, traditional)">
+Gourmet
+                                        </a></td>                                         <td class='test-passed'><a href="#adviceSalume(Gourmet, Premium Salume, EUR 73,23, 38,00, traditional)">
+Premium Salume
+                                        </a></td>                                         <td class='test-passed'><a href="#adviceSalume(Gourmet, Premium Salume, EUR 73,23, 38,00, traditional)">
+EUR 73,23
+                                        </a></td>                                         <td class='test-passed'><a href="#adviceSalume(Gourmet, Premium Salume, EUR 73,23, 38,00, traditional)">
+38,00
+                                        </a></td>                                         <td class='test-passed'><a href="#adviceSalume(Gourmet, Premium Salume, EUR 73,23, 38,00, traditional)">
+traditional
+                                        </a></td> 
+                                </tr>
+                             
+                            </tbody>
+                        </table>
+
+                        <div class="scenario" id="546242567_982565180">
+                            <a id="adviceSalume(Magic, Cheap Salume, EUR 15,55, 49,99, special)"></a>
                             <h2>Specification</h2>
                             <pre class="highlight specification">
-Given salume supplier app is up and running
-And database is down
+Given available products are cheap light traditional and premium
 
-When a client requests status page
+When requesting best offer for a customer considered &quot;Magic&quot;
 
-Then the content type is TEXT_PLAIN_CHARSET_UTF8
-Then the status page has http status code OK
-Then the applicantion name and version is &quot;Salume Supplier DEV&quot;
-Then the status of the app is &quot;FAILING&quot;
-Then the app version in the status page is the implementation version in the manifest
-Then the database status is &quot;FAILING&quot;</pre>
+Then number of advised products is 3
+Then advise customer to buy &quot;Cheap Salume&quot; salume
+Then first suggested product has price &quot;EUR 15,55&quot;
+Then first suggested product has fat percentage &quot;49,99&quot;
+Then first suggested product is regarded as &quot;special&quot;
+Then the content type is APPLICATION_XML_CHARSET_UTF8</pre>
                             <h3 class="logKey">Test results:</h3>
                                     <pre class='highlight results test-passed'>
 Test passed</pre>
 
-                                         <h3 class="logKey">Interesting Givens</h3>
 
-                                        <table class="interestingGivens logValue">
-                                            <tr>
-                                                <th class="key">Supplier Status Page:</th>
-                                                <td class="interestingGiven">http://localhost:8282/salume/supplier/status</td>
-                                            </tr>
-                                        
-                                        </table>
-
-                                        <h3 class="logKey" logkey="Status_Page_request_from_client_to_Supplier">Status Page request from client to Supplier</h3>
-                                        <div class="logValue highlight String" >http://localhost:8282/salume/supplier/status</div>
-                                                                            <h3 class="logKey" logkey="Status_Page_response_from_Supplier_to_client">Status Page response from Supplier to client</h3>
-                                        <div class="logValue highlight String" >Salume Supplier DEV is: FAILING
-Version: ${project.version}
-Database connections is: FAILING</div>
+                                        <h3 class="logKey" logkey="Salume_advice_request_from_customer_to_Supplier">Salume advice request from customer to Supplier</h3>
+                                        <div class="logValue highlight String" >http://localhost:8081/salume/supplier/advise/for/Magic</div>
+                                                                            <h3 class="logKey" logkey="Salume_advice_response_from_Supplier_to_customer">Salume advice response from Supplier to customer</h3>
+                                        <div class="logValue highlight String" >&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;
+&lt;product-advisor&gt;
+    &lt;products&gt;
+        &lt;product&gt;
+            &lt;id&gt;1&lt;/id&gt;
+            &lt;name&gt;Cheap Salume&lt;/name&gt;
+            &lt;price&gt;EUR 15,55&lt;/price&gt;
+            &lt;reputation&gt;special&lt;/reputation&gt;
+            &lt;fat-percentage&gt;49,99&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;2&lt;/id&gt;
+            &lt;name&gt;Light Salume&lt;/name&gt;
+            &lt;price&gt;EUR 29,55&lt;/price&gt;
+            &lt;reputation&gt;special&lt;/reputation&gt;
+            &lt;fat-percentage&gt;31,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;4&lt;/id&gt;
+            &lt;name&gt;Traditional Salume&lt;/name&gt;
+            &lt;price&gt;EUR 41,60&lt;/price&gt;
+            &lt;reputation&gt;traditional&lt;/reputation&gt;
+            &lt;fat-percentage&gt;37,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+    &lt;/products&gt;
+&lt;/product-advisor&gt;
+</div>
                                                                             <h3 class="logKey" logkey="Sequence_Diagram">Sequence Diagram</h3>
                                         <div class="logValue highlight SvgWrapper" ><div class='nohighlight'><?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="154px" style="width:242px;height:154px;" version="1.1" viewBox="0 0 242 154" width="242px">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="154px" style="width:273px;height:154px;" version="1.1" viewBox="0 0 273 154" width="273px">
   <defs>
     <filter height="300%" id="f1" width="300%" x="-1" y="-1">
       <feGaussianBlur result="blurOut" stdDeviation="2.0" />
@@ -374,24 +451,289 @@ Database connections is: FAILING</div>
     </filter>
   </defs>
   <g>
-    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="35" x2="35" y1="38.2969" y2="116.5625" />
-    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="200.5" x2="200.5" y1="38.2969" y2="116.5625" />
-    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="51" x="8" y="3" />
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="37" x="15" y="22.9951">client</text>
-    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="51" x="8" y="115.5625" />
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="37" x="15" y="135.5576">client</text>
-    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="163.5" y="3" />
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="170.5" y="22.9951">Supplier</text>
-    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="163.5" y="115.5625" />
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="170.5" y="135.5576">Supplier</text>
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="198.5" x2="188.5" y1="69.2969" y2="65.2969" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="198.5" x2="188.5" y1="69.2969" y2="73.2969" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="35.5" x2="199.5" y1="69.2969" y2="69.2969" />
-    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Status_Page_request_from_client_to_Supplier" textLength="131" x="42.5" y="64.3638">Status Page request</text>
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="35.5" x2="45.5" y1="98.4297" y2="94.4297" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="35.5" x2="45.5" y1="98.4297" y2="102.4297" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="35.5" x2="199.5" y1="98.4297" y2="98.4297" />
-    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Status_Page_response_from_Supplier_to_client" textLength="141" x="52.5" y="93.4966">Status Page response</text>
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="50" x2="50" y1="38.2969" y2="116.5625" />
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="231" x2="231" y1="38.2969" y2="116.5625" />
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="80" x="8" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="66" x="15" y="22.9951">customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="80" x="8" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="66" x="15" y="135.5576">customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="194" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="201" y="22.9951">Supplier</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="194" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="201" y="135.5576">Supplier</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="229" x2="219" y1="69.2969" y2="65.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="229" x2="219" y1="69.2969" y2="73.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="230" y1="69.2969" y2="69.2969" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_request_from_customer_to_Supplier" textLength="147" x="57" y="64.3638">Salume advice request</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="60" y1="98.4297" y2="94.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="60" y1="98.4297" y2="102.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="230" y1="98.4297" y2="98.4297" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_response_from_Supplier_to_customer" textLength="157" x="67" y="93.4966">Salume advice response</text>
+  </g>
+</svg>
+
+</div></div>
+                                    
+                    </div>
+                                            <div class="scenario" id="546242567_1498259207">
+                            <a id="adviceSalume(Healthy, Not Light In Your Pocket, EUR 57,37, 31,00, special)"></a>
+                            <h2>Specification</h2>
+                            <pre class="highlight specification">
+Given available products are cheap light traditional and premium
+
+When requesting best offer for a customer considered &quot;Healthy&quot;
+
+Then number of advised products is 3
+Then advise customer to buy &quot;Not Light In Your Pocket&quot; salume
+Then first suggested product has price &quot;EUR 57,37&quot;
+Then first suggested product has fat percentage &quot;31,00&quot;
+Then first suggested product is regarded as &quot;special&quot;
+Then the content type is APPLICATION_XML_CHARSET_UTF8</pre>
+                            <h3 class="logKey">Test results:</h3>
+                                    <pre class='highlight results test-passed'>
+Test passed</pre>
+
+
+                                        <h3 class="logKey" logkey="Salume_advice_request_from_customer_to_Supplier">Salume advice request from customer to Supplier</h3>
+                                        <div class="logValue highlight String" >http://localhost:8081/salume/supplier/advise/for/Healthy</div>
+                                                                            <h3 class="logKey" logkey="Salume_advice_response_from_Supplier_to_customer">Salume advice response from Supplier to customer</h3>
+                                        <div class="logValue highlight String" >&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;
+&lt;product-advisor&gt;
+    &lt;products&gt;
+        &lt;product&gt;
+            &lt;id&gt;3&lt;/id&gt;
+            &lt;name&gt;Not Light In Your Pocket&lt;/name&gt;
+            &lt;price&gt;EUR 57,37&lt;/price&gt;
+            &lt;reputation&gt;special&lt;/reputation&gt;
+            &lt;fat-percentage&gt;31,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;2&lt;/id&gt;
+            &lt;name&gt;Light Salume&lt;/name&gt;
+            &lt;price&gt;EUR 29,55&lt;/price&gt;
+            &lt;reputation&gt;special&lt;/reputation&gt;
+            &lt;fat-percentage&gt;31,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;4&lt;/id&gt;
+            &lt;name&gt;Traditional Salume&lt;/name&gt;
+            &lt;price&gt;EUR 41,60&lt;/price&gt;
+            &lt;reputation&gt;traditional&lt;/reputation&gt;
+            &lt;fat-percentage&gt;37,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+    &lt;/products&gt;
+&lt;/product-advisor&gt;
+</div>
+                                                                            <h3 class="logKey" logkey="Sequence_Diagram">Sequence Diagram</h3>
+                                        <div class="logValue highlight SvgWrapper" ><div class='nohighlight'><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="154px" style="width:273px;height:154px;" version="1.1" viewBox="0 0 273 154" width="273px">
+  <defs>
+    <filter height="300%" id="f1" width="300%" x="-1" y="-1">
+      <feGaussianBlur result="blurOut" stdDeviation="2.0" />
+      <feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0" />
+      <feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3" />
+      <feBlend in="SourceGraphic" in2="blurOut3" mode="normal" />
+    </filter>
+  </defs>
+  <g>
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="50" x2="50" y1="38.2969" y2="116.5625" />
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="231" x2="231" y1="38.2969" y2="116.5625" />
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="80" x="8" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="66" x="15" y="22.9951">customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="80" x="8" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="66" x="15" y="135.5576">customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="194" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="201" y="22.9951">Supplier</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="194" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="201" y="135.5576">Supplier</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="229" x2="219" y1="69.2969" y2="65.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="229" x2="219" y1="69.2969" y2="73.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="230" y1="69.2969" y2="69.2969" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_request_from_customer_to_Supplier" textLength="147" x="57" y="64.3638">Salume advice request</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="60" y1="98.4297" y2="94.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="60" y1="98.4297" y2="102.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="230" y1="98.4297" y2="98.4297" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_response_from_Supplier_to_customer" textLength="157" x="67" y="93.4966">Salume advice response</text>
+  </g>
+</svg>
+
+</div></div>
+                                    
+                    </div>
+                                            <div class="scenario" id="546242567_1542437569">
+                            <a id="adviceSalume(Gourmet, Premium Salume, EUR 73,23, 38,00, traditional)"></a>
+                            <h2>Specification</h2>
+                            <pre class="highlight specification">
+Given available products are cheap light traditional and premium
+
+When requesting best offer for a customer considered &quot;Gourmet&quot;
+
+Then number of advised products is 3
+Then advise customer to buy &quot;Premium Salume&quot; salume
+Then first suggested product has price &quot;EUR 73,23&quot;
+Then first suggested product has fat percentage &quot;38,00&quot;
+Then first suggested product is regarded as &quot;traditional&quot;
+Then the content type is APPLICATION_XML_CHARSET_UTF8</pre>
+                            <h3 class="logKey">Test results:</h3>
+                                    <pre class='highlight results test-passed'>
+Test passed</pre>
+
+
+                                        <h3 class="logKey" logkey="Salume_advice_request_from_customer_to_Supplier">Salume advice request from customer to Supplier</h3>
+                                        <div class="logValue highlight String" >http://localhost:8081/salume/supplier/advise/for/Gourmet</div>
+                                                                            <h3 class="logKey" logkey="Salume_advice_response_from_Supplier_to_customer">Salume advice response from Supplier to customer</h3>
+                                        <div class="logValue highlight String" >&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;
+&lt;product-advisor&gt;
+    &lt;products&gt;
+        &lt;product&gt;
+            &lt;id&gt;5&lt;/id&gt;
+            &lt;name&gt;Premium Salume&lt;/name&gt;
+            &lt;price&gt;EUR 73,23&lt;/price&gt;
+            &lt;reputation&gt;traditional&lt;/reputation&gt;
+            &lt;fat-percentage&gt;38,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;3&lt;/id&gt;
+            &lt;name&gt;Not Light In Your Pocket&lt;/name&gt;
+            &lt;price&gt;EUR 57,37&lt;/price&gt;
+            &lt;reputation&gt;special&lt;/reputation&gt;
+            &lt;fat-percentage&gt;31,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;4&lt;/id&gt;
+            &lt;name&gt;Traditional Salume&lt;/name&gt;
+            &lt;price&gt;EUR 41,60&lt;/price&gt;
+            &lt;reputation&gt;traditional&lt;/reputation&gt;
+            &lt;fat-percentage&gt;37,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+    &lt;/products&gt;
+&lt;/product-advisor&gt;
+</div>
+                                                                            <h3 class="logKey" logkey="Sequence_Diagram">Sequence Diagram</h3>
+                                        <div class="logValue highlight SvgWrapper" ><div class='nohighlight'><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="154px" style="width:273px;height:154px;" version="1.1" viewBox="0 0 273 154" width="273px">
+  <defs>
+    <filter height="300%" id="f1" width="300%" x="-1" y="-1">
+      <feGaussianBlur result="blurOut" stdDeviation="2.0" />
+      <feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0" />
+      <feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3" />
+      <feBlend in="SourceGraphic" in2="blurOut3" mode="normal" />
+    </filter>
+  </defs>
+  <g>
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="50" x2="50" y1="38.2969" y2="116.5625" />
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="231" x2="231" y1="38.2969" y2="116.5625" />
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="80" x="8" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="66" x="15" y="22.9951">customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="80" x="8" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="66" x="15" y="135.5576">customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="194" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="201" y="22.9951">Supplier</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="194" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="201" y="135.5576">Supplier</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="229" x2="219" y1="69.2969" y2="65.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="229" x2="219" y1="69.2969" y2="73.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="230" y1="69.2969" y2="69.2969" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_request_from_customer_to_Supplier" textLength="147" x="57" y="64.3638">Salume advice request</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="60" y1="98.4297" y2="94.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="60" y1="98.4297" y2="102.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="230" y1="98.4297" y2="98.4297" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_response_from_Supplier_to_customer" textLength="157" x="67" y="93.4966">Salume advice response</text>
+  </g>
+</svg>
+
+</div></div>
+                                    
+                    </div>
+                    
+                </div>
+            </div>
+                    <div class="testmethod section">
+                <a id="onlySuggestTraditionalProductsToExperts"></a>
+                <h2 class="section-header">Only suggest traditional products to experts</h2>
+                <div class="section-body">
+                        <pre class="notes">Expert clients are more demanding and won't accept anything that is not considered traditional long-honored products.
+The number of suggested products is 2 because there are .</pre>
+                    
+
+
+                        <div class="scenario" id="441867003_802573073">
+                            <a id=""></a>
+                            <h2>Specification</h2>
+                            <pre class="highlight specification">
+Given available products are cheap light traditional and premium
+
+When requesting best offer for a customer considered &quot;Expert&quot;
+
+Then number of advised products is 2 because there are only two products considered traditional in the db
+
+Then advise customer to buy &quot;Traditional Salume&quot; salume
+Then first suggested product has price &quot;EUR 41,60&quot;
+Then first suggested product has fat percentage &quot;37,00&quot;
+Then first suggested product is regarded as &quot;traditional&quot;
+
+Then second suggested product is &quot;Premium Salume&quot; salume
+Then second suggested product is regarded as &quot;traditional&quot;
+
+Then the content type is APPLICATION_XML_CHARSET_UTF8</pre>
+                            <h3 class="logKey">Test results:</h3>
+                                    <pre class='highlight results test-passed'>
+Test passed</pre>
+
+
+                                        <h3 class="logKey" logkey="Salume_advice_request_from_customer_to_Supplier">Salume advice request from customer to Supplier</h3>
+                                        <div class="logValue highlight String" >http://localhost:8081/salume/supplier/advise/for/Expert</div>
+                                                                            <h3 class="logKey" logkey="Salume_advice_response_from_Supplier_to_customer">Salume advice response from Supplier to customer</h3>
+                                        <div class="logValue highlight String" >&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;
+&lt;product-advisor&gt;
+    &lt;products&gt;
+        &lt;product&gt;
+            &lt;id&gt;4&lt;/id&gt;
+            &lt;name&gt;Traditional Salume&lt;/name&gt;
+            &lt;price&gt;EUR 41,60&lt;/price&gt;
+            &lt;reputation&gt;traditional&lt;/reputation&gt;
+            &lt;fat-percentage&gt;37,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;5&lt;/id&gt;
+            &lt;name&gt;Premium Salume&lt;/name&gt;
+            &lt;price&gt;EUR 73,23&lt;/price&gt;
+            &lt;reputation&gt;traditional&lt;/reputation&gt;
+            &lt;fat-percentage&gt;38,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+    &lt;/products&gt;
+&lt;/product-advisor&gt;
+</div>
+                                                                            <h3 class="logKey" logkey="Sequence_Diagram">Sequence Diagram</h3>
+                                        <div class="logValue highlight SvgWrapper" ><div class='nohighlight'><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="154px" style="width:273px;height:154px;" version="1.1" viewBox="0 0 273 154" width="273px">
+  <defs>
+    <filter height="300%" id="f1" width="300%" x="-1" y="-1">
+      <feGaussianBlur result="blurOut" stdDeviation="2.0" />
+      <feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0" />
+      <feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3" />
+      <feBlend in="SourceGraphic" in2="blurOut3" mode="normal" />
+    </filter>
+  </defs>
+  <g>
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="50" x2="50" y1="38.2969" y2="116.5625" />
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="231" x2="231" y1="38.2969" y2="116.5625" />
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="80" x="8" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="66" x="15" y="22.9951">customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="80" x="8" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="66" x="15" y="135.5576">customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="194" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="201" y="22.9951">Supplier</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="194" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="201" y="135.5576">Supplier</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="229" x2="219" y1="69.2969" y2="65.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="229" x2="219" y1="69.2969" y2="73.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="230" y1="69.2969" y2="69.2969" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_request_from_customer_to_Supplier" textLength="147" x="57" y="64.3638">Salume advice request</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="60" y1="98.4297" y2="94.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="60" y1="98.4297" y2="102.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="50" x2="230" y1="98.4297" y2="98.4297" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_response_from_Supplier_to_customer" textLength="157" x="67" y="93.4966">Salume advice response</text>
   </g>
 </svg>
 

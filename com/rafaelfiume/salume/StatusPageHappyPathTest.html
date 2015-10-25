@@ -311,6 +311,24 @@ dl.index-result {
 
         <h1>Status page happy path</h1>
 
+        <pre class="notes"><h3>What Is an Acceptance Test (not a stupid question)?</h3>Before implementing a feature, we write a test that will both:
+a) describe the feature being implemented in an human readable and understandable way to help close the gaps between business and developers, and
+b) work as a regression test suit.
+
+This is and end-to-end test that shouldn't need to change if a database is replaced by another, if a broker is introduced in a messaging layer,
+and so on (even if those changes would probably break the test) because it describes a feature from a high level business point-of-view.
+
+At first, we don't mind if the code compile, and start writing a consistent business focused happy path test, from the input to the output.
+Then we do the necessary job to see the test failing, and assure that the failing messages are meaningful
+(very helpful since it will help us catch problems quickly as they happen in the future.)
+
+The test will keep failing till the feature it describes is implemented, when the app will be ready to be deployed into the staging environment(s).
+If business is happy and the new feature is bug free, it's ready to be deployed into production (there may be additional steps depending on the work environment).
+<h3>Walking Skeleton</h3>Besides being the acceptance test for the status page, this test was also part of a walking skeleton for this app (more details about what that means <a href="https://rafaelfiume.wordpress.com/2015/09/30/iteration-0/" target="blank">here</a>).
+
+"The more experience I have, the more I focus on the way we work instead of the technologies we use.
+I recommend reading the excellent <a href="http://www.growing-object-oriented-software.com" target="blank">Growing Object-Oriented Software Guided by Tests</a>.</pre>
+        
 
         <div class="contents">
             <h2>Contents</h2>
@@ -327,7 +345,7 @@ dl.index-result {
                 <div class="section-body">
 
 
-                        <div class="scenario" id="108333023_1764604500">
+                        <div class="scenario" id="404994500_1532874332">
                             <a id=""></a>
                             <h2>Specification</h2>
                             <pre class="highlight specification">
@@ -350,20 +368,20 @@ Test passed</pre>
                                         <table class="interestingGivens logValue">
                                             <tr>
                                                 <th class="key">Supplier Status Page:</th>
-                                                <td class="interestingGiven">http://localhost:8080/salume/supplier/status</td>
+                                                <td class="interestingGiven">http://localhost:8081/salume/supplier/status</td>
                                             </tr>
                                         
                                         </table>
 
-                                        <h3 class="logKey" logkey="Status_Page_Request_from_client_to_Supplier">Status Page Request from client to Supplier</h3>
-                                        <div class="logValue highlight String" >http://localhost:8080/salume/supplier/status</div>
-                                                                            <h3 class="logKey" logkey="Status_Page_Response_from_Supplier_to_client">Status Page Response from Supplier to client</h3>
+                                        <h3 class="logKey" logkey="Status_Page_request_from_client_to_Supplier">Status Page request from client to Supplier</h3>
+                                        <div class="logValue highlight String" >http://localhost:8081/salume/supplier/status</div>
+                                                                            <h3 class="logKey" logkey="Status_Page_response_from_Supplier_to_client">Status Page response from Supplier to client</h3>
                                         <div class="logValue highlight String" >Salume Supplier DEV is: OK
-Version: 0.1.5
+Version: ${project.version}
 Database connections is: OK</div>
                                                                             <h3 class="logKey" logkey="Sequence_Diagram">Sequence Diagram</h3>
                                         <div class="logValue highlight SvgWrapper" ><div class='nohighlight'><?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="154px" style="width:245px;height:154px;" version="1.1" viewBox="0 0 245 154" width="245px">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="154px" style="width:242px;height:154px;" version="1.1" viewBox="0 0 242 154" width="242px">
   <defs>
     <filter height="300%" id="f1" width="300%" x="-1" y="-1">
       <feGaussianBlur result="blurOut" stdDeviation="2.0" />
@@ -374,23 +392,23 @@ Database connections is: OK</div>
   </defs>
   <g>
     <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="35" x2="35" y1="38.2969" y2="116.5625" />
-    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="203.5" x2="203.5" y1="38.2969" y2="116.5625" />
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="200.5" x2="200.5" y1="38.2969" y2="116.5625" />
     <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="51" x="8" y="3" />
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="37" x="15" y="22.9951">client</text>
     <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="51" x="8" y="115.5625" />
     <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="37" x="15" y="135.5576">client</text>
-    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="166.5" y="3" />
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="173.5" y="22.9951">Supplier</text>
-    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="166.5" y="115.5625" />
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="173.5" y="135.5576">Supplier</text>
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="201.5" x2="191.5" y1="69.2969" y2="65.2969" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="201.5" x2="191.5" y1="69.2969" y2="73.2969" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="35.5" x2="202.5" y1="69.2969" y2="69.2969" />
-    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Status_Page_Request_from_client_to_Supplier" textLength="134" x="42.5" y="64.3638">Status Page Request</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="163.5" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="170.5" y="22.9951">Supplier</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="163.5" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="170.5" y="135.5576">Supplier</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="198.5" x2="188.5" y1="69.2969" y2="65.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="198.5" x2="188.5" y1="69.2969" y2="73.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="35.5" x2="199.5" y1="69.2969" y2="69.2969" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Status_Page_request_from_client_to_Supplier" textLength="131" x="42.5" y="64.3638">Status Page request</text>
     <line style="stroke: #A80036; stroke-width: 1.0;" x1="35.5" x2="45.5" y1="98.4297" y2="94.4297" />
     <line style="stroke: #A80036; stroke-width: 1.0;" x1="35.5" x2="45.5" y1="98.4297" y2="102.4297" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="35.5" x2="202.5" y1="98.4297" y2="98.4297" />
-    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Status_Page_Response_from_Supplier_to_client" textLength="144" x="52.5" y="93.4966">Status Page Response</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="35.5" x2="199.5" y1="98.4297" y2="98.4297" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Status_Page_response_from_Supplier_to_client" textLength="141" x="52.5" y="93.4966">Status Page response</text>
   </g>
 </svg>
 

@@ -4,73 +4,6 @@
         <title></title>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
 
-<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/themes/base/jquery-ui.css" type="text/css" media="all"/>
-<link rel="stylesheet" href="http://static.jquery.com/ui/css/demo-docs-theme/ui.theme.css" type="text/css" media="all"/>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.7/jquery-ui.min.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-
-    var createDialogsForSequenceDiagramMessages = function() {
-        var messagePayloadDialogs = {};
-        $(".sequence_diagram_clickable").each(function() {
-            var sequenceDiagramMessage = $(this);
-            var myScenario = sequenceDiagramMessage.parents(".scenario");
-            var scenarioUid = myScenario.attr("id");
-            var sequenceDiagramMessageId = sequenceDiagramMessage.attr("sequence_diagram_message_id");
-
-            var dialogContent = myScenario.find('H3[logKey="' + sequenceDiagramMessageId + '"]').next("div").clone();
-
-            var capturedInputAndOutputsName = sequenceDiagramMessage.text();
-            sequenceDiagramMessageId = "" + sequenceDiagramMessageId + "_" + scenarioUid;
-            messagePayloadDialogs[sequenceDiagramMessageId] = dialogContent.dialog({title:capturedInputAndOutputsName,minWidth: 800,stack:false,closeOnEscape:true, autoOpen:false });
-        });
-        return messagePayloadDialogs;
-    };
-
-    var dialogsCreated = false;
-    var messagePayloadDialogs = {};
-    $(document).ready(function () {
-
-        $(".SvgWrapper").toggleClass("hide");
-
-        $(".sequence_diagram_clickable").click(function() {
-            openDialog($(this), "click");
-        });
-
-        $(".sequence_diagram_clickable").hover(function() {
-            openDialog($(this), "hover");
-        }, function(){
-            closeHoveredDialog($(this));
-        })
-    });
-
-    function dialogForSequenceDiagramMessage(sequenceDiagramMessage) {
-        var myScenario = sequenceDiagramMessage.parents(".scenario");
-        var scenarioUid = myScenario.attr("id");
-        var sequenceDiagramMessageId = "" + sequenceDiagramMessage.attr("sequence_diagram_message_id") + "_" + scenarioUid;
-        return messagePayloadDialogs[sequenceDiagramMessageId];
-    }
-
-    function closeHoveredDialog(sequenceDiagramMessage) {
-        var dialog = dialogForSequenceDiagramMessage(sequenceDiagramMessage);
-        if(dialog.openMethod == "hover" ) {
-            dialog.dialog("close")
-        }
-    }
-
-    function openDialog(sequenceDiagramMessage, openMethod) {
-        if (!dialogsCreated) {
-            messagePayloadDialogs = createDialogsForSequenceDiagramMessages();
-            dialogsCreated = true;
-        }
-
-        var dialog = dialogForSequenceDiagramMessage(sequenceDiagramMessage);
-        dialog.openMethod=openMethod;
-        dialog.dialog("open");
-    }
-
-</script>
-
 
 
             <style type="text/css">
@@ -309,94 +242,70 @@ dl.index-result {
     </head>
     <body>
 
-        <h1>Status page sad path</h1>
+        <h1>Simple database support</h1>
 
 
         <div class="contents">
             <h2>Contents</h2>
 
             <ul class="contents">
-                    <li class='test-passed'><a href="#databaseConnectionFailure">Database connection failure</a></li>
+                    <li class='test-passed'><a href="#createTableStatement">Create table statement</a></li>
+                                    <li class='test-passed'><a href="#cleanTable">Clean table</a></li>
                 
             </ul>
         </div>
 
             <div class="testmethod section">
-                <a id="databaseConnectionFailure"></a>
-                <h2 class="section-header">Database connection failure</h2>
+                <a id="createTableStatement"></a>
+                <h2 class="section-header">Create table statement</h2>
                 <div class="section-body">
 
 
-                        <div class="scenario" id="1087712231_598569407">
+                        <div class="scenario" id="2103763750_215078753">
                             <a id=""></a>
                             <h2>Specification</h2>
                             <pre class="highlight specification">
-Given salume supplier app is up and running
-And database is down
+Given a statement &quot;CREATE TABLE moviestore.films (\n&quot;
+&quot; code char(5) CONSTRAINT firstkey PRIMARY KEY,\n&quot;
+&quot; title varchar(40) NOT NULL,\n&quot;
+&quot; did integer NOT NULL,\n&quot;
+&quot; date_prod date,\n&quot;
+&quot; kind varchar(10),\n&quot;
+&quot; len interval hour to minute\n&quot;
+&quot;);&quot;
 
-When a client requests status page
+When executing that statement
 
-Then the content type is TEXT_PLAIN_CHARSET_UTF8
-Then the status page has http status code OK
-Then the applicantion name and version is &quot;Salume Supplier DEV&quot;
-Then the status of the app is &quot;FAILING&quot;
-Then the app version in the status page is the implementation version in the manifest
-Then the database status is &quot;FAILING&quot;</pre>
+Then the table with schema &quot;moviestore&quot; and table name &quot;films&quot; exists</pre>
                             <h3 class="logKey">Test results:</h3>
                                     <pre class='highlight results test-passed'>
 Test passed</pre>
 
-                                         <h3 class="logKey">Interesting Givens</h3>
 
-                                        <table class="interestingGivens logValue">
-                                            <tr>
-                                                <th class="key">Supplier Status Page:</th>
-                                                <td class="interestingGiven">http://localhost:8282/salume/supplier/status</td>
-                                            </tr>
-                                        
-                                        </table>
+                    </div>
+                    
+                </div>
+            </div>
+                    <div class="testmethod section">
+                <a id="cleanTable"></a>
+                <h2 class="section-header">Clean table</h2>
+                <div class="section-body">
 
-                                        <h3 class="logKey" logkey="Status_Page_request_from_client_to_Supplier">Status Page request from client to Supplier</h3>
-                                        <div class="logValue highlight String" >http://localhost:8282/salume/supplier/status</div>
-                                                                            <h3 class="logKey" logkey="Status_Page_response_from_Supplier_to_client">Status Page response from Supplier to client</h3>
-                                        <div class="logValue highlight String" >Salume Supplier DEV is: FAILING
-Version: ${project.version}
-Database connections is: FAILING</div>
-                                                                            <h3 class="logKey" logkey="Sequence_Diagram">Sequence Diagram</h3>
-                                        <div class="logValue highlight SvgWrapper" ><div class='nohighlight'><?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="154px" style="width:242px;height:154px;" version="1.1" viewBox="0 0 242 154" width="242px">
-  <defs>
-    <filter height="300%" id="f1" width="300%" x="-1" y="-1">
-      <feGaussianBlur result="blurOut" stdDeviation="2.0" />
-      <feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0" />
-      <feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3" />
-      <feBlend in="SourceGraphic" in2="blurOut3" mode="normal" />
-    </filter>
-  </defs>
-  <g>
-    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="35" x2="35" y1="38.2969" y2="116.5625" />
-    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="200.5" x2="200.5" y1="38.2969" y2="116.5625" />
-    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="51" x="8" y="3" />
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="37" x="15" y="22.9951">client</text>
-    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="51" x="8" y="115.5625" />
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="37" x="15" y="135.5576">client</text>
-    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="163.5" y="3" />
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="170.5" y="22.9951">Supplier</text>
-    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="163.5" y="115.5625" />
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="170.5" y="135.5576">Supplier</text>
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="198.5" x2="188.5" y1="69.2969" y2="65.2969" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="198.5" x2="188.5" y1="69.2969" y2="73.2969" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="35.5" x2="199.5" y1="69.2969" y2="69.2969" />
-    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Status_Page_request_from_client_to_Supplier" textLength="131" x="42.5" y="64.3638">Status Page request</text>
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="35.5" x2="45.5" y1="98.4297" y2="94.4297" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="35.5" x2="45.5" y1="98.4297" y2="102.4297" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="35.5" x2="199.5" y1="98.4297" y2="98.4297" />
-    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Status_Page_response_from_Supplier_to_client" textLength="141" x="52.5" y="93.4966">Status Page response</text>
-  </g>
-</svg>
 
-</div></div>
-                                    
+                        <div class="scenario" id="1971783162_247113419">
+                            <a id=""></a>
+                            <h2>Specification</h2>
+                            <pre class="highlight specification">
+Given a customer table with three entries
+Then customer table has size 3
+
+When cleaning the customer table
+Then customer table is empty</pre>
+                            <h3 class="logKey">Test results:</h3>
+                                    <pre class='highlight results test-passed'>
+Test passed</pre>
+
+
                     </div>
                     
                 </div>
