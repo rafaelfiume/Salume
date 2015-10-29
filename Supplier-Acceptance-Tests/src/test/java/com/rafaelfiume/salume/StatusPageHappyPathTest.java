@@ -4,6 +4,7 @@ import com.googlecode.yatspec.junit.Notes;
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
+import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
 import com.rafaelfiume.salume.web.controllers.StatusPageController;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.jar.Manifest;
 
+import static com.rafaelfiume.salume.support.Applications.CLIENT;
+import static com.rafaelfiume.salume.support.Applications.SUPPLIER;
 import static java.lang.System.lineSeparator;
 import static org.apache.commons.lang3.StringUtils.trim;
 import static org.hamcrest.Matchers.is;
@@ -86,8 +89,7 @@ public class StatusPageHappyPathTest extends AbstractSequenceDiagramTestState {
         return (givens, capturedInputAndOutputs) -> {
             this.response = new TestRestTemplate().getForEntity(STATUS_PAGE_URI, String.class);
 
-            // this is what makes the sequence diagram magic happens
-            capturedInputAndOutputs.add("Status Page request from client to Supplier", STATUS_PAGE_URI);
+            capture("Status page request", withContent(STATUS_PAGE_URI), from(CLIENT), to(SUPPLIER));
 
             return capturedInputAndOutputs;
         };
@@ -95,8 +97,7 @@ public class StatusPageHappyPathTest extends AbstractSequenceDiagramTestState {
 
     private StateExtractor<HttpStatus> theStatusPage() {
         return inputAndOutputs -> {
-            // this is what makes the sequence diagram magic happens
-            capturedInputAndOutputs.add("Status Page response from Supplier to client", response.getBody());
+            capture("Status page response ", withContent(response.getBody()), from(SUPPLIER), to(CLIENT));
 
             return this.response.getStatusCode();
         };

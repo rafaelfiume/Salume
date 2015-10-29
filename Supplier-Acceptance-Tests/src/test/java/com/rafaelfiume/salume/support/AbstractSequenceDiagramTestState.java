@@ -1,4 +1,4 @@
-package com.rafaelfiume.salume;
+package com.rafaelfiume.salume.support;
 
 import com.googlecode.totallylazy.Sequence;
 import com.googlecode.yatspec.junit.SpecResultListener;
@@ -12,6 +12,7 @@ import com.googlecode.yatspec.rendering.html.DontHighlightRenderer;
 import com.googlecode.yatspec.rendering.html.HtmlResultRenderer;
 import com.googlecode.yatspec.rendering.html.index.HtmlIndexRenderer;
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
+import com.rafaelfiume.salume.SupplierApplication;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -21,6 +22,7 @@ import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import static com.googlecode.totallylazy.Sequences.sequence;
+import static java.lang.String.format;
 
 @RunWith(SpecRunner.class)
 @SpringApplicationConfiguration(classes = SupplierApplication.class)
@@ -42,6 +44,10 @@ public class AbstractSequenceDiagramTestState extends TestState implements WithC
         this.sequenceDiagramGenerator = new SequenceDiagramGenerator();
     }
 
+    //
+    // Yatspec Setup
+    //
+
     @After
     public void generateSequenceDiagram() {
         Sequence<SequenceDiagramMessage> messages = sequence(new ByNamingConventionMessageProducer().messages(capturedInputAndOutputs));
@@ -56,6 +62,27 @@ public class AbstractSequenceDiagramTestState extends TestState implements WithC
                         withCustomRenderer(SvgWrapper.class, new DontHighlightRenderer()),
                 new HtmlIndexRenderer()).
                 safeCast(SpecResultListener.class);
+    }
+
+    //
+    // Helpers
+    //
+
+    protected void capture(String stuffBeingCaptured, String content, Applications from, Applications to) {
+        // this is what makes the sequence diagram magic happens
+        capturedInputAndOutputs.add(format("%s from %s to %s", stuffBeingCaptured, from.appName(), to.appName()), content);
+    }
+
+    protected String withContent(String content) {
+        return content;
+    }
+
+    protected Applications from(Applications from) {
+        return from;
+    }
+
+    protected Applications to(Applications to) {
+        return to;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.rafaelfiume.salume;
+package com.rafaelfiume.salume.advisor;
 
 import com.googlecode.yatspec.junit.Notes;
 import com.googlecode.yatspec.junit.Row;
@@ -6,13 +6,12 @@ import com.googlecode.yatspec.junit.Table;
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
-import com.rafaelfiume.salume.db.SimpleDatabaseSupport;
 import com.rafaelfiume.salume.domain.Product;
+import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +36,8 @@ import java.io.Writer;
 
 import static com.rafaelfiume.salume.domain.Product.Reputation.NORMAL;
 import static com.rafaelfiume.salume.domain.Product.Reputation.TRADITIONAL;
+import static com.rafaelfiume.salume.support.Applications.CUSTOMER;
+import static com.rafaelfiume.salume.support.Applications.SUPPLIER;
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathConstants.NUMBER;
 import static org.hamcrest.Matchers.hasXPath;
@@ -44,18 +45,11 @@ import static org.springframework.http.MediaType.parseMediaType;
 
 @Notes("A customer can have whatever they want as long as it is salume. At least for now...\n\n" +
         "See an explanation about this story <a href=\"https://rafaelfiume.wordpress.com/2013/04/07/dragons-unicorns-and-titans-an-agile-software-developer-tail/\" target=\"blank\">here</a>.")
-public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
+public class SalumeAdvisorHappyPathTest extends AbstractSequenceDiagramTestState {
 
     private static final MediaType APPLICATION_XML_CHARSET_UTF8 = parseMediaType("application/xml;charset=utf-8");
 
-    private SimpleDatabaseSupport db;
-
     private ResponseEntity<String> response;
-
-    @Autowired
-    public void setDb(SimpleDatabaseSupport db) {
-        this.db = db;
-    }
 
     @Notes("Gioseppo select the customer profile when serving his customers.\n\n" +
             "" +
@@ -69,7 +63,7 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
             @Row({"Healthy", "Not Light In Your Pocket", "EUR 57,37", "31,00", "special"}),
             @Row({"Gourmet", "Premium Salume", "EUR 73,23", "38,00", "traditional"})
     })
-    public void adviceSalume(String profile, String product, String price, String fatPercentage, String traditional) throws Exception {
+    public void suggestUpToThreeChoicesAccordingToClientProfile(String profile, String product, String price, String fatPercentage, String traditional) throws Exception {
         given(availableProductsAre(cheap(), light(), traditional(), andPremium()));
 
         when(requestingBestOfferFor(aCustomerConsidered(profile)));
@@ -82,15 +76,14 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
         then(theContentType(), is(APPLICATION_XML_CHARSET_UTF8));
     }
 
-    @Notes("Expert clients are more demanding and won't accept anything that is not considered traditional long-honored products.\n" +
-            "The number of suggested products is 2 because there are .")
+    @Notes("Expert clients are more demanding and won't accept anything that is not considered traditional long-honored products.")
     @Test
     public void onlySuggestTraditionalProductsToExperts() throws Exception {
-        given(availableProductsAre(cheap(), light(), traditional(), andPremium()));
+        given(onlyTwoOfTheAvailableProductsAreTraditional());
 
         when(requestingBestOfferFor(aCustomerConsidered("Expert")));
 
-        then(numberOfAdvisedProducts(), is(2)); // because there are only two products considered traditional in the db
+        then(numberOfAdvisedProducts(), is(2));
 
         then(adviseCustomerTo(), buy("Traditional Salume", salume()));
         then(firstSuggestedProduct(), hasPrice("EUR 41,60"));
@@ -115,6 +108,18 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
         };
     }
 
+    private GivensBuilder onlyTwoOfTheAvailableProductsAreTraditional() {
+        return givens -> {
+            // Data added using sql scripts. See: 01.create-table.sql
+
+            // Consider doing something like the following in the future...
+            // DatabaseUtilities.cleanAll();
+            // DatabaseUtilities.addProducts(products);
+
+            return givens;
+        };
+    }
+
     private ActionUnderTest requestingBestOfferFor(final String profile) {
         return (givens, capturedInputAndOutputs1) -> {
             // TODO RF 20/10/2015 Extract the server address to a method in the abstract class
@@ -122,8 +127,7 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
 
             this.response = new TestRestTemplate().getForEntity(advisorUrl, String.class);
 
-            // TODO RF 20/10/2015 Extract it to a method in the abstract class
-            capturedInputAndOutputs.add("Salume advice request from customer to Supplier", advisorUrl);
+            capture("Salume advice request", withContent(advisorUrl), from(CUSTOMER), to(SUPPLIER));
 
             return capturedInputAndOutputs;
         };
@@ -136,18 +140,21 @@ public class SalumeAdvisorTest extends AbstractSequenceDiagramTestState {
     }
 
     private StateExtractor<Node> adviseCustomerTo() throws Exception {
-        // TODO RF 20/10/2015 Extract it to a method in the abstract class
-        capturedInputAndOutputs.add("Salume advice response from Supplier to customer", prettyPrint(xmlFrom(response.getBody())));
+        capture("Salume advice response", withContent(prettyPrint(xmlFrom(response.getBody()))), from(SUPPLIER), to(CUSTOMER));
 
         return firstSuggestedProduct();
     }
 
     private StateExtractor<Node> firstSuggestedProduct() {
-        return inputAndOutputs -> ((NodeList) xpath().evaluate("//product", xmlFrom(response.getBody()), NODESET)).item(0);
+        return inputAndOutputs -> ((NodeList)
+                xpath().evaluate("//product", xmlFrom(response.getBody()), NODESET)
+        ).item(0);
     }
 
     private StateExtractor<Node> secondSuggestedProduct() {
-        return inputAndOutputs -> ((NodeList) xpath().evaluate("//product", xmlFrom(response.getBody()), NODESET)).item(1);
+        return inputAndOutputs -> ((NodeList)
+                xpath().evaluate("//product", xmlFrom(response.getBody()), NODESET)
+        ).item(1);
     }
 
     Product cheap() {
