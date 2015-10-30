@@ -13,6 +13,8 @@ import com.googlecode.yatspec.rendering.html.HtmlResultRenderer;
 import com.googlecode.yatspec.rendering.html.index.HtmlIndexRenderer;
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import com.rafaelfiume.salume.SupplierApplication;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -21,14 +23,22 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
+import java.io.File;
+import java.io.IOException;
+
 import static com.googlecode.totallylazy.Sequences.sequence;
 import static java.lang.String.format;
+import static org.apache.commons.lang3.StringUtils.SPACE;
+import static org.apache.commons.lang3.StringUtils.replace;
+import static org.apache.commons.lang3.StringUtils.trim;
 
 @RunWith(SpecRunner.class)
 @SpringApplicationConfiguration(classes = SupplierApplication.class)
 @WebIntegrationTest(/*"debug=true"*/)
 @ActiveProfiles("dev")
 public class AbstractSequenceDiagramTestState extends TestState implements WithCustomResultListeners {
+
+    private static final String GENERATED_FILES_DIRECTORY = "input-output-examples";
 
     // Check http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#testcontext-junit4-rules
     @ClassRule
@@ -71,6 +81,25 @@ public class AbstractSequenceDiagramTestState extends TestState implements WithC
     protected void capture(String stuffBeingCaptured, String content, Applications from, Applications to) {
         // this is what makes the sequence diagram magic happens
         capturedInputAndOutputs.add(format("%s from %s to %s", stuffBeingCaptured, from.appName(), to.appName()), content);
+        saveCaptured(content, withNameUsing(stuffBeingCaptured, from, to));
+    }
+
+    private void saveCaptured(String content, String fileName) {
+        try {
+            FileUtils.write(new File(fileName), content, "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String withNameUsing(String stuffBeingCaptured, Applications from, Applications to) {
+        return trim(format("%s/%s_%s_from_%s_to_%s.txt",
+                GENERATED_FILES_DIRECTORY,
+                getClass().getCanonicalName(),
+                replace(stuffBeingCaptured, SPACE, "_"),
+                from.appName(),
+                to.appName()));
     }
 
     protected String withContent(String content) {
