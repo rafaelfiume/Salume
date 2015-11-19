@@ -19,7 +19,6 @@
         <dependency>
             <groupId>com.rafaelfiume</groupId>
             <artifactId>Salume-Domain</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
