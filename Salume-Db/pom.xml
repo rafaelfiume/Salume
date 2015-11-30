@@ -6,7 +6,7 @@
     <parent>
         <artifactId>Salume-Parent</artifactId>
         <groupId>com.rafaelfiume</groupId>
-        <version>0.1.7-SNAPSHOT</version>
+        <version>0.1.7</version>
     </parent>
 
     <artifactId>Salume-Db</artifactId>
