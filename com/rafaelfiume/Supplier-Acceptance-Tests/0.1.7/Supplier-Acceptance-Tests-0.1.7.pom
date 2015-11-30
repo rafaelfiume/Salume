@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.rafaelfiume</groupId>
+        <artifactId>Salume-Parent</artifactId>
+        <version>0.1.7</version>
+    </parent>
+
+    <artifactId>Supplier-Acceptance-Tests</artifactId>
+    <packaging>jar</packaging>
+
+    <description>Acceptance Tests for Salume Server App</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.rafaelfiume</groupId>
+            <artifactId>Supplier</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Spring test -->
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+
+        <!-- Test stuff -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.yatspec</groupId>
+            <artifactId>yatspec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.totallylazy</groupId>
+            <artifactId>totallylazy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.plantuml</groupId>
+            <artifactId>plantuml</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>input-output-examples</directory>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>create-api-contract-input-output-examples</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/*.class</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>dbRecreate</id>
+            <build>
+                <plugins>
+                    <!-- Consider to have a module to specify the order of execution of Db-Integrator -->
+
+                    <!-- Only updates the database if everything is correct -->
+                    <plugin>
+                        <groupId>com.rafaelfiume</groupId>
+                        <artifactId>Db-Integrator</artifactId>
+                        <version>${project.version}</version>
+                        <executions>
+                            <execution>
+                                <!-- Recreate remote (staging or production depending on the environment) after a success build -->
+                                <!-- If $DATABASE_RELEASE_URL is not set, the execution will be ignored. -->
+                                <id>recreating-release-db</id>
+                                <phase>test</phase>
+                                <inherited>true</inherited>
+                                <goals>
+                                    <goal>recreatedb</goal>
+                                </goals>
+                                <configuration>
+                                    <databaseUrl>${env.DATABASE_RELEASE_URL}</databaseUrl>
+                                    <!--<currentBranch>${env.TRAVIS_BRANCH}</currentBranch>-->
+                                </configuration>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.postgresql</groupId>
+                                <artifactId>postgresql</artifactId>
+                                <version>${postgresql.version}</version>
+                                <scope>runtime</scope>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+
+</project>
