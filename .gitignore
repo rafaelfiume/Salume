@@ -4,6 +4,7 @@ nohup.out
 # Build Artifacts
 input-output-examples
 */target
+/target/*
 *.releaseBackup
 release.properties
 

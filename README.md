@@ -2,9 +2,11 @@
 
 Check the application spec [here](http://rafaelfiume.github.io/Salume/). Access the [status page](http://app.rafaelfiume.com/salume/supplier/status/) in production.
 
-## Running the application locally
+## Running the Application
 
-The following environment variable must be set: $DATABASE_URL.
+The following environment variable must be set:
+* $DATABASE_URL
+* $GITHUB_OAUTH_TOKEN
 
 Build with:
 
