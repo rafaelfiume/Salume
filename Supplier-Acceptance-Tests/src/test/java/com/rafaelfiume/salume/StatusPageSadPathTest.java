@@ -40,7 +40,7 @@ public class StatusPageSadPathTest extends AbstractSequenceDiagramTestState {
     private ResponseEntity<String> response;
 
     @Test
-    public void databaseConnectionFailure() throws Exception {
+    public void showStatusFailWhenAppIsUpAndRunningAndDatabaseConnectionFails() throws Exception {
         given(salumeSupplierAppIsUpAndRunning());
         and(databaseIsDown());
 

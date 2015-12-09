@@ -63,7 +63,7 @@ public class SalumeAdvisorHappyPathTest extends AbstractSequenceDiagramTestState
             @Row({"Healthy", "Not Light In Your Pocket", "EUR 57,37", "31,00", "special"}),
             @Row({"Gourmet", "Premium Salume", "EUR 73,23", "38,00", "traditional"})
     })
-    public void suggestUpToThreeChoicesAccordingToClientProfile(String profile, String product, String price, String fatPercentage, String traditional) throws Exception {
+    public void suggestUpToThreeDifferentProductsAccordingToClientProfile(String profile, String product, String price, String fatPercentage, String traditional) throws Exception {
         given(availableProductsAre(cheap(), light(), traditional(), andPremium()));
 
         when(requestingBestOfferFor(aCustomerConsidered(profile)));

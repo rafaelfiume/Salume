@@ -56,7 +56,7 @@ public class StatusPageHappyPathTest extends AbstractSequenceDiagramTestState {
     private ResponseEntity<String> response;
 
     @Test
-    public void appIsOk() throws Exception {
+    public void showStatusOkWhenAppIsUpAndRunningAndAllTheResourcesItDependsOnAreAvailable() throws Exception {
         given(salumeSupplierAppIsUpAndRunning());
 
         when(aClientRequestsStatusPage());
