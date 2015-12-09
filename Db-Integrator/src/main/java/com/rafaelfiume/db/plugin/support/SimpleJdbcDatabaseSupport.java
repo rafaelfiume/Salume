@@ -1,6 +1,5 @@
 package com.rafaelfiume.db.plugin.support;
 
-import com.rafaelfiume.db.plugin.config.DataSourceConfig;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 

@@ -1,0 +1,2 @@
+INSERT INTO salumistore.products VALUES (4, 'Salame Salve-se Quem Puder'                , 41.60, 37.00, 1);
+INSERT INTO salumistore.products VALUES (5, 'Salame É Comer e Correr (para o hospital)' , 73.23, 38.00, 1);

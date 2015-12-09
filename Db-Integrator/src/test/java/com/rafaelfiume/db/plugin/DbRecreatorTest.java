@@ -1,6 +1,6 @@
 package com.rafaelfiume.db.plugin;
 
-import com.rafaelfiume.db.plugin.support.ScriptsSource;
+import com.rafaelfiume.db.plugin.support.ScriptsReader;
 import com.rafaelfiume.db.plugin.support.SimpleDatabaseSupport;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
@@ -22,7 +22,7 @@ public class DbRecreatorTest {
     private SimpleDatabaseSupport dbSupport;
 
     @Mock
-    private ScriptsSource scriptsSource;
+    private ScriptsReader scriptsReader;
 
     @Mock
     private Log log;
@@ -31,13 +31,13 @@ public class DbRecreatorTest {
 
     @Before
     public void setUp() {
-        dbRecreator = new DbRecreator(log, scriptsSource);
+        dbRecreator = new DbRecreator(log, scriptsReader);
     }
 
     @Test
     public void shouldRecreateDatabase() {
         // pre act
-        when(scriptsSource.getScripts(any())).thenReturn("some nice sql here");
+        when(scriptsReader.getScripts(any())).thenReturn("some nice sql here");
 
         // act
         dbRecreator.recreateDb(DATABASE_URL, MOVIESTORE_SCHEMA, dbSupport);
@@ -63,7 +63,7 @@ public class DbRecreatorTest {
         // pre act
         final RuntimeException toBeThrown = new RuntimeException();
         doThrow(toBeThrown).when(dbSupport).dropDb(MOVIESTORE_SCHEMA);
-        when(scriptsSource.getScripts(any())).thenReturn("some nice sql here");
+        when(scriptsReader.getScripts(any())).thenReturn("some nice sql here");
 
         // act
         dbRecreator.recreateDb(DATABASE_URL, MOVIESTORE_SCHEMA, dbSupport);

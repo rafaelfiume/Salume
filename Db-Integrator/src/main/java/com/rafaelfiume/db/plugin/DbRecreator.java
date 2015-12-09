@@ -1,6 +1,6 @@
 package com.rafaelfiume.db.plugin;
 
-import com.rafaelfiume.db.plugin.support.ScriptsSource;
+import com.rafaelfiume.db.plugin.support.ScriptsReader;
 import com.rafaelfiume.db.plugin.support.SimpleDatabaseSupport;
 import org.apache.maven.plugin.logging.Log;
 
@@ -9,11 +9,11 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class DbRecreator {
 
     private final Log log;
-    private final ScriptsSource scriptsSource;
+    private final ScriptsReader scriptsReader;
 
-    public DbRecreator(Log log, ScriptsSource scriptsSource) {
+    public DbRecreator(Log log, ScriptsReader scriptsReader) {
         this.log = log;
-        this.scriptsSource = scriptsSource;
+        this.scriptsReader = scriptsReader;
     }
 
     public void recreateDb(String databaseUrl, String schema, SimpleDatabaseSupport dbSupport) {
@@ -40,7 +40,7 @@ public class DbRecreator {
 
     private void loadSqlScriptsAndExecuteThem(SimpleDatabaseSupport dbSupport) {
         log.info("Second, loading statements...");
-        final String script = scriptsSource.getScripts("scripts/01.create-table.sql");
+        final String script = scriptsReader.getScripts("scripts/i01/01.create-table.sql");
 
         log.info("Script is: " + script);
         try {

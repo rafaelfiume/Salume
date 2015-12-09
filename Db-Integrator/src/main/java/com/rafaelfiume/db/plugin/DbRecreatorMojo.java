@@ -1,7 +1,7 @@
 package com.rafaelfiume.db.plugin;
 
 import com.rafaelfiume.db.plugin.config.DataSourceConfig;
-import com.rafaelfiume.db.plugin.support.ScriptsSource;
+import com.rafaelfiume.db.plugin.support.ScriptsReader;
 import com.rafaelfiume.db.plugin.support.SimpleJdbcDatabaseSupport;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -28,7 +28,7 @@ public class DbRecreatorMojo extends AbstractMojo {
     private String databaseUrl;
 
     public DbRecreatorMojo() {
-        this.dbRecreator = new DbRecreator(getLog(), new ScriptsSource());
+        this.dbRecreator = new DbRecreator(getLog(), new ScriptsReader());
     }
 
     public void execute() throws MojoExecutionException {
