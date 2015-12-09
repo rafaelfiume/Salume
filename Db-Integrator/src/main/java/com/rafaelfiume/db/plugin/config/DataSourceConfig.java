@@ -1,30 +1,31 @@
 package com.rafaelfiume.db.plugin.config;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import org.apache.commons.lang3.Validate;
+import org.springframework.jdbc.datasource.AbstractDataSource;
 
 import javax.sql.DataSource;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
-import static java.lang.System.getenv;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 
 public class DataSourceConfig {
 
-    private static final String DATABASE_URL = "DATABASE_URL";
-
     // TODO RF 23/10/2015 Duplicated from Salume-Db
 
-    public DataSource dataSource() throws URISyntaxException {
-        return dataSource(getenv(DATABASE_URL));
-    }
-
     // Used by Db-Integrator plugin
-    public DataSource dataSource(String databaseUrl) throws URISyntaxException {
-        Validate.notNull(databaseUrl, "missing %s environment variable", DATABASE_URL);
+    public DataSource dataSource(String databaseUrl) {
+        if (isBlank(databaseUrl)) return new EmptyDataSource(); // let upper classes deal with missing db url
 
-        final URI dbUri = new URI(databaseUrl);
+        final URI dbUri;
+        try {
+            dbUri = new URI(databaseUrl);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("irrecoverable exception: wrong database url", e);
+        }
 
         final StringBuilder dbUriBuilder = new StringBuilder("jdbc:postgresql://")
                 .append(dbUri.getHost())
@@ -36,12 +37,25 @@ public class DataSourceConfig {
             dbUriBuilder.append("?").append(query);
         }
 
-        BasicDataSource basicDataSource = new BasicDataSource();
+        final BasicDataSource basicDataSource = new BasicDataSource();
         basicDataSource.setUrl(dbUriBuilder.toString());
         basicDataSource.setUsername(dbUri.getUserInfo().split(":")[0]);
         basicDataSource.setPassword(dbUri.getUserInfo().split(":")[1]);
 
         return basicDataSource;
+    }
+
+    static class EmptyDataSource extends AbstractDataSource {
+
+        @Override
+        public Connection getConnection(String username, String password) throws SQLException {
+            return getConnection();
+        }
+
+        @Override
+        public Connection getConnection() throws SQLException {
+            throw new UnsupportedOperationException("operation not supported: database url was not set");
+        }
     }
 
 }

@@ -8,9 +8,13 @@ import java.net.URISyntaxException;
 
 public class ScriptsSource {
 
-    public String getScripts() throws IOException, URISyntaxException {
-        final InputStream is = getClass().getClassLoader().getResourceAsStream("scripts/01.create-table.sql");
-        return IOUtils.toString(is);
+    public String getScripts(String source) {
+        try {
+            final InputStream is = getClass().getClassLoader().getResourceAsStream(source);
+            return IOUtils.toString(is);
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("could not load scripts from %s", source), e);
+        }
     }
 
 }
