@@ -42,18 +42,6 @@
             <artifactId>jackson-dataformat-xml</artifactId>
         </dependency>
 
-        <!-- Database -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-dbcp2</artifactId>
-        </dependency>
-
-
         <!-- Logging : bridging Spring to SLF4J, and binding from SLF4J to Log4J -->
 
         <dependency>

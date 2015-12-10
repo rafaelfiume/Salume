@@ -72,10 +72,10 @@ public class SimpleDatabaseSupportTest extends TestState {
     @Test
     public void cleanTable() throws Exception {
         given(aCustomerTableWithThreeEntries());
-        then(customerTable(), hasSize(3));
+        then(theCustomerTable(), hasSize(3));
 
         when(cleaningTheCustomerTable());
-        then(customerTable(), is(empty()));
+        then(theCustomerTable(), is(empty()));
     }
 
     private GivensBuilder aStatement(final String statement) {
@@ -147,7 +147,7 @@ public class SimpleDatabaseSupportTest extends TestState {
         };
     }
 
-    private StateExtractor<List<Customer>> customerTable() {
+    private StateExtractor<List<Customer>> theCustomerTable() {
         return inputAndOutputs -> dbSupport.query("SELECT * FROM moviestore.customers", new CustomerRowMapper());
     }
 
