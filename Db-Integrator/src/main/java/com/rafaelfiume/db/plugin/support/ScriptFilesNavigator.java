@@ -1,40 +1,71 @@
 package com.rafaelfiume.db.plugin.support;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 
-import java.io.File;
+import java.io.Closeable;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
+import java.nio.file.*;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+import static java.nio.file.FileSystems.newFileSystem;
+import static org.apache.commons.io.IOUtils.closeQuietly;
 
 /**
  * Not reusable navigator: instantiate a new one every time navigating through scripts dir is needed.
  */
-public class ScriptFilesNavigator {
+public class ScriptFilesNavigator implements ScriptsNavigator {
 
-    private final Collection<File> files;
-    private final Iterator<File> fileIterator;
+    private static final String SCRIPTS_DIR = "/scripts";
 
-    public ScriptFilesNavigator() throws URISyntaxException {
-        final URI uri = ScriptFilesNavigator.class.getResource("/scripts").toURI();
-        final File scriptsFolder = new File(uri);
+    private final Iterator<String> iterator;
 
-        this.files = FileUtils.listFiles(scriptsFolder, new String[]{"sql"}, true);
-        this.fileIterator = FileUtils.iterateFiles(scriptsFolder, new String[]{"sql"}, true);
+    private FileSystem fileSystem;
+
+    public ScriptFilesNavigator() {
+        this.iterator = scriptsDirPath()
+                .map(path -> "scripts" + path.toString().split(SCRIPTS_DIR)[1])
+                .sequential()
+                .iterator();
     }
 
-    public int numberOfFiles() {
-        return files.size();
-    }
-
+    @Override
     public boolean hasNext() {
-        return fileIterator.hasNext();
+        return iterator.hasNext();
     }
 
+    @Override
     public String next() {
-        final File scriptFile = fileIterator.next();
-        return "scripts/" + scriptFile.getParentFile().getName() + "/" + scriptFile.getName();
+        return iterator.next();
     }
 
+    private Stream<Path> scriptsDirPath() {
+        try {
+            final URI uri = ScriptFilesNavigator.class.getResource(SCRIPTS_DIR).toURI();
+            final Path scriptsPath;
+            if (uri.getScheme().equals("jar")) {
+                this.fileSystem = newFileSystem(uri, Collections.<String, Object>emptyMap());
+                scriptsPath = fileSystem.getPath(SCRIPTS_DIR);
+            } else {
+                scriptsPath = Paths.get(uri);
+            }
+
+            return Files.find(scriptsPath, 2,
+                    (path, basicFileAttributes) -> basicFileAttributes.isRegularFile()
+            ).sorted();
+
+        } catch (IOException | URISyntaxException e) {
+            throw new RuntimeException("failed to find scripts dir", e);
+        }
+    }
+
+
+    @Override
+    public void close() throws IOException {
+        closeQuietly(fileSystem);
+    }
 }

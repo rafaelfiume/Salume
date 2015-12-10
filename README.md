@@ -44,4 +44,5 @@ Specify a value to it to run db scripts in the release environment (staging, pro
 
 ### Database Recreator Plugin
 * ~~Recrete Db when specifying dbRecreator profile in the maven build~~
-* Possibility of using more than one script file to recreate the db
+* ~~Possibility of using more than one script file to recreate the db~~
+* Load db with more data

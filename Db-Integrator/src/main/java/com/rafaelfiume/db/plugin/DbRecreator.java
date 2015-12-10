@@ -1,7 +1,9 @@
 package com.rafaelfiume.db.plugin;
 
+import com.rafaelfiume.db.plugin.support.ScriptsNavigator;
 import com.rafaelfiume.db.plugin.support.ScriptsReader;
 import com.rafaelfiume.db.plugin.support.SimpleDatabaseSupport;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -9,10 +11,12 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class DbRecreator {
 
     private final Log log;
+    private final ScriptsNavigator scriptsNavigator;
     private final ScriptsReader scriptsReader;
 
-    public DbRecreator(Log log, ScriptsReader scriptsReader) {
+    public DbRecreator(Log log, ScriptsNavigator scriptsNavigator, ScriptsReader scriptsReader) {
         this.log = log;
+        this.scriptsNavigator = scriptsNavigator;
         this.scriptsReader = scriptsReader;
     }
 
@@ -40,9 +44,19 @@ public class DbRecreator {
 
     private void loadSqlScriptsAndExecuteThem(SimpleDatabaseSupport dbSupport) {
         log.info("Second, loading statements...");
-        final String script = scriptsReader.getScripts("scripts/i01/01.create-table.sql");
 
-        log.info("Script is: " + script);
+        // Very likely missing a colaborator here. Let's see what happens when adding the next functionalities
+        while (scriptsNavigator.hasNext()){
+            executeScripts(dbSupport, scriptsNavigator.next());
+        }
+        IOUtils.closeQuietly(scriptsNavigator); // TODO RF 10/12/2015 Fix this
+    }
+
+    private void executeScripts(SimpleDatabaseSupport dbSupport, String scriptFile) {
+        final String script = scriptsReader.readScript(scriptFile);
+
+        log.info("Executing script: " + scriptFile);
+        log.debug("Script is: " + script);
         try {
             dbSupport.execute(script);
         } catch (Exception e) {

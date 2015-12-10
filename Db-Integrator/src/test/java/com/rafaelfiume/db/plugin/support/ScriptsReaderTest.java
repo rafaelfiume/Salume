@@ -13,7 +13,7 @@ public class ScriptsReaderTest {
 
     @Test
     public void retrieveScriptFile() {
-        final String scripts = new ScriptsReader().getScripts("scripts/i01/01.create-table.sql");
+        final String scripts = new ScriptsReader().readScript("scripts/i01/01.create-table.sql");
         assertNotNull(scripts);
     }
 
@@ -21,7 +21,7 @@ public class ScriptsReaderTest {
     public void throwIrrecoverableExceptionWhenCanNotFindDbScripts() {
         thrown.expect(RuntimeException.class);
         thrown.expectMessage("could not load scripts from scripts/inexistent.script.sql");
-        new ScriptsReader().getScripts("scripts/inexistent.script.sql");
+        new ScriptsReader().readScript("scripts/inexistent.script.sql");
     }
 
 }

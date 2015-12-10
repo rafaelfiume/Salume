@@ -8,7 +8,7 @@ import java.net.URISyntaxException;
 
 public class ScriptsReader {
 
-    public String getScripts(String source) {
+    public String readScript(String source) {
         try (final InputStream is = getClass().getClassLoader().getResourceAsStream(source)) {
             return IOUtils.toString(is);
 
