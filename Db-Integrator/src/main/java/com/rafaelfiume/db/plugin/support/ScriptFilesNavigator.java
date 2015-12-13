@@ -1,15 +1,14 @@
 package com.rafaelfiume.db.plugin.support;
 
-import org.apache.commons.io.IOUtils;
-
-import java.io.Closeable;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.*;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.nio.file.FileSystems.newFileSystem;
@@ -20,10 +19,9 @@ import static org.apache.commons.io.IOUtils.closeQuietly;
  */
 public class ScriptFilesNavigator implements ScriptsNavigator {
 
-    private static final String SCRIPTS_DIR = "/scripts";
+    private static final String SCRIPTS_DIR = "scripts";
 
     private final Iterator<String> iterator;
-
     private FileSystem fileSystem;
 
     public ScriptFilesNavigator() {
@@ -45,11 +43,11 @@ public class ScriptFilesNavigator implements ScriptsNavigator {
 
     private Stream<Path> scriptsDirPath() {
         try {
-            final URI uri = ScriptFilesNavigator.class.getResource(SCRIPTS_DIR).toURI();
+            final URI uri = ScriptFilesNavigator.class.getResource("/" + SCRIPTS_DIR).toURI();
             final Path scriptsPath;
             if (uri.getScheme().equals("jar")) {
                 this.fileSystem = newFileSystem(uri, Collections.<String, Object>emptyMap());
-                scriptsPath = fileSystem.getPath(SCRIPTS_DIR);
+                scriptsPath = fileSystem.getPath("/" + SCRIPTS_DIR);
             } else {
                 scriptsPath = Paths.get(uri);
             }
