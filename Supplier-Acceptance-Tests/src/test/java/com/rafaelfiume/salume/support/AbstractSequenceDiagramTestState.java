@@ -22,6 +22,7 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +41,6 @@ public class AbstractSequenceDiagramTestState extends TestState implements WithC
 
     private static final String GENERATED_FILES_DIRECTORY = "input-output-examples";
 
-    // Check http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#testcontext-junit4-rules
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
 
@@ -50,7 +50,7 @@ public class AbstractSequenceDiagramTestState extends TestState implements WithC
     private SequenceDiagramGenerator sequenceDiagramGenerator;
 
     @Before
-    public void setUp() {
+    public final void setUp() {
         this.sequenceDiagramGenerator = new SequenceDiagramGenerator();
     }
 
@@ -59,7 +59,7 @@ public class AbstractSequenceDiagramTestState extends TestState implements WithC
     //
 
     @After
-    public void generateSequenceDiagram() {
+    public final void generateSequenceDiagram() {
         Sequence<SequenceDiagramMessage> messages = sequence(new ByNamingConventionMessageProducer().messages(capturedInputAndOutputs));
         capturedInputAndOutputs.add("Sequence Diagram", sequenceDiagramGenerator.generateSequenceDiagram(messages));
     }

@@ -1,24 +1,27 @@
 package com.rafaelfiume.salume.services;
 
-import com.rafaelfiume.salume.db.advisor.JdbcProductAdvisorDao;
+import com.rafaelfiume.salume.db.advisor.PersistentProductBase;
 import com.rafaelfiume.salume.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static java.lang.String.format;
 
-@Component
+@Service
+@Transactional
 public class ProductAdvisor {
 
-    private final JdbcProductAdvisorDao productAdvisorDao;
+    private final PersistentProductBase productAdvisorDao;
 
     @Autowired
-    public ProductAdvisor(JdbcProductAdvisorDao productAdvisorDao) {
+    public ProductAdvisor(PersistentProductBase productAdvisorDao) {
         this.productAdvisorDao = productAdvisorDao;
     }
 
+    @Transactional
     public List<Product> recommendationFor(String profile) {
         // TODO RF 24/10/2015 First-cut implementation. Improve this non O.O switch impl.
 

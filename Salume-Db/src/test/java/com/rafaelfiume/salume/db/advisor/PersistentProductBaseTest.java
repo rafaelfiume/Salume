@@ -8,6 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +17,6 @@ import javax.money.MonetaryAmount;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
-import java.util.Locale;
 
 import static com.rafaelfiume.salume.domain.Product.Reputation.NORMAL;
 import static com.rafaelfiume.salume.domain.Product.Reputation.TRADITIONAL;
@@ -27,7 +27,9 @@ import static org.junit.Assert.assertThat;
 
 @ContextConfiguration(classes = DbApplication.class)
 @Transactional
-public class JdbcProductAdvisorDaoTest {
+@Sql("clean-products.sql")
+@Sql("populate-products.sql")
+public class PersistentProductBaseTest {
 
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
@@ -35,18 +37,19 @@ public class JdbcProductAdvisorDaoTest {
     @Rule
     public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
-    private JdbcProductAdvisorDao advisorDao;
+    private PersistentProductBase underTest;
 
     @Autowired
-    public void setAdvisorDao(JdbcProductAdvisorDao advisorDao) {
-        this.advisorDao = advisorDao;
+    public void setAdvisorDao(PersistentProductBase advisorDao) {
+        this.underTest = advisorDao;
     }
 
     @Test
-    public void magicProfile() throws ParseException {
-        List<Product> suggested = advisorDao.productsForMagic();
+    public void magicProfile1() throws ParseException {
+        List<Product> suggested = underTest.productsForMagic();
 
         assertThat(suggested, hasSize(3));
+
         assertThat(first(suggested).getId(), is(1L));
         assertThat(first(suggested).getName(), is("Cheap Salume"));
         assertThat(first(suggested).getPrice(), is(theAmountOf("15,55")));
@@ -59,12 +62,12 @@ public class JdbcProductAdvisorDaoTest {
         assertThat(third(suggested).getName(), is("Traditional Salume"));
         assertThat(third(suggested).getPrice(), is(theAmountOf("41,60")));
     }
-
     @Test
     public void healthyProfile() throws ParseException {
-        List<Product> suggested = advisorDao.productsForHealthy();
+        List<Product> suggested = underTest.productsForHealthy();
 
         assertThat(suggested, hasSize(3));
+
         assertThat(first(suggested).getId(), is(3L));
         assertThat(first(suggested).getName(), is("Not Light In Your Pocket"));
         assertThat(first(suggested).getPrice(), is(theAmountOf("57,37")));
@@ -80,7 +83,7 @@ public class JdbcProductAdvisorDaoTest {
 
     @Test
     public void expertProfile() throws ParseException {
-        List<Product> suggested = advisorDao.productsForExpert();
+        List<Product> suggested = underTest.productsForExpert();
 
         /*
          * Only two results here (the only two traditional products available),
@@ -88,6 +91,7 @@ public class JdbcProductAdvisorDaoTest {
          */
 
         assertThat(suggested, hasSize(2));
+
         assertThat(first(suggested).getId(), is(4L));
         assertThat(first(suggested).getName(), is("Traditional Salume"));
         assertThat(first(suggested).getPrice(), is(theAmountOf("41,60")));
@@ -100,9 +104,10 @@ public class JdbcProductAdvisorDaoTest {
 
     @Test
     public void gourmetProfile() throws ParseException {
-        List<Product> suggested = advisorDao.productsForGourmet();
+        List<Product> suggested = underTest.productsForGourmet();
 
         assertThat(suggested, hasSize(3));
+
         assertThat(first(suggested).getId(), is(5L));
         assertThat(first(suggested).getName(), is("Premium Salume"));
         assertThat(first(suggested).getPrice(), is(theAmountOf("73,23")));

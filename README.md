@@ -1,13 +1,9 @@
-# Salume [![Build Status](https://travis-ci.org/rafaelfiume/Salume.svg?branch=master)](https://travis-ci.org/rafaelfiume/Salume) [![Apache 2.0 License](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](https://github.com/rafaelfiume/Prosciutto-Mob/blob/master/LICENSE)
+# Salume [![Build Status](https://travis-ci.org/rafaelfiume/Salume.svg?branch=master)](https://travis-ci.org/rafaelfiume/Salume) [![Apache 2.0 License](https://img.shields.io/badge/license-Apache_2.0-blue.svg)](https://github.com/rafaelfiume/Salume/blob/master/LICENSE)
 
 
-Check the application spec [here](http://rafaelfiume.github.io/Salume/). Access the [status page](http://app.rafaelfiume.com/salume/supplier/status/) in production.
+Check the application spec [here](http://rafaelfiume.github.io/Salume). Access the [status page](http://app.rafaelfiume.com/salume/supplier/status) in production.
 
 ## Running the Application
-
-The following environment variable must be set:
-* $DATABASE_URL
-* $GITHUB_OAUTH_TOKEN
 
 Build with:
 
@@ -25,9 +21,9 @@ The following variables are used in this project:
 
 #### Application
 1) $DATABASE_URL is mandatory and points to the database. It must be set since there's no default value.
-2) $DATABASE_RELEASE_URL is optional, but recommended.
-Specify a value to it to run db scripts in the release environment (staging, prod).
+2) $DATABASE_RELEASE_URL is optional, but recommended. Specify a value to it to run db scripts in the release environment (staging, prod).
 3) $PORT is mandatory, but usually set by Heroku. When necessary $PORT can be specified using --PORT=8081, for instance.
+4) $GITHUB_OAUTH_TOKEN (optional) is necessary when pushing Supplier-Acceptance-Tests into mvn-repo
 
 ## TODO List - aka User Stories ;)
 
@@ -45,4 +41,4 @@ Specify a value to it to run db scripts in the release environment (staging, pro
 ### Database Recreator Plugin
 * ~~Recrete Db when specifying dbRecreator profile in the maven build~~
 * ~~Possibility of using more than one script file to recreate the db~~
-* Load db with more data
+* Load db with more products (WiP)

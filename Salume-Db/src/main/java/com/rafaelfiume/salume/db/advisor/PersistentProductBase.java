@@ -6,7 +6,7 @@ import org.javamoney.moneta.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -14,16 +14,16 @@ import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.util.List;
 
-import static com.rafaelfiume.salume.db.advisor.JdbcProductAdvisorDao.Queries.*;
+import static com.rafaelfiume.salume.db.advisor.PersistentProductBase.Queries.*;
 import static java.util.Locale.ITALY;
 
-@Component
-public class JdbcProductAdvisorDao {
+@Repository
+public class PersistentProductBase { // TODO RF 12/12/2015 implements ProductBase
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public JdbcProductAdvisorDao(DataSource dataSource) {
+    public PersistentProductBase(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

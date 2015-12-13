@@ -16,7 +16,7 @@ public class SimpleJdbcDatabaseSupport implements SimpleDatabaseSupport {
     }
 
     @Override
-    public void dropDb(String schema) {
+    public void dropAndCreate(String schema) {
         jdbcTemplate.execute("drop schema if exists " + schema + " cascade");
         jdbcTemplate.execute("create schema " + schema);
     }

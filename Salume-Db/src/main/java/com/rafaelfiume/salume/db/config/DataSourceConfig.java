@@ -5,29 +5,44 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.Validate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static java.lang.String.format;
 import static java.lang.System.getenv;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 
 @Configuration
+@EnableTransactionManagement
 public class DataSourceConfig {
 
     private static final String DATABASE_URL = "DATABASE_URL";
-    
+
     @Bean
-    public DataSource dataSource() throws URISyntaxException {
+    public DataSource dataSource() {
         return dataSource(getenv(DATABASE_URL));
     }
 
+    @Bean
+    public PlatformTransactionManager txManager() {
+        return new DataSourceTransactionManager(dataSource());
+    }
+
     // Used by Db-Integrator plugin
-    public DataSource dataSource(String databaseUrl) throws URISyntaxException {
+    public DataSource dataSource(String databaseUrl) {
         Validate.notNull(databaseUrl, "missing %s environment variable", DATABASE_URL);
 
-        final URI dbUri = new URI(databaseUrl);
+        final URI dbUri;
+        try {
+            dbUri = new URI(databaseUrl);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(format("error creating URI from %s", databaseUrl), e);
+        }
 
         final StringBuilder dbUriBuilder = new StringBuilder("jdbc:postgresql://")
                 .append(dbUri.getHost())

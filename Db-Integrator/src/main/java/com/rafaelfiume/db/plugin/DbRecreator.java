@@ -35,7 +35,7 @@ public class DbRecreator {
     private void dropDatabaseIfItAlreadyExists(String schema, SimpleDatabaseSupport dbSupport) {
         log.info("First, dropping schema " + schema + "...");
         try {
-            dbSupport.dropDb(schema);
+            dbSupport.dropAndCreate(schema);
         } catch (Exception e) {
             log.warn("Failed to drop schema " + schema + ". (Maybe the schema was never created?) Trying to proceed with db recreation anyway...", e);
         }

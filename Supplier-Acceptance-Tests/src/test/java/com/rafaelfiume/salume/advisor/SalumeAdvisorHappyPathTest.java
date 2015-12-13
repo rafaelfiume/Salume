@@ -6,21 +6,28 @@ import com.googlecode.yatspec.junit.Table;
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
+import com.rafaelfiume.salume.db.SimpleJdbcDatabaseSupport;
 import com.rafaelfiume.salume.domain.Product;
 import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.javamoney.moneta.Money;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.transaction.TestTransaction;
+import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import javax.money.MonetaryAmount;
+import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -45,11 +52,30 @@ import static org.springframework.http.MediaType.parseMediaType;
 
 @Notes("A customer can have whatever they want as long as it is salume. At least for now...\n\n" +
         "See an explanation about this story <a href=\"https://rafaelfiume.wordpress.com/2013/04/07/dragons-unicorns-and-titans-an-agile-software-developer-tail/\" target=\"blank\">here</a>.")
+@Transactional
 public class SalumeAdvisorHappyPathTest extends AbstractSequenceDiagramTestState {
 
     private static final MediaType APPLICATION_XML_CHARSET_UTF8 = parseMediaType("application/xml;charset=utf-8");
 
     private ResponseEntity<String> response;
+
+    private final JdbcTestUtils dbUtils = new JdbcTestUtils();
+
+    private final SpringCommitsAndClosesTestTransactionTransactor transactor = new SpringCommitsAndClosesTestTransactionTransactor();
+
+    private JdbcTemplate jdbcTemplate;
+
+    private SimpleJdbcDatabaseSupport db;
+
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    @Autowired
+    public void setSimpleJdbcDatabaseSupport(SimpleJdbcDatabaseSupport db) {
+        this.db = db;
+    }
 
     @Notes("Gioseppo select the customer profile when serving his customers.\n\n" +
             "" +
@@ -59,12 +85,12 @@ public class SalumeAdvisorHappyPathTest extends AbstractSequenceDiagramTestState
             "Special is another word for \"ordinary non tradition product\".")
     @Test
     @Table({
-            @Row({"Magic", "Cheap Salume", "EUR 15,55", "49,99", "special"}),
+            @Row({"Magic", "Cheap Salume", "EUR 11,11", "49,99", "special"}),
             @Row({"Healthy", "Not Light In Your Pocket", "EUR 57,37", "31,00", "special"}),
             @Row({"Gourmet", "Premium Salume", "EUR 73,23", "38,00", "traditional"})
     })
     public void suggestUpToThreeDifferentProductsAccordingToClientProfile(String profile, String product, String price, String fatPercentage, String traditional) throws Exception {
-        given(availableProductsAre(cheap(), light(), traditional(), andPremium()));
+        given(theAvailableProductsAre(cheap(), light(), traditional(), andPremium()));
 
         when(requestingBestOfferFor(aCustomerConsidered(profile)));
 
@@ -79,7 +105,7 @@ public class SalumeAdvisorHappyPathTest extends AbstractSequenceDiagramTestState
     @Notes("Expert clients are more demanding and won't accept anything that is not considered traditional long-honored products.")
     @Test
     public void onlySuggestTraditionalProductsToExperts() throws Exception {
-        given(onlyTwoOfTheAvailableProductsAreTraditional());
+        given(theAvailableProductsAre(cheap(), light(), traditional(), andPremium()));
 
         when(requestingBestOfferFor(aCustomerConsidered("Expert")));
 
@@ -96,25 +122,17 @@ public class SalumeAdvisorHappyPathTest extends AbstractSequenceDiagramTestState
         then(theContentType(), is(APPLICATION_XML_CHARSET_UTF8));
     }
 
-    private GivensBuilder availableProductsAre(Product... products) {
+    private GivensBuilder theAvailableProductsAre(Product... products) {
         return givens -> {
-            // Data added using sql scripts. See: 01.create-table.sql
+            transactor.perform(() -> {
+                dbUtils.deleteFromTables(jdbcTemplate, "salumistore.products");
 
-            // Consider doing something like the following in the future...
-            // DatabaseUtilities.cleanAll();
-            // DatabaseUtilities.addProducts(products);
-
-            return givens;
-        };
-    }
-
-    private GivensBuilder onlyTwoOfTheAvailableProductsAreTraditional() {
-        return givens -> {
-            // Data added using sql scripts. See: 01.create-table.sql
-
-            // Consider doing something like the following in the future...
-            // DatabaseUtilities.cleanAll();
-            // DatabaseUtilities.addProducts(products);
+                db.execute("INSERT INTO salumistore.products VALUES (1, 'Cheap Salume'             , 11.11, 49.99, 2)");
+                db.execute("INSERT INTO salumistore.products VALUES (2, 'Light Salume'             , 29.55, 31.00, 2)");
+                db.execute("INSERT INTO salumistore.products VALUES (3, 'Not Light In Your Pocket' , 57.37, 31.00, 2)");
+                db.execute("INSERT INTO salumistore.products VALUES (4, 'Traditional Salume'       , 41.60, 37.00, 1)");
+                db.execute("INSERT INTO salumistore.products VALUES (5, 'Premium Salume'           , 73.23, 38.00, 1)");
+            });
 
             return givens;
         };
@@ -126,6 +144,7 @@ public class SalumeAdvisorHappyPathTest extends AbstractSequenceDiagramTestState
             String advisorUrl = "http://localhost:8081/salume/supplier/advise/for/" + profile;
 
             this.response = new TestRestTemplate().getForEntity(advisorUrl, String.class);
+            System.out.println("Total products when client REQUEST ADVICE is: " + dbUtils.countRowsInTable(jdbcTemplate, "salumistore.products"));
 
             capture("Salume advice request", withContent(advisorUrl), from(CUSTOMER), to(SUPPLIER));
 
@@ -158,7 +177,7 @@ public class SalumeAdvisorHappyPathTest extends AbstractSequenceDiagramTestState
     }
 
     Product cheap() {
-        return new Product(1L, "Cheap Salume", moneyOf(15.55), "49,99", NORMAL);
+        return new Product(1L, "Cheap Salume", moneyOf(11.11), "49,99", NORMAL);
     }
 
     Product light() {
@@ -252,6 +271,28 @@ public class SalumeAdvisorHappyPathTest extends AbstractSequenceDiagramTestState
 
     private XPath xpath() {
         return XPathFactory.newInstance().newXPath();
+    }
+
+    //
+    //// Transaction Management stuff
+    //
+
+    public interface UnitOfWork {
+
+        void work() throws Exception;
+    }
+
+    public static class SpringCommitsAndClosesTestTransactionTransactor {
+
+        public void perform(UnitOfWork unitOfWork) throws Exception {
+            // Spring starts transaction...
+
+            unitOfWork.work();  // Do the job
+
+            // Now commit stuff
+            TestTransaction.flagForCommit();
+            TestTransaction.end();
+        }
     }
 
 }

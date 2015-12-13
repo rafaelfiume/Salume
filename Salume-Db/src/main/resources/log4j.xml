@@ -8,11 +8,6 @@
         </layout>
     </appender>
 
-    <logger name="com.rafaelfiume.salume.config" additivity="false">
-        <level value="DEBUG" />
-        <appender-ref ref="console" />
-    </logger>
-
     <root>
         <level value="INFO" />
         <appender-ref ref="console" />

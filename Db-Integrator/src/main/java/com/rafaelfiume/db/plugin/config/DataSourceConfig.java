@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 
@@ -25,7 +26,7 @@ public class DataSourceConfig {
         try {
             dbUri = new URI(databaseUrl);
         } catch (URISyntaxException e) {
-            throw new RuntimeException("irrecoverable exception: wrong database url", e);
+            throw new RuntimeException(format("error creating URI from %s", databaseUrl), e);
         }
 
         final StringBuilder dbUriBuilder = new StringBuilder("jdbc:postgresql://")

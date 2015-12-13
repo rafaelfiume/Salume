@@ -8,10 +8,7 @@ import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,7 +28,9 @@ import static org.hamcrest.Matchers.is;
 @RunWith(SpecRunner.class)
 @ContextConfiguration(classes = DbApplication.class)
 @Transactional
-public class SimpleDatabaseSupportTest extends TestState {
+public class SimpleJdbcDatabaseSupportTest extends TestState {
+
+    public static final String MOVIESTORE_SCHEMA = "moviestore";
 
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
@@ -41,16 +40,16 @@ public class SimpleDatabaseSupportTest extends TestState {
 
     private String dbStatement;
 
-    private SimpleDatabaseSupport dbSupport;
+    private SimpleJdbcDatabaseSupport underTest;
 
     @Autowired
-    public void setSimpleDatabaseSupport(SimpleDatabaseSupport dbSupport) {
-        this.dbSupport = dbSupport;
+    public void setSimpleDatabaseSupport(SimpleJdbcDatabaseSupport dbSupport) {
+        this.underTest = dbSupport;
     }
 
     @Before
     public void dropDb() {
-        dbSupport.dropDb("moviestore");
+        underTest.dropAndCreate(MOVIESTORE_SCHEMA);
     }
 
     @Test
@@ -66,7 +65,7 @@ public class SimpleDatabaseSupportTest extends TestState {
 
         when(executingThatStatement());
 
-        then(theTable(withSchema("moviestore"), andTableName("films")), exists());
+        then(theTable(withSchema(MOVIESTORE_SCHEMA), andTableName("films")), exists());
     }
 
     @Test
@@ -78,33 +77,37 @@ public class SimpleDatabaseSupportTest extends TestState {
         then(theCustomerTable(), is(empty()));
     }
 
+    @After
+    public void cleanUpTestData() {
+        underTest.drop(MOVIESTORE_SCHEMA);
+    }
+
     private GivensBuilder aStatement(final String statement) {
         return givens -> {
-            SimpleDatabaseSupportTest.this.dbStatement = statement;
+            SimpleJdbcDatabaseSupportTest.this.dbStatement = statement;
             return givens;
         };
     }
 
     private ActionUnderTest executingThatStatement() {
         return (givens, capturedInputAndOutputs) -> {
-            dbSupport.execute(dbStatement);
+            underTest.execute(dbStatement);
             return capturedInputAndOutputs;
         };
     }
 
     private StateExtractor<Boolean> theTable(String schemaName, String tableName) {
         return inputAndOutputs -> {
-            // http://stackoverflow.com/a/24089729
             String query = "SELECT EXISTS (\n" +
                     "    SELECT 1 \n" +
-                    "    FROM   pg_catalog.pg_class c\n" +
-                    "    JOIN   pg_catalog.pg_namespace n ON n.oid = c.relnamespace\n" +
-                    "    WHERE  n.nspname = '" + schemaName + "'\n" +
-                    "    AND    c.relname = '" + tableName + "'\n" +
-                    "    AND    c.relkind = 'r'    -- only tables(?)\n" +
+                    "    FROM   pg_catalog.pg_class c \n" +
+                    "    JOIN   pg_catalog.pg_namespace n ON n.oid = c.relnamespace \n" +
+                    "    WHERE  n.nspname = '" + schemaName + "' \n" +
+                    "    AND    c.relname = '" + tableName + "' \n" +
+                    "    AND    c.relkind = 'r'    -- only tables(?) \n" +
                     ");";
 
-            return dbSupport.queryBoolean(query);
+            return underTest.queryBoolean(query);
         };
     }
 
@@ -132,23 +135,23 @@ public class SimpleDatabaseSupportTest extends TestState {
 
     private GivensBuilder aCustomerTableWithThreeEntries() {
         return givens -> {
-            dbSupport.execute("CREATE TABLE moviestore.customers (id int CONSTRAINT firstkey PRIMARY KEY, name varchar(40) NOT NULL);");
-            dbSupport.execute("INSERT INTO moviestore.customers VALUES (1, 'Zen Kiwi');");
-            dbSupport.execute("INSERT INTO moviestore.customers VALUES (2, 'Banana Pereira');");
-            dbSupport.execute("INSERT INTO moviestore.customers VALUES (3, 'Watermelown Dias');");
+            underTest.execute("CREATE TABLE moviestore.customers (id int CONSTRAINT firstkey PRIMARY KEY, name varchar(40) NOT NULL);");
+            underTest.execute("INSERT INTO moviestore.customers VALUES (1, 'Zen Kiwi');");
+            underTest.execute("INSERT INTO moviestore.customers VALUES (2, 'Banana Pereira');");
+            underTest.execute("INSERT INTO moviestore.customers VALUES (3, 'Watermelown Dias');");
             return givens;
         };
     }
 
     private ActionUnderTest cleaningTheCustomerTable() {
         return (givens, capturedInputAndOutputs) -> {
-            dbSupport.cleanTable("moviestore.customers");
+            underTest.cleanTable("moviestore.customers");
             return capturedInputAndOutputs;
         };
     }
 
     private StateExtractor<List<Customer>> theCustomerTable() {
-        return inputAndOutputs -> dbSupport.query("SELECT * FROM moviestore.customers", new CustomerRowMapper());
+        return inputAndOutputs -> underTest.query("SELECT * FROM moviestore.customers", new CustomerRowMapper());
     }
 
     private static class Customer {
