@@ -1,4 +1,4 @@
-package com.rafaelfiume.salume.advisor;
+package com.rafaelfiume.salume.acceptance.advisor;
 
 import com.googlecode.yatspec.junit.Notes;
 import com.googlecode.yatspec.junit.Row;
@@ -66,7 +66,7 @@ import static org.springframework.http.MediaType.parseMediaType;
 @Notes("A customer can have whatever they want as long as it is salume. At least for now...\n\n" +
         "See an explanation about this story <a href=\"https://rafaelfiume.wordpress.com/2013/04/07/dragons-unicorns-and-titans-an-agile-software-developer-tail/\" target=\"blank\">here</a>.")
 @Transactional
-public class SalumeAdvisorHappyPathTest extends AbstractSequenceDiagramTestState {
+public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramTestState {
 
     private static final MediaType APPLICATION_XML_CHARSET_UTF8 = parseMediaType("application/xml;charset=utf-8");
 

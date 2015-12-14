@@ -13,10 +13,11 @@ import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
 @Configuration
 public class MisconfiguredDataSourceConfig {
 
+    @SuppressWarnings("unused")
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource unknownDataSource = new DriverManagerDataSource(
-                "jdbc:postgresql://localhost:5432/salumeproddb",
+                "jdbc:postgresql://localhost:5432/wrongdb",
                 "postgres",
                 "######"
         );

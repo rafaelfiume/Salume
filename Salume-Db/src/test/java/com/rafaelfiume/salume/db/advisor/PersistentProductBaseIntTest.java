@@ -2,7 +2,6 @@ package com.rafaelfiume.salume.db.advisor;
 
 import com.rafaelfiume.salume.db.DbApplication;
 import com.rafaelfiume.salume.domain.Product;
-import com.rafaelfiume.salume.domain.Reputation;
 import org.javamoney.moneta.Money;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -30,7 +29,7 @@ import static org.junit.Assert.assertThat;
 @Transactional
 @Sql("clean-products.sql")
 @Sql("populate-products.sql")
-public class PersistentProductBaseTest {
+public class PersistentProductBaseIntTest {
 
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();

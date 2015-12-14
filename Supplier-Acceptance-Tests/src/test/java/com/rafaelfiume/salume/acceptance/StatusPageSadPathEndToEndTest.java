@@ -1,8 +1,9 @@
-package com.rafaelfiume.salume;
+package com.rafaelfiume.salume.acceptance;
 
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
+import com.rafaelfiume.salume.SupplierApplication;
 import com.rafaelfiume.salume.config.MisconfiguredDataSourceConfig;
 import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
 import com.rafaelfiume.salume.web.controllers.StatusPageController;
@@ -31,7 +32,7 @@ import static org.springframework.http.MediaType.parseMediaType;
 @SpringApplicationConfiguration(classes = {SupplierApplication.class, MisconfiguredDataSourceConfig.class})
 @WebIntegrationTest(value = "server.port=8282") // It requires another container to run since it's using different configs (see line above)
 @DirtiesContext // Closes the context and stops the container
-public class StatusPageSadPathTest extends AbstractSequenceDiagramTestState {
+public class StatusPageSadPathEndToEndTest extends AbstractSequenceDiagramTestState {
 
     public static final String STATUS_PAGE_URI = "http://localhost:8282/salume/supplier/status"; // using different port
 

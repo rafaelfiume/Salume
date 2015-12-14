@@ -1,9 +1,10 @@
-package com.rafaelfiume.salume;
+package com.rafaelfiume.salume.acceptance;
 
 import com.googlecode.yatspec.junit.Notes;
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
+import com.rafaelfiume.salume.SupplierApplication;
 import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
 import com.rafaelfiume.salume.web.controllers.StatusPageController;
 import org.hamcrest.Description;
@@ -47,7 +48,7 @@ import static org.springframework.http.MediaType.parseMediaType;
         "The more experience I have, the more I focus on the way we work instead of the technologies we use.\n" +
         "I recommend reading the excellent <a href=\"http://www.growing-object-oriented-software.com\" target=\"blank\">Growing Object-Oriented Software Guided by Tests</a>."
 )
-public class StatusPageHappyPathTest extends AbstractSequenceDiagramTestState {
+public class StatusPageHappyPathEndToEndTest extends AbstractSequenceDiagramTestState {
 
     public static final String STATUS_PAGE_URI = "http://localhost:8081/salume/supplier/status";
 
@@ -70,7 +71,7 @@ public class StatusPageHappyPathTest extends AbstractSequenceDiagramTestState {
     }
 
     private String theImplementationVersionInTheManifest() {
-        Manifest manifest = StatusPageController.getManifest(SupplierApplication.class);
+        final Manifest manifest = StatusPageController.getManifest(SupplierApplication.class);
         return "Version: " + manifest.getMainAttributes().getValue("Implementation-Version");
     }
 

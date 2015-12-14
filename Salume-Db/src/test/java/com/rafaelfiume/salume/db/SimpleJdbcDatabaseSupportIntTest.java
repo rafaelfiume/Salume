@@ -28,7 +28,7 @@ import static org.hamcrest.Matchers.is;
 @RunWith(SpecRunner.class)
 @ContextConfiguration(classes = DbApplication.class)
 @Transactional
-public class SimpleJdbcDatabaseSupportTest extends TestState {
+public class SimpleJdbcDatabaseSupportIntTest extends TestState {
 
     public static final String MOVIESTORE_SCHEMA = "moviestore";
 
@@ -84,7 +84,7 @@ public class SimpleJdbcDatabaseSupportTest extends TestState {
 
     private GivensBuilder aStatement(final String statement) {
         return givens -> {
-            SimpleJdbcDatabaseSupportTest.this.dbStatement = statement;
+            SimpleJdbcDatabaseSupportIntTest.this.dbStatement = statement;
             return givens;
         };
     }
