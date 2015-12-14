@@ -6,9 +6,8 @@ import com.rafaelfiume.salume.domain.Product;
 
 import javax.money.format.MonetaryAmountFormat;
 import javax.money.format.MonetaryFormats;
-import java.util.Locale;
 
-import static com.rafaelfiume.salume.domain.Product.Reputation.TRADITIONAL;
+import static com.rafaelfiume.salume.domain.Reputation.TRADITIONAL;
 import static java.util.Locale.ITALY;
 
 @JacksonXmlRootElement(localName = "product")
@@ -31,23 +30,28 @@ public class ProductResponse {
         this.reputation = product.getReputation() == TRADITIONAL ? "traditional" : "special";
     }
 
+    @SuppressWarnings("unused")
     public long getId() {
         return id;
     }
 
+    @SuppressWarnings("unused")
     public String getName() {
         return name;
     }
 
+    @SuppressWarnings("unused")
     public String getPrice() {
         return price;
     }
 
+    @SuppressWarnings("unused")
     @JacksonXmlProperty(localName = "fat-percentage")
     public String getFatPercentage() {
         return fatPercentage;
     }
 
+    @SuppressWarnings("unused")
     public String getReputation() {
         return reputation;
     }

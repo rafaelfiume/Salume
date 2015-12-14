@@ -2,6 +2,7 @@ package com.rafaelfiume.salume.db.advisor;
 
 import com.rafaelfiume.salume.db.DbApplication;
 import com.rafaelfiume.salume.domain.Product;
+import com.rafaelfiume.salume.domain.Reputation;
 import org.javamoney.moneta.Money;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -18,8 +19,8 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
 
-import static com.rafaelfiume.salume.domain.Product.Reputation.NORMAL;
-import static com.rafaelfiume.salume.domain.Product.Reputation.TRADITIONAL;
+import static com.rafaelfiume.salume.domain.Reputation.NORMAL;
+import static com.rafaelfiume.salume.domain.Reputation.TRADITIONAL;
 import static java.util.Locale.ITALY;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;

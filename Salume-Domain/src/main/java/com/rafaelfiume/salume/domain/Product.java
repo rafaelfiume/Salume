@@ -4,8 +4,6 @@ import javax.money.MonetaryAmount;
 
 public class Product {
 
-    public enum Reputation { NORMAL, TRADITIONAL }
-
     private final Long id;
     private final String name;
     private final MonetaryAmount price;

@@ -1,7 +1,7 @@
 package com.rafaelfiume.salume.db.advisor;
 
 import com.rafaelfiume.salume.domain.Product;
-import com.rafaelfiume.salume.domain.Product.Reputation;
+import com.rafaelfiume.salume.domain.Reputation;
 import org.javamoney.moneta.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
