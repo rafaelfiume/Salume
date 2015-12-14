@@ -48,11 +48,11 @@ public class StatusPageSadPathEndToEndTest extends AbstractSequenceDiagramTestSt
         when(aClientRequestsStatusPage());
 
         then(theContentType(), is(TEXT_PLAIN_CHARSET_UTF8));
-        then(theStatusPage(), hasHttpStatusCode(OK));
-        then(theApplicantionNameAndVersion(), is("Salume Supplier DEV"));
-        then(theStatusOfTheApp(), is("FAILING"));
-        then(theAppVersionInTheStatusPage(), is(theImplementationVersionInTheManifest()));
-        then(theDatabaseStatus(), is("FAILING"));
+        and(theStatusPage(), hasHttpStatusCode(OK));
+        and(theApplicantionNameAndVersion(), is("Salume Supplier DEV"));
+        and(theStatusOfTheApp(), is("FAILING"));
+        and(theAppVersionInTheStatusPage(), is(theImplementationVersionInTheManifest()));
+        and(theDatabaseStatus(), is("FAILING"));
     }
 
     private String theImplementationVersionInTheManifest() {

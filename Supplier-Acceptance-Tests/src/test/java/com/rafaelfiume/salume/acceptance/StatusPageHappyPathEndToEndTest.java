@@ -63,11 +63,11 @@ public class StatusPageHappyPathEndToEndTest extends AbstractSequenceDiagramTest
         when(aClientRequestsStatusPage());
 
         then(theContentType(), is(TEXT_PLAIN_CHARSET_UTF8));
-        then(theStatusPage(), hasHttpStatusCode(OK));
-        then(theApplicantionNameAndVersion(), is("Salume Supplier DEV"));
-        then(theStatusOfTheApp(), is("OK"));
-        then(theAppVersionInTheStatusPage(), is(theImplementationVersionInTheManifest()));
-        then(theDatabaseStatus(), is("OK"));
+        and(theStatusPage(), hasHttpStatusCode(OK));
+        and(theApplicantionNameAndVersion(), is("Salume Supplier DEV"));
+        and(theStatusOfTheApp(), is("OK"));
+        and(theAppVersionInTheStatusPage(), is(theImplementationVersionInTheManifest()));
+        and(theDatabaseStatus(), is("OK"));
     }
 
     private String theImplementationVersionInTheManifest() {

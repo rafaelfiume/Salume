@@ -305,10 +305,6 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
         return p;
     }
 
-    private <ItemOfInterest> TestState and(StateExtractor<ItemOfInterest> extractor, Matcher<? super ItemOfInterest> matcher) throws Exception {
-        return then(extractor, matcher);
-    }
-
     //
     // Xml related
     //
