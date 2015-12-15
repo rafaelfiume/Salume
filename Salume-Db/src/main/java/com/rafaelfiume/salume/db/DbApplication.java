@@ -1,7 +1,7 @@
 package com.rafaelfiume.salume.db;
 
 import com.rafaelfiume.salume.db.config.DataSourceConfig;
-import com.rafaelfiume.salume.db.config.MoneyDealerConfig;
+import com.rafaelfiume.salume.db.config.DomainConfig;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({
         DataSourceConfig.class,
-        MoneyDealerConfig.class
+        DomainConfig.class
 })
 public class DbApplication {
 }

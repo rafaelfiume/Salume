@@ -1,5 +1,6 @@
 package com.rafaelfiume.salume.db.advisor;
 
+import com.rafaelfiume.salume.domain.FatConverter;
 import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;
 import com.rafaelfiume.salume.domain.Reputation;
@@ -11,21 +12,22 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.NumberFormat;
 import java.util.List;
 
 import static com.rafaelfiume.salume.db.advisor.PersistentProductBase.Queries.*;
-import static java.util.Locale.ITALY;
 
 @Repository
 public class PersistentProductBase { // TODO RF 12/12/2015 implements ProductBase
 
-    private final MoneyDealer moneyDealer;
-
     private final JdbcTemplate jdbcTemplate;
 
+    private final MoneyDealer moneyDealer;
+
+    private final FatConverter fatConverter;
+
     @Autowired
-    public PersistentProductBase(DataSource dataSource, MoneyDealer moneyDealer) {
+    public PersistentProductBase(DataSource dataSource, MoneyDealer moneyDealer, FatConverter fatConverter) {
+        this.fatConverter = fatConverter;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.moneyDealer = moneyDealer;
     }
@@ -43,11 +45,11 @@ public class PersistentProductBase { // TODO RF 12/12/2015 implements ProductBas
     }
 
     public List<Product> productsForGourmet() {
-        return query(GOURMETL_PRODUCTS);
+        return query(GOURMET_PRODUCTS);
     }
 
     private List<Product> query(String query) {
-        return jdbcTemplate.query(query, new ProductRowMapper(moneyDealer));
+        return jdbcTemplate.query(query, new ProductRowMapper(moneyDealer, fatConverter));
     }
 
     static final class Queries {
@@ -65,26 +67,18 @@ public class PersistentProductBase { // TODO RF 12/12/2015 implements ProductBas
 
         static final String TRADITIONAL_PRODUCTS = BASE_PROFILE_QUERY + " AND r.name = 'Traditional' ORDER BY price LIMIT " + RESULT_LIMIT;
 
-        static final String GOURMETL_PRODUCTS = BASE_PROFILE_QUERY + " ORDER BY price DESC LIMIT " + RESULT_LIMIT;
+        static final String GOURMET_PRODUCTS = BASE_PROFILE_QUERY + " ORDER BY price DESC LIMIT " + RESULT_LIMIT;
     }
 
     static final class ProductRowMapper implements RowMapper<Product> {
 
-        private MoneyDealer moneyDealer;
+        private final MoneyDealer moneyDealer;
 
-        /*
-         * In case you're wondering what #format is doing here, it was decided to represent fat % as a String
-         * in the domain layer for simplicity, and as real in the database for performance.
-         */
-        // TODO RF 22/10/2015 Pass the locale as an app configuration
-        private static final NumberFormat FAT_FORMATTER = NumberFormat.getNumberInstance(ITALY);
+        private final FatConverter fatConverter;
 
-        static {
-            FAT_FORMATTER.setMinimumFractionDigits(2);
-        }
-
-        public ProductRowMapper(MoneyDealer moneyDealer) {
+        public ProductRowMapper(MoneyDealer moneyDealer, FatConverter fatConverter) {
             this.moneyDealer = moneyDealer;
+            this.fatConverter = fatConverter;
         }
 
         @Override
@@ -93,7 +87,7 @@ public class PersistentProductBase { // TODO RF 12/12/2015 implements ProductBas
                     rs.getLong("id"),
                     rs.getString("name"),
                     moneyDealer.theAmountOf(rs.getBigDecimal("price")),
-                    FAT_FORMATTER.format(rs.getFloat("fat")), ////////////////////////////////////// TODO
+                    fatConverter.format(rs.getFloat("fat")),
                     Reputation.valueOf(rs.getString("reputation_name").toUpperCase()));
         }
     }

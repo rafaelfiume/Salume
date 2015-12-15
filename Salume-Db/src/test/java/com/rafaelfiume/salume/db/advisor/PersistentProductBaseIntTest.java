@@ -50,7 +50,7 @@ public class PersistentProductBaseIntTest {
     }
 
     @Test
-    public void magicProfile1() throws ParseException {
+    public void magicProfile() throws ParseException {
         List<Product> suggested = underTest.productsForMagic();
 
         assertThat(suggested, hasSize(3));

@@ -8,6 +8,7 @@ import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
 import com.rafaelfiume.salume.ProductBuilder;
 import com.rafaelfiume.salume.db.SimpleJdbcDatabaseSupport;
+import com.rafaelfiume.salume.domain.FatConverter;
 import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;
 import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
@@ -30,8 +31,6 @@ import org.w3c.dom.NodeList;
 
 import javax.sql.DataSource;
 import javax.xml.xpath.XPathExpressionException;
-import java.text.NumberFormat;
-import java.text.ParseException;
 
 import static com.rafaelfiume.salume.ProductBuilder.a;
 import static com.rafaelfiume.salume.domain.Reputation.NORMAL;
@@ -39,7 +38,6 @@ import static com.rafaelfiume.salume.support.Applications.CUSTOMER;
 import static com.rafaelfiume.salume.support.Applications.SUPPLIER;
 import static com.rafaelfiume.salume.support.Xml.*;
 import static java.lang.String.format;
-import static java.util.Locale.ITALY;
 import static javax.xml.xpath.XPathConstants.*;
 import static org.springframework.http.MediaType.parseMediaType;
 import static org.springframework.test.jdbc.JdbcTestUtils.deleteFromTables;
@@ -55,6 +53,8 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
 
     private MoneyDealer moneyDealer;
 
+    private FatConverter fatConverter;
+
     private ResponseEntity<String> response;
 
     private JdbcTemplate jdbcTemplate;
@@ -64,6 +64,11 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
     @Autowired
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    @Autowired
+    public void setFatConverter(FatConverter fatConverter) {
+        this.fatConverter = fatConverter;
     }
 
     @Autowired
@@ -136,24 +141,16 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
         };
     }
 
-    private static final NumberFormat FAT_FORMATTER = NumberFormat.getNumberInstance(ITALY);
-    static {
-        FAT_FORMATTER.setMinimumFractionDigits(2);
-    }
     private void addProduct(Product p, long id) {
-        try {
-            db.execute(
-                    format("INSERT INTO salumistore.products VALUES (%s, '%s', %s, %s, %s);",
-                            id,
-                            p.getName(),
-                            p.getPrice().getNumber(),
-                            FAT_FORMATTER.parse(p.getFatPercentage()),
-                            (p.getReputation() == NORMAL) ? 2 : 1 // TODO RF 13/12 Blerghhh But focusing on making the test readable first
-                    )
-            );
-        } catch (ParseException e) {
-            throw new RuntimeException("this ugly exception handling is going to disappear in the next few commits...", e);
-        }
+        db.execute(
+                format("INSERT INTO salumistore.products VALUES (%s, '%s', %s, %s, %s);",
+                        id,
+                        p.getName(),
+                        p.getPrice().getNumber(),
+                        fatConverter.theFatOf(p.getFatPercentage()),
+                        (p.getReputation() == NORMAL) ? 2 : 1 // TODO RF 13/12 Blerghhh But focusing on making the test readable first
+                )
+        );
     }
 
     private ActionUnderTest requestingBestOfferFor(final String profile) {
@@ -205,16 +202,16 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
         return p;
     }
 
-    private AdvisedProductMatcherBuilder isThe(String productName) {
-        return AdvisedProductMatcherBuilder.isThe(moneyDealer, productName);
-    }
-
     //
     // Matchers
     //
 
     private <T> Matcher<T> is(T expected) {
         return Matchers.is(expected);
+    }
+
+    private AdvisedProductMatcherBuilder isThe(String productName) {
+        return AdvisedProductMatcherBuilder.isThe(moneyDealer, productName);
     }
 
     static class AdvisedProductMatcherBuilder {
@@ -247,7 +244,7 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
         }
 
         AdvisedProductMatcher percentageOfFat() {
-            // Just make the test read nicer. Use it after # to build the matcher
+            // Just make the test read nicer. Use it after #with to build the matcher
             final Product product = expectedProduct.build(moneyDealer);
             return new AdvisedProductMatcher(
                     product.getName(),
