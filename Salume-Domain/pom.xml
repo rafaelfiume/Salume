@@ -17,6 +17,17 @@
             <groupId>org.javamoney</groupId>
             <artifactId>moneta</artifactId>
         </dependency>
+
+        <!-- Test stuff -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

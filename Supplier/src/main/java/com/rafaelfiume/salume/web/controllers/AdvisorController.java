@@ -1,5 +1,6 @@
 package com.rafaelfiume.salume.web.controllers;
 
+import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.services.ProductAdvisor;
 import com.rafaelfiume.salume.web.result.MobileProductAdvisorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +14,17 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class AdvisorController {
 
     private final ProductAdvisor productAdvisor;
+    private final MoneyDealer moneyDealer;
 
     @Autowired
-    public AdvisorController(ProductAdvisor productAdvisor) {
+    public AdvisorController(ProductAdvisor productAdvisor, MoneyDealer moneyDealer) {
         this.productAdvisor = productAdvisor;
+        this.moneyDealer = moneyDealer;
     }
 
     @RequestMapping(value = "/advise/for/{profile}", method = GET, produces = "application/xml")
     public MobileProductAdvisorResponse handle(@PathVariable String profile) {
-        return MobileProductAdvisorResponse.of(productAdvisor.recommendationFor(profile));
+        return MobileProductAdvisorResponse.of(productAdvisor.recommendationFor(profile), moneyDealer);
     }
 
 }

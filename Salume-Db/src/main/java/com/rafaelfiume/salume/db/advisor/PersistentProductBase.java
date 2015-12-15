@@ -1,8 +1,8 @@
 package com.rafaelfiume.salume.db.advisor;
 
+import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;
 import com.rafaelfiume.salume.domain.Reputation;
-import org.javamoney.moneta.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,11 +20,14 @@ import static java.util.Locale.ITALY;
 @Repository
 public class PersistentProductBase { // TODO RF 12/12/2015 implements ProductBase
 
+    private final MoneyDealer moneyDealer;
+
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public PersistentProductBase(DataSource dataSource) {
+    public PersistentProductBase(DataSource dataSource, MoneyDealer moneyDealer) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.moneyDealer = moneyDealer;
     }
 
     public List<Product> productsForMagic() {
@@ -44,7 +47,7 @@ public class PersistentProductBase { // TODO RF 12/12/2015 implements ProductBas
     }
 
     private List<Product> query(String query) {
-        return jdbcTemplate.query(query, new ProductRowMapper());
+        return jdbcTemplate.query(query, new ProductRowMapper(moneyDealer));
     }
 
     static final class Queries {
@@ -67,14 +70,21 @@ public class PersistentProductBase { // TODO RF 12/12/2015 implements ProductBas
 
     static final class ProductRowMapper implements RowMapper<Product> {
 
+        private MoneyDealer moneyDealer;
+
         /*
          * In case you're wondering what #format is doing here, it was decided to represent fat % as a String
          * in the domain layer for simplicity, and as real in the database for performance.
          */
         // TODO RF 22/10/2015 Pass the locale as an app configuration
         private static final NumberFormat FAT_FORMATTER = NumberFormat.getNumberInstance(ITALY);
-        {
+
+        static {
             FAT_FORMATTER.setMinimumFractionDigits(2);
+        }
+
+        public ProductRowMapper(MoneyDealer moneyDealer) {
+            this.moneyDealer = moneyDealer;
         }
 
         @Override
@@ -82,9 +92,8 @@ public class PersistentProductBase { // TODO RF 12/12/2015 implements ProductBas
             return new Product(
                     rs.getLong("id"),
                     rs.getString("name"),
-                    // TODO RF 22/10/2015 Pass the currency code as an app configuration
-                    Money.of(rs.getBigDecimal("price"), "EUR"),
-                    FAT_FORMATTER.format(rs.getFloat("fat")),
+                    moneyDealer.theAmountOf(rs.getBigDecimal("price")),
+                    FAT_FORMATTER.format(rs.getFloat("fat")), ////////////////////////////////////// TODO
                     Reputation.valueOf(rs.getString("reputation_name").toUpperCase()));
         }
     }

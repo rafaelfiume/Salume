@@ -2,18 +2,11 @@ package com.rafaelfiume.salume.web.result;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;
-
-import javax.money.format.MonetaryAmountFormat;
-import javax.money.format.MonetaryFormats;
-
-import static com.rafaelfiume.salume.domain.Reputation.TRADITIONAL;
-import static java.util.Locale.ITALY;
 
 @JacksonXmlRootElement(localName = "product")
 public class ProductResponse {
-
-    private static final MonetaryAmountFormat moneyFormatter = MonetaryFormats.getAmountFormat(ITALY);
 
     private final long id;
     private final String name;
@@ -21,10 +14,10 @@ public class ProductResponse {
     private final String fatPercentage;
     private final String reputation;
 
-    public ProductResponse(Product product) {
+    public ProductResponse(Product product, MoneyDealer moneyDealer) {
         this.id = product.getId();
         this.name = product.getName();
-        this.price = moneyFormatter.format(product.getPrice());
+        this.price = moneyDealer.format(product.getPrice());
         this.fatPercentage = product.getFatPercentage();
         this.reputation = ReputationRepresentation.of(product.getReputation());
     }

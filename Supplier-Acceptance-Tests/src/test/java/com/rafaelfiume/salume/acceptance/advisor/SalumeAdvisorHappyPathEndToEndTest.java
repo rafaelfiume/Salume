@@ -8,6 +8,7 @@ import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
 import com.rafaelfiume.salume.ProductBuilder;
 import com.rafaelfiume.salume.db.SimpleJdbcDatabaseSupport;
+import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;
 import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
 import com.rafaelfiume.salume.support.TestSetupException;
@@ -17,7 +18,6 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
-import org.javamoney.moneta.Money;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.TestRestTemplate;
@@ -28,16 +28,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.money.MonetaryAmount;
-import javax.money.format.MonetaryAmountFormat;
-import javax.money.format.MonetaryFormats;
 import javax.sql.DataSource;
 import javax.xml.xpath.XPathExpressionException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
 import static com.rafaelfiume.salume.ProductBuilder.a;
-import static com.rafaelfiume.salume.acceptance.advisor.SalumeAdvisorHappyPathEndToEndTest.AdvisedProductMatcherBuilder.isThe;
 import static com.rafaelfiume.salume.domain.Reputation.NORMAL;
 import static com.rafaelfiume.salume.support.Applications.CUSTOMER;
 import static com.rafaelfiume.salume.support.Applications.SUPPLIER;
@@ -55,9 +51,11 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
 
     private static final MediaType APPLICATION_XML_CHARSET_UTF8 = parseMediaType("application/xml;charset=utf-8");
 
-    private ResponseEntity<String> response;
-
     private final SpringCommitsAndClosesTestTransactionTransactor transactor = new SpringCommitsAndClosesTestTransactionTransactor();
+
+    private MoneyDealer moneyDealer;
+
+    private ResponseEntity<String> response;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -71,6 +69,11 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
     @Autowired
     public void setSimpleJdbcDatabaseSupport(SimpleJdbcDatabaseSupport db) {
         this.db = db;
+    }
+
+    @Autowired
+    public void setMoneyDealer(MoneyDealer moneyDealer) {
+        this.moneyDealer = moneyDealer;
     }
 
     @Notes("Gioseppo select the customer profile when serving his customers.\n\n" +
@@ -124,7 +127,7 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
 
                 long id = 1;
                 for (ProductBuilder p : products) {
-                    addProduct(p.build(), id);
+                    addProduct(p.build(moneyDealer), id);
                     id++;
                 }
             });
@@ -191,6 +194,22 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
     }
 
     //
+    // Decorator methods to make the test read well
+    //
+
+    private String aCustomerConsidered(String profile) {
+        return profile;
+    }
+
+    private ProductBuilder and(ProductBuilder p) {
+        return p;
+    }
+
+    private AdvisedProductMatcherBuilder isThe(String productName) {
+        return AdvisedProductMatcherBuilder.isThe(moneyDealer, productName);
+    }
+
+    //
     // Matchers
     //
 
@@ -201,14 +220,17 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
     static class AdvisedProductMatcherBuilder {
 
         private final ProductBuilder expectedProduct;
+        private final MoneyDealer moneyDealer;
 
-        static AdvisedProductMatcherBuilder isThe(String expectedProduct) {
-            return new AdvisedProductMatcherBuilder(expectedProduct);
+        static AdvisedProductMatcherBuilder isThe(MoneyDealer moneyDealer, String expectedProduct) {
+            return new AdvisedProductMatcherBuilder(moneyDealer, expectedProduct);
         }
 
-        AdvisedProductMatcherBuilder(String expectedProductName) {
+        AdvisedProductMatcherBuilder(MoneyDealer moneyDealer, String expectedProductName) {
+            this.moneyDealer = moneyDealer;
             this.expectedProduct = new ProductBuilder(expectedProductName);
         }
+
         AdvisedProductMatcherBuilder at(String price) {
             this.expectedProduct.at(price);
             return this;
@@ -226,7 +248,12 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
 
         AdvisedProductMatcher percentageOfFat() {
             // Just make the test read nicer. Use it after # to build the matcher
-            return new AdvisedProductMatcher(expectedProduct.build());
+            final Product product = expectedProduct.build(moneyDealer);
+            return new AdvisedProductMatcher(
+                    product.getName(),
+                    moneyDealer.format(product.getPrice()),
+                    ReputationRepresentation.of(product.getReputation()),
+                    product.getFatPercentage());
         }
     }
 
@@ -237,13 +264,11 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
         private final String expectedReputation;
         private final String expectedFatPercentage;
 
-        private static final MonetaryAmountFormat moneyFormatter = MonetaryFormats.getAmountFormat(ITALY);
-
-        AdvisedProductMatcher(Product expectedProduct) {
-            this.expectedName = expectedProduct.getName();
-            this.expectedPrice = moneyFormatter.format(expectedProduct.getPrice());
-            this.expectedReputation = ReputationRepresentation.of(expectedProduct.getReputation());
-            this.expectedFatPercentage = expectedProduct.getFatPercentage();
+        AdvisedProductMatcher(String expectedName, String expectedPrice, String expectedReputation, String expectedFatPercentage) {
+            this.expectedName = expectedName;
+            this.expectedPrice = expectedPrice;
+            this.expectedReputation = expectedReputation;
+            this.expectedFatPercentage = expectedFatPercentage;
         }
 
         @Override
@@ -256,7 +281,6 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
 
         @Override
         public void describeTo(Description description) {
-
             description.appendText(format(
                     "a product with name \"%s\", price \"%s\", reputation \"%s\", and fat percentage \"%s\"",
                     expectedName, expectedPrice, expectedReputation, expectedFatPercentage)
@@ -270,21 +294,10 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
                     actualNameFrom(xml), actualPriceFrom(xml), actualReputationFrom(xml), actualFatPercentageFrom(xml)));
         }
 
-        private String actualNameFrom(Node xml) {
-            return getValueFrom(xml, "name");
-        }
-
-        private String actualPriceFrom(Node xml) {
-            return getValueFrom(xml, "price");
-        }
-
-        private String actualReputationFrom(Node xml) {
-            return getValueFrom(xml, "reputation");
-        }
-
-        private String actualFatPercentageFrom(Node xml) {
-            return getValueFrom(xml, "fat-percentage");
-        }
+        private String actualNameFrom(Node xml) {          return getValueFrom(xml, "name"); }
+        private String actualPriceFrom(Node xml) {         return getValueFrom(xml, "price"); }
+        private String actualReputationFrom(Node xml) {    return getValueFrom(xml, "reputation"); }
+        private String actualFatPercentageFrom(Node xml) { return getValueFrom(xml, "fat-percentage"); }
 
         private String getValueFrom(Node item, String xpath) {
             try {
@@ -298,22 +311,6 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
     // TODO RF 07/10 I'm already triplicating this method...
     private StateExtractor<MediaType> theContentType() {
         return inputAndOutputs -> response.getHeaders().getContentType();
-    }
-
-    private MonetaryAmount moneyOf(Number money) {
-        return Money.of(money, "EUR");
-    }
-
-    //
-    // Decorator methods to make the test read well
-    //
-
-    private String aCustomerConsidered(String profile) {
-        return profile;
-    }
-
-    private ProductBuilder and(ProductBuilder p) {
-        return p;
     }
 
 }

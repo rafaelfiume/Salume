@@ -1,16 +1,10 @@
 package com.rafaelfiume.salume;
 
-import com.rafaelfiume.salume.acceptance.advisor.SalumeAdvisorHappyPathEndToEndTest;
+import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;
 import com.rafaelfiume.salume.domain.Reputation;
 
-import javax.money.format.MonetaryAmountFormat;
-import javax.money.format.MonetaryFormats;
-import java.util.Locale;
-
 public class ProductBuilder {
-
-    private final MonetaryAmountFormat formatoPadrao = MonetaryFormats.getAmountFormat(Locale.ITALY);
 
     private final String name;
     private String price;
@@ -45,11 +39,11 @@ public class ProductBuilder {
         return this;
     }
 
-    public Product build() {
+    public Product build(MoneyDealer moneyDealer) {
         return new Product(
                 1L, // Being ignored in the integration and acceptance tests
                 this.name,
-                formatoPadrao.parse(this.price),
+                moneyDealer.theAmountOf(this.price),
                 this.fat,
                 Reputation.valueOf(this.reputation));
     }

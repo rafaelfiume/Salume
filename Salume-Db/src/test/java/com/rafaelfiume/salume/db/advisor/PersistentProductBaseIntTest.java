@@ -1,8 +1,8 @@
 package com.rafaelfiume.salume.db.advisor;
 
 import com.rafaelfiume.salume.db.DbApplication;
+import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;
-import org.javamoney.moneta.Money;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,13 +14,11 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.money.MonetaryAmount;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.List;
 
 import static com.rafaelfiume.salume.domain.Reputation.NORMAL;
 import static com.rafaelfiume.salume.domain.Reputation.TRADITIONAL;
-import static java.util.Locale.ITALY;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -37,11 +35,18 @@ public class PersistentProductBaseIntTest {
     @Rule
     public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
+    private MoneyDealer moneyDealer;
+
     private PersistentProductBase underTest;
 
     @Autowired
     public void setAdvisorDao(PersistentProductBase advisorDao) {
         this.underTest = advisorDao;
+    }
+
+    @Autowired
+    public void setMoneyDealer(MoneyDealer moneyDealer) {
+        this.moneyDealer = moneyDealer;
     }
 
     @Test
@@ -52,15 +57,15 @@ public class PersistentProductBaseIntTest {
 
         assertThat(first(suggested).getId(), is(1L));
         assertThat(first(suggested).getName(), is("Cheap Salume"));
-        assertThat(first(suggested).getPrice(), is(theAmountOf("15,55")));
+        assertThat(first(suggested).getPrice(), is(theAmountOf("EUR 15,55")));
         assertThat(first(suggested).getFatPercentage(), is("49,99"));
         assertThat(first(suggested).getReputation(), is(NORMAL));
 
         assertThat(second(suggested).getName(), is("Light Salume"));
-        assertThat(second(suggested).getPrice(), is(theAmountOf("29,55")));
+        assertThat(second(suggested).getPrice(), is(theAmountOf("EUR 29,55")));
 
         assertThat(third(suggested).getName(), is("Traditional Salume"));
-        assertThat(third(suggested).getPrice(), is(theAmountOf("41,60")));
+        assertThat(third(suggested).getPrice(), is(theAmountOf("EUR 41,60")));
     }
     @Test
     public void healthyProfile() throws ParseException {
@@ -70,7 +75,7 @@ public class PersistentProductBaseIntTest {
 
         assertThat(first(suggested).getId(), is(3L));
         assertThat(first(suggested).getName(), is("Not Light In Your Pocket"));
-        assertThat(first(suggested).getPrice(), is(theAmountOf("57,37")));
+        assertThat(first(suggested).getPrice(), is(theAmountOf("EUR 57,37")));
         assertThat(first(suggested).getFatPercentage(), is("31,00"));
         assertThat(first(suggested).getReputation(), is(NORMAL));
 
@@ -94,7 +99,7 @@ public class PersistentProductBaseIntTest {
 
         assertThat(first(suggested).getId(), is(4L));
         assertThat(first(suggested).getName(), is("Traditional Salume"));
-        assertThat(first(suggested).getPrice(), is(theAmountOf("41,60")));
+        assertThat(first(suggested).getPrice(), is(theAmountOf("EUR 41,60")));
         assertThat(first(suggested).getFatPercentage(), is("37,00"));
         assertThat(first(suggested).getReputation(), is(TRADITIONAL));
 
@@ -110,15 +115,15 @@ public class PersistentProductBaseIntTest {
 
         assertThat(first(suggested).getId(), is(5L));
         assertThat(first(suggested).getName(), is("Premium Salume"));
-        assertThat(first(suggested).getPrice(), is(theAmountOf("73,23")));
+        assertThat(first(suggested).getPrice(), is(theAmountOf("EUR 73,23")));
         assertThat(first(suggested).getFatPercentage(), is("38,00"));
         assertThat(first(suggested).getReputation(), is(TRADITIONAL));
 
         assertThat(second(suggested).getName(), is("Not Light In Your Pocket"));
-        assertThat(second(suggested).getPrice(), is(theAmountOf("57,37")));
+        assertThat(second(suggested).getPrice(), is(theAmountOf("EUR 57,37")));
 
         assertThat(third(suggested).getName(), is("Traditional Salume"));
-        assertThat(third(suggested).getPrice(), is(theAmountOf("41,60")));
+        assertThat(third(suggested).getPrice(), is(theAmountOf("EUR 41,60")));
     }
 
     private <T> T first(List<T> list) {
@@ -134,8 +139,7 @@ public class PersistentProductBaseIntTest {
     }
 
     private MonetaryAmount theAmountOf(String value) throws ParseException {
-        // TODO RF 22/10/2015 Pass the locale as an app configuration
-        return Money.of(NumberFormat.getNumberInstance(ITALY).parse(value), "EUR");
+        return moneyDealer.theAmountOf(value);
     }
 
 }
