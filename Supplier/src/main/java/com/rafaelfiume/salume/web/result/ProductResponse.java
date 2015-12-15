@@ -26,8 +26,7 @@ public class ProductResponse {
         this.name = product.getName();
         this.price = moneyFormatter.format(product.getPrice());
         this.fatPercentage = product.getFatPercentage();
-        // TODO RF 20/10/2015 Get special from properties
-        this.reputation = product.getReputation() == TRADITIONAL ? "traditional" : "special";
+        this.reputation = ReputationRepresentation.of(product.getReputation());
     }
 
     @SuppressWarnings("unused")

@@ -9,10 +9,10 @@ import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
 import com.rafaelfiume.salume.ProductBuilder;
 import com.rafaelfiume.salume.db.SimpleJdbcDatabaseSupport;
 import com.rafaelfiume.salume.domain.Product;
-import com.rafaelfiume.salume.domain.Reputation;
 import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
 import com.rafaelfiume.salume.support.TestSetupException;
 import com.rafaelfiume.salume.support.transactions.SpringCommitsAndClosesTestTransactionTransactor;
+import com.rafaelfiume.salume.web.result.ReputationRepresentation;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
@@ -242,7 +242,7 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
         AdvisedProductMatcher(Product expectedProduct) {
             this.expectedName = expectedProduct.getName();
             this.expectedPrice = moneyFormatter.format(expectedProduct.getPrice());
-            this.expectedReputation = (NORMAL == expectedProduct.getReputation()) ? "special" : "traditional"; // This logic is out of place... Move it to ProductResponse and test it
+            this.expectedReputation = ReputationRepresentation.of(expectedProduct.getReputation());
             this.expectedFatPercentage = expectedProduct.getFatPercentage();
         }
 
@@ -294,7 +294,6 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
             }
         }
     }
-
 
     // TODO RF 07/10 I'm already triplicating this method...
     private StateExtractor<MediaType> theContentType() {
