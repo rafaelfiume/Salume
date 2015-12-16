@@ -16,6 +16,7 @@
         <module>Db-Integrator</module>
         <module>Salume-Db</module>
         <module>Supplier-Acceptance-Tests</module>
+        <module>Test-Support</module>
     </modules>
 
     <properties>
@@ -218,6 +219,12 @@
 
             <!-- Test stuff -->
 
+            <dependency>
+                <groupId>com.rafaelfiume</groupId>
+                <artifactId>Test-Support</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-all</artifactId>

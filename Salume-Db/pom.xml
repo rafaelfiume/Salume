@@ -89,6 +89,10 @@
         <!-- Test -->
 
         <dependency>
+            <groupId>com.rafaelfiume</groupId>
+            <artifactId>Test-Support</artifactId>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>

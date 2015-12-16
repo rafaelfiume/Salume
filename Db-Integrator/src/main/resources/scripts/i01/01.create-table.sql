@@ -6,7 +6,7 @@ CREATE TABLE salumistore.reputation (                                           
 );
 
 CREATE TABLE salumistore.products (
-    id          integer         PRIMARY KEY,
+    id          serial          PRIMARY KEY,
     name        varchar(80)     NOT NULL UNIQUE,
     price       numeric(5, 2)   NOT NULL CONSTRAINT positive_price CHECK (price > 0),
     fat         real            NOT NULL CONSTRAINT positive_fat CHECK (fat > 0),          -- % of fat

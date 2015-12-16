@@ -23,7 +23,11 @@ public class MoneyDealer {
         return monetaryAmountFormat.parse(value);
     }
 
-    public String format(MonetaryAmount value) {
-        return monetaryAmountFormat.format(value);
+    public String format(MonetaryAmount amount) {
+        return monetaryAmountFormat.format(amount);
+    }
+
+    public BigDecimal numberFrom(MonetaryAmount amount) {
+        return amount.getNumber().numberValue(BigDecimal.class);
     }
 }

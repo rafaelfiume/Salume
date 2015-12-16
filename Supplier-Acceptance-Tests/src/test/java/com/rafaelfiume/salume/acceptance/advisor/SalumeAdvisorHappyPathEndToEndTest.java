@@ -6,11 +6,12 @@ import com.googlecode.yatspec.junit.Table;
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
-import com.rafaelfiume.salume.ProductBuilder;
+import com.rafaelfiume.salume.domain.ProductBuilder;
 import com.rafaelfiume.salume.db.SimpleJdbcDatabaseSupport;
 import com.rafaelfiume.salume.domain.FatConverter;
 import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;
+import com.rafaelfiume.salume.domain.matchers.AbstractAdvisedProductMatcherBuilder;
 import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
 import com.rafaelfiume.salume.support.TestSetupException;
 import com.rafaelfiume.salume.support.transactions.SpringCommitsAndClosesTestTransactionTransactor;
@@ -32,7 +33,7 @@ import org.w3c.dom.NodeList;
 import javax.sql.DataSource;
 import javax.xml.xpath.XPathExpressionException;
 
-import static com.rafaelfiume.salume.ProductBuilder.a;
+import static com.rafaelfiume.salume.domain.ProductBuilder.a;
 import static com.rafaelfiume.salume.domain.Reputation.NORMAL;
 import static com.rafaelfiume.salume.support.Applications.CUSTOMER;
 import static com.rafaelfiume.salume.support.Applications.SUPPLIER;
@@ -214,41 +215,22 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
         return AdvisedProductMatcherBuilder.isThe(moneyDealer, productName);
     }
 
-    static class AdvisedProductMatcherBuilder {
-
-        private final ProductBuilder expectedProduct;
-        private final MoneyDealer moneyDealer;
+    static class AdvisedProductMatcherBuilder extends AbstractAdvisedProductMatcherBuilder<Node> {
 
         static AdvisedProductMatcherBuilder isThe(MoneyDealer moneyDealer, String expectedProduct) {
             return new AdvisedProductMatcherBuilder(moneyDealer, expectedProduct);
         }
 
-        AdvisedProductMatcherBuilder(MoneyDealer moneyDealer, String expectedProductName) {
-            this.moneyDealer = moneyDealer;
-            this.expectedProduct = new ProductBuilder(expectedProductName);
+        private AdvisedProductMatcherBuilder(MoneyDealer moneyDealer, String expectedProductName) {
+            super(moneyDealer, expectedProductName);
         }
 
-        AdvisedProductMatcherBuilder at(String price) {
-            this.expectedProduct.at(price);
-            return this;
-        }
-
-        AdvisedProductMatcherBuilder regardedAs(String reputation) {
-            this.expectedProduct.regardedAs(reputation);
-            return this;
-        }
-
-        AdvisedProductMatcherBuilder with(String fat) {
-            this.expectedProduct.with(fat);
-            return this;
-        }
-
-        AdvisedProductMatcher percentageOfFat() {
-            // Just make the test read nicer. Use it after #with to build the matcher
-            final Product product = expectedProduct.build(moneyDealer);
+        @Override
+        public AdvisedProductMatcher percentageOfFat() {
+            final Product product = expectedProduct();
             return new AdvisedProductMatcher(
                     product.getName(),
-                    moneyDealer.format(product.getPrice()),
+                    moneyDealer().format(product.getPrice()),
                     ReputationRepresentation.of(product.getReputation()),
                     product.getFatPercentage());
         }

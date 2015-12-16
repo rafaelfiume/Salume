@@ -3,30 +3,32 @@ package com.rafaelfiume.salume.db.advisor;
 import com.rafaelfiume.salume.db.DbApplication;
 import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;
+import com.rafaelfiume.salume.domain.ProductBuilder;
+import com.rafaelfiume.salume.domain.matchers.AbstractAdvisedProductMatcherBuilder;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.money.MonetaryAmount;
-import java.text.ParseException;
+import javax.sql.DataSource;
 import java.util.List;
 
-import static com.rafaelfiume.salume.domain.Reputation.NORMAL;
-import static com.rafaelfiume.salume.domain.Reputation.TRADITIONAL;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static com.rafaelfiume.salume.domain.ProductBuilder.a;
+import static java.lang.String.format;
 import static org.junit.Assert.assertThat;
+import static org.springframework.test.jdbc.JdbcTestUtils.deleteFromTables;
 
 @ContextConfiguration(classes = DbApplication.class)
 @Transactional
-@Sql("clean-products.sql")
-@Sql("populate-products.sql")
 public class PersistentProductBaseIntTest {
 
     @ClassRule
@@ -35,111 +37,162 @@ public class PersistentProductBaseIntTest {
     @Rule
     public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
+    private List<Product> actualSuggestions;
+
+    private JdbcTemplate jdbcTemplate;
+
     private MoneyDealer moneyDealer;
 
     private PersistentProductBase underTest;
 
     @Autowired
-    public void setAdvisorDao(PersistentProductBase advisorDao) {
-        this.underTest = advisorDao;
+    @SuppressWarnings("unused")
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Autowired
+    @SuppressWarnings("unused")
     public void setMoneyDealer(MoneyDealer moneyDealer) {
         this.moneyDealer = moneyDealer;
     }
 
-    @Test
-    public void magicProfile() throws ParseException {
-        List<Product> suggested = underTest.productsForMagic();
-
-        assertThat(suggested, hasSize(3));
-
-        assertThat(first(suggested).getId(), is(1L));
-        assertThat(first(suggested).getName(), is("Cheap Salume"));
-        assertThat(first(suggested).getPrice(), is(theAmountOf("EUR 15,55")));
-        assertThat(first(suggested).getFatPercentage(), is("49,99"));
-        assertThat(first(suggested).getReputation(), is(NORMAL));
-
-        assertThat(second(suggested).getName(), is("Light Salume"));
-        assertThat(second(suggested).getPrice(), is(theAmountOf("EUR 29,55")));
-
-        assertThat(third(suggested).getName(), is("Traditional Salume"));
-        assertThat(third(suggested).getPrice(), is(theAmountOf("EUR 41,60")));
-    }
-    @Test
-    public void healthyProfile() throws ParseException {
-        List<Product> suggested = underTest.productsForHealthy();
-
-        assertThat(suggested, hasSize(3));
-
-        assertThat(first(suggested).getId(), is(3L));
-        assertThat(first(suggested).getName(), is("Not Light In Your Pocket"));
-        assertThat(first(suggested).getPrice(), is(theAmountOf("EUR 57,37")));
-        assertThat(first(suggested).getFatPercentage(), is("31,00"));
-        assertThat(first(suggested).getReputation(), is(NORMAL));
-
-        assertThat(second(suggested).getName(), is("Light Salume"));
-        assertThat(second(suggested).getFatPercentage(), is("31,00"));
-
-        assertThat(third(suggested).getName(), is("Traditional Salume"));
-        assertThat(third(suggested).getFatPercentage(), is("37,00"));
+    @Autowired
+    @SuppressWarnings("unused")
+    public void setAdvisorDao(PersistentProductBase advisorDao) {
+        this.underTest = advisorDao;
     }
 
     @Test
-    public void expertProfile() throws ParseException {
-        List<Product> suggested = underTest.productsForExpert();
+    public void shouldReturnTheCheapestProductsForCustomerWithMagicProfile() {
+        add(a("(Second Cheapest) Salume").at("EUR 29,55").regardedAs("NORMAL").with("31,00").percentageOfFat(),
+            a("(Cheapest) Salume")       .at("EUR 11,11").regardedAs("NORMAL").with("49,99").percentageOfFat(),
+            a("(Expensive) & Light")     .at("EUR 57,37").regardedAs("NORMAL").with("37,55").percentageOfFat());
 
-        /*
-         * Only two results here (the only two traditional products available),
-         * since no ordinary products are going to be offered to experts (they would feel cheated).
-         */
+        actualSuggestions = underTest.productsForMagic();
 
-        assertThat(suggested, hasSize(2));
-
-        assertThat(first(suggested).getId(), is(4L));
-        assertThat(first(suggested).getName(), is("Traditional Salume"));
-        assertThat(first(suggested).getPrice(), is(theAmountOf("EUR 41,60")));
-        assertThat(first(suggested).getFatPercentage(), is("37,00"));
-        assertThat(first(suggested).getReputation(), is(TRADITIONAL));
-
-        assertThat(second(suggested).getName(), is("Premium Salume"));
-        assertThat(second(suggested).getReputation(), is(TRADITIONAL));
+        assertThat(firstSuggestion(),  isThe("(Cheapest) Salume")       .at("EUR 11,11").regardedAs("NORMAL").with("49,99").percentageOfFat());
+        assertThat(secondSuggestion(), isThe("(Second Cheapest) Salume").at("EUR 29,55").regardedAs("NORMAL").with("31,00").percentageOfFat());
+        assertThat(thirdSuggestion(),  isThe("(Expensive) & Light")     .at("EUR 57,37").regardedAs("NORMAL").with("37,55").percentageOfFat());
     }
 
     @Test
-    public void gourmetProfile() throws ParseException {
-        List<Product> suggested = underTest.productsForGourmet();
+    public void shouldReturnTheProductsWithLessFatForCustomerWithHealthyProfile() {
+        add(a("(Lightest) Salume")       .at("EUR 29,55").regardedAs("NORMAL").with("31,00").percentageOfFat(),
+            a("(Fattest) Salume")        .at("EUR 11,11").regardedAs("NORMAL").with("49,99").percentageOfFat(),
+            a("(Second Lightest) Salume").at("EUR 57,37").regardedAs("NORMAL").with("37,55").percentageOfFat());
 
-        assertThat(suggested, hasSize(3));
+        actualSuggestions = underTest.productsForHealthy();
 
-        assertThat(first(suggested).getId(), is(5L));
-        assertThat(first(suggested).getName(), is("Premium Salume"));
-        assertThat(first(suggested).getPrice(), is(theAmountOf("EUR 73,23")));
-        assertThat(first(suggested).getFatPercentage(), is("38,00"));
-        assertThat(first(suggested).getReputation(), is(TRADITIONAL));
-
-        assertThat(second(suggested).getName(), is("Not Light In Your Pocket"));
-        assertThat(second(suggested).getPrice(), is(theAmountOf("EUR 57,37")));
-
-        assertThat(third(suggested).getName(), is("Traditional Salume"));
-        assertThat(third(suggested).getPrice(), is(theAmountOf("EUR 41,60")));
+        assertThat(firstSuggestion(),  isThe("(Lightest) Salume")       .at("EUR 29,55").regardedAs("NORMAL").with("31,00").percentageOfFat());
+        assertThat(secondSuggestion(), isThe("(Second Lightest) Salume").at("EUR 57,37").regardedAs("NORMAL").with("37,55").percentageOfFat());
+        assertThat(thirdSuggestion(),  isThe("(Fattest) Salume")        .at("EUR 11,11").regardedAs("NORMAL").with("49,99").percentageOfFat());
     }
 
-    private <T> T first(List<T> list) {
-        return list.get(0);
+    @Test
+    public void shouldReturnOnlyTraditionalProductsWithCheapestOnesFirstForCustomerWithExpertProfile() {
+        add(a("(Traditional) Salume")               .at("EUR 29,55").regardedAs("TRADITIONAL").with("31,00").percentageOfFat(),
+            a("(Normal) Cheapest Salume")           .at("EUR 11,11").regardedAs("NORMAL")     .with("49,99").percentageOfFat(),
+            a("(Traditional) More Expensive Salume").at("EUR 57,37").regardedAs("TRADITIONAL").with("37,55").percentageOfFat());
+
+        actualSuggestions = underTest.productsForExpert();
+
+        assertThat(firstSuggestion(),  isThe("(Traditional) Salume")               .at("EUR 29,55").regardedAs("TRADITIONAL").with("31,00").percentageOfFat());
+        assertThat(secondSuggestion(), isThe("(Traditional) More Expensive Salume").at("EUR 57,37").regardedAs("TRADITIONAL").with("37,55").percentageOfFat());
+
+        assertThat(actualSuggestions, hasOnlyTraditionalProducts());
     }
 
-    private <T> T second(List<T> list) {
-        return list.get(1);
+    @Test
+    public void shouldReturnMostExpendiveOnesFirstForCustomerWithExpertProfile() {
+        add(a("(Second Cheapest) Salume").at("EUR 29,55").regardedAs("NORMAL").with("31,00").percentageOfFat(),
+                a("(Cheapest) Salume")       .at("EUR 11,11").regardedAs("NORMAL").with("49,99").percentageOfFat(),
+                a("(Expensive) & Light")     .at("EUR 57,37").regardedAs("NORMAL").with("37,55").percentageOfFat());
+
+        actualSuggestions = underTest.productsForGourmet();
+
+        assertThat(firstSuggestion(),  isThe("(Expensive) & Light")     .at("EUR 57,37").regardedAs("NORMAL").with("37,55").percentageOfFat());
+        assertThat(secondSuggestion(), isThe("(Second Cheapest) Salume").at("EUR 29,55").regardedAs("NORMAL").with("31,00").percentageOfFat());
+        assertThat(thirdSuggestion(),  isThe("(Cheapest) Salume")       .at("EUR 11,11").regardedAs("NORMAL").with("49,99").percentageOfFat());
     }
 
-    private <T> T third(List<T> list) {
-        return list.get(2);
+    private Matcher<? super List<Product>> hasOnlyTraditionalProducts() {
+        return Matchers.hasSize(2);
     }
 
-    private MonetaryAmount theAmountOf(String value) throws ParseException {
-        return moneyDealer.theAmountOf(value);
+    private Product firstSuggestion() {
+        return actualSuggestions.get(0);
     }
 
+    private Product secondSuggestion() {
+        return actualSuggestions.get(1);
+    }
+
+    private Product thirdSuggestion() {
+        return actualSuggestions.get(2);
+    }
+
+    private void add(ProductBuilder... products) {
+        deleteFromTables(jdbcTemplate, "salumistore.products");
+
+        for (ProductBuilder p : products) {
+            underTest.add(p.build(moneyDealer));
+        }
+    }
+
+    //
+    //// Matchers
+    //
+
+    private AdvisedProductMatcherBuilder isThe(String productName) {
+        return AdvisedProductMatcherBuilder.isThe(moneyDealer, productName);
+    }
+
+    static class AdvisedProductMatcherBuilder extends AbstractAdvisedProductMatcherBuilder<Product> {
+
+        static AdvisedProductMatcherBuilder isThe(MoneyDealer moneyDealer, String expectedProduct) {
+            return new AdvisedProductMatcherBuilder(moneyDealer, expectedProduct);
+        }
+
+        private AdvisedProductMatcherBuilder(MoneyDealer moneyDealer, String expectedProductName) {
+            super(moneyDealer, expectedProductName);
+        }
+
+        @Override
+        public ProductMather percentageOfFat() {
+            return new ProductMather(expectedProduct());
+        }
+    }
+
+    static class ProductMather extends TypeSafeMatcher<Product> {
+
+        private final Product expected;
+
+        ProductMather(Product expected) {
+            this.expected = expected;
+        }
+
+        @Override
+        protected boolean matchesSafely(Product actual) {
+            return expected.getName().equals(actual.getName())
+                    && expected.getPrice().equals(actual.getPrice())
+                    && expected.getReputation() == actual.getReputation()
+                    && expected.getFatPercentage().equals(actual.getFatPercentage());
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText(format(
+                    "a product with name \"%s\", price \"%s\", reputation \"%s\", and fat percentage \"%s\"",
+                    expected.getName(), expected.getPrice(), expected.getReputation(), expected.getFatPercentage())
+            );
+        }
+
+        @Override
+        protected void describeMismatchSafely(Product actual, Description mismatchDescription) {
+            mismatchDescription.appendText(format(
+                    "product had name \"%s\", price \"%s\", reputation \"%s\", and fat percentage \"%s\"",
+                    actual.getName(), actual.getPrice(), actual.getReputation(), actual.getFatPercentage()));
+        }
+    }
 }

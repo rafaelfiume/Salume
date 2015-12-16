@@ -1,8 +1,4 @@
-package com.rafaelfiume.salume;
-
-import com.rafaelfiume.salume.domain.MoneyDealer;
-import com.rafaelfiume.salume.domain.Product;
-import com.rafaelfiume.salume.domain.Reputation;
+package com.rafaelfiume.salume.domain;
 
 public class ProductBuilder {
 
