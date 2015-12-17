@@ -4,7 +4,7 @@ import com.rafaelfiume.salume.db.DbApplication;
 import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;
 import com.rafaelfiume.salume.domain.ProductBuilder;
-import com.rafaelfiume.salume.domain.matchers.AbstractAdvisedProductMatcherBuilder;
+import com.rafaelfiume.salume.matchers.AbstractAdvisedProductMatcherBuilder;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;

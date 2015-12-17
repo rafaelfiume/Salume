@@ -18,7 +18,7 @@ cache:
   directories:
   - $HOME/.m2
 
-# The following global varables are encrypted:
+# The following global variables are encrypted:
 env:
   global:
   # GH_TOKEN

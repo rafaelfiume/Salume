@@ -1,4 +1,4 @@
-package com.rafaelfiume.salume.domain.matchers;
+package com.rafaelfiume.salume.matchers;
 
 import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;

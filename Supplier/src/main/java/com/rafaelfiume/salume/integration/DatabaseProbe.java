@@ -18,7 +18,6 @@ public class DatabaseProbe {
 
     private final String probeDbQuery;
 
-    // Note: Have a look at http://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#jdbc-choose-style
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired

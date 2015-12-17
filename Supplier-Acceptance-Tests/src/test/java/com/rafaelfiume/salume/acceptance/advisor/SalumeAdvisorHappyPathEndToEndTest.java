@@ -1,8 +1,6 @@
 package com.rafaelfiume.salume.acceptance.advisor;
 
 import com.googlecode.yatspec.junit.Notes;
-import com.googlecode.yatspec.junit.Row;
-import com.googlecode.yatspec.junit.Table;
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
@@ -10,16 +8,13 @@ import com.rafaelfiume.salume.db.advisor.PersistentProductBase;
 import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;
 import com.rafaelfiume.salume.domain.ProductBuilder;
-import com.rafaelfiume.salume.domain.matchers.AbstractAdvisedProductMatcherBuilder;
+import com.rafaelfiume.salume.matchers.AbstractAdvisedProductMatcherBuilder;
+import com.rafaelfiume.salume.matchers.AdvisedProductMatcher;
 import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
-import com.rafaelfiume.salume.support.TestSetupException;
 import com.rafaelfiume.salume.support.transactions.SpringCommitsAndClosesTestTransactionTransactor;
 import com.rafaelfiume.salume.web.result.ReputationRepresentation;
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
-import org.hamcrest.TypeSafeMatcher;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.TestRestTemplate;
@@ -31,14 +26,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.sql.DataSource;
-import javax.xml.xpath.XPathExpressionException;
 
 import static com.rafaelfiume.salume.domain.ProductBuilder.a;
 import static com.rafaelfiume.salume.support.Applications.CUSTOMER;
 import static com.rafaelfiume.salume.support.Applications.SUPPLIER;
 import static com.rafaelfiume.salume.support.Xml.*;
-import static java.lang.String.format;
-import static javax.xml.xpath.XPathConstants.*;
+import static javax.xml.xpath.XPathConstants.NODESET;
+import static javax.xml.xpath.XPathConstants.NUMBER;
 import static org.springframework.http.MediaType.parseMediaType;
 import static org.springframework.test.jdbc.JdbcTestUtils.deleteFromTables;
 
@@ -58,13 +52,13 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
     private PersistentProductBase productBase;
 
     @Autowired
-    public void setDataSource(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public void setMoneyDealer(MoneyDealer moneyDealer) {
+        this.moneyDealer = moneyDealer;
     }
 
     @Autowired
-    public void setMoneyDealer(MoneyDealer moneyDealer) {
-        this.moneyDealer = moneyDealer;
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Autowired
@@ -247,57 +241,6 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
                     moneyDealer().format(product.getPrice()),
                     ReputationRepresentation.of(product.getReputation()),
                     product.getFatPercentage());
-        }
-    }
-
-    static class AdvisedProductMatcher extends TypeSafeMatcher<Node> {
-
-        private final String expectedName;
-        private final String expectedPrice;
-        private final String expectedReputation;
-        private final String expectedFatPercentage;
-
-        AdvisedProductMatcher(String expectedName, String expectedPrice, String expectedReputation, String expectedFatPercentage) {
-            this.expectedName = expectedName;
-            this.expectedPrice = expectedPrice;
-            this.expectedReputation = expectedReputation;
-            this.expectedFatPercentage = expectedFatPercentage;
-        }
-
-        @Override
-        protected boolean matchesSafely(Node xml) {
-            return expectedName.equals(actualNameFrom(xml))
-                    && expectedPrice.equals(actualPriceFrom(xml))
-                    && expectedReputation.equals(actualReputationFrom(xml))
-                    && expectedFatPercentage.equals(actualFatPercentageFrom(xml));
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText(format(
-                    "a product with name \"%s\", price \"%s\", reputation \"%s\", and fat percentage \"%s\"",
-                    expectedName, expectedPrice, expectedReputation, expectedFatPercentage)
-            );
-        }
-
-        @Override
-        protected void describeMismatchSafely(Node xml, Description mismatchDescription) {
-            mismatchDescription.appendText(format(
-                    "product had name \"%s\", price \"%s\", reputation \"%s\", and fat percentage \"%s\"",
-                    actualNameFrom(xml), actualPriceFrom(xml), actualReputationFrom(xml), actualFatPercentageFrom(xml)));
-        }
-
-        private String actualNameFrom(Node xml) {          return getValueFrom(xml, "name"); }
-        private String actualPriceFrom(Node xml) {         return getValueFrom(xml, "price"); }
-        private String actualReputationFrom(Node xml) {    return getValueFrom(xml, "reputation"); }
-        private String actualFatPercentageFrom(Node xml) { return getValueFrom(xml, "fat-percentage"); }
-
-        private String getValueFrom(Node item, String xpath) {
-            try {
-                return (String) xpath().evaluate(xpath + "/text()", item, STRING);
-            } catch (XPathExpressionException e) {
-                throw new TestSetupException(e);
-            }
         }
     }
 

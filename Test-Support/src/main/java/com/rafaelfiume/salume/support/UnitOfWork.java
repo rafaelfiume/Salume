@@ -1,4 +1,4 @@
-package com.rafaelfiume.salume.support.transactions;
+package com.rafaelfiume.salume.support;
 
 public interface UnitOfWork {
 
