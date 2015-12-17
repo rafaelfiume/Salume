@@ -42,6 +42,7 @@ public class DataSourceConfig {
         basicDataSource.setUrl(dbUriBuilder.toString());
         basicDataSource.setUsername(dbUri.getUserInfo().split(":")[0]);
         basicDataSource.setPassword(dbUri.getUserInfo().split(":")[1]);
+        basicDataSource.setMaxTotal(1);
 
         return basicDataSource;
     }
