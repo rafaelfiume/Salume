@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <plugins>
+    <plugin>
+      <name>Db-Integrator Maven Plugin</name>
+      <prefix>Db-Integrator</prefix>
+      <artifactId>Db-Integrator</artifactId>
+    </plugin>
+  </plugins>
+</metadata>
