@@ -5,7 +5,7 @@
 
     <groupId>com.rafaelfiume</groupId>
     <artifactId>Salume-Parent</artifactId>
-    <version>0.1.7</version>
+    <version>0.1.8-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <url>http://rafaelfiume.com</url>
@@ -16,6 +16,7 @@
         <module>Db-Integrator</module>
         <module>Salume-Db</module>
         <module>Supplier-Acceptance-Tests</module>
+        <module>Test-Support</module>
     </modules>
 
     <properties>
@@ -114,9 +115,9 @@
             </dependency>
 
             <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-dbcp2</artifactId>
-                <version>2.1.1</version>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>2.4.3</version>
             </dependency>
 
             <!-- Spring Boot-->
@@ -219,6 +220,17 @@
             <!-- Test stuff -->
 
             <dependency>
+                <groupId>com.rafaelfiume</groupId>
+                <artifactId>Test-Support</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.10.19</version>
+            </dependency>
+            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
@@ -261,7 +273,7 @@
         <url>http://github.com/rafaelfiume/Salume/</url>
         <connection>scm:git:git://github.com/rafaelfiume/Salume.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/rafaelfiume/Salume.git</developerConnection>
-        <tag>Salume-Parent-0.1.7</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
