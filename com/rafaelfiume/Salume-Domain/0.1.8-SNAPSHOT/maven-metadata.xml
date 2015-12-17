@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>com.rafaelfiume</groupId>
+  <artifactId>Salume-Domain</artifactId>
+  <version>0.1.8-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20151217.021322</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <lastUpdated>20151217021322</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>0.1.8-20151217.021322-1</value>
+        <updated>20151217021322</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>0.1.8-20151217.021322-1</value>
+        <updated>20151217021322</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>
