@@ -1,7 +1,6 @@
 package com.rafaelfiume.db.plugin.config;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 
 import javax.sql.DataSource;
@@ -39,16 +38,12 @@ public class DataSourceConfig {
             dbUriBuilder.append("?").append(query);
         }
 
-        final HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(dbUriBuilder.toString());
-        config.setUsername(dbUri.getUserInfo().split(":")[0]);
-        config.setPassword(dbUri.getUserInfo().split(":")[1]);
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        config.setMaximumPoolSize(1);
+        final BasicDataSource basicDataSource = new BasicDataSource();
+        basicDataSource.setUrl(dbUriBuilder.toString());
+        basicDataSource.setUsername(dbUri.getUserInfo().split(":")[0]);
+        basicDataSource.setPassword(dbUri.getUserInfo().split(":")[1]);
 
-        return new HikariDataSource(config);
+        return basicDataSource;
     }
 
     static class EmptyDataSource extends AbstractDataSource {
