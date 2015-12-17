@@ -41,4 +41,4 @@ The following variables are used in this project:
 ### Database Recreator Plugin
 * ~~Recrete Db when specifying dbRecreator profile in the maven build~~
 * ~~Possibility of using more than one script file to recreate the db~~
-* Load db with more products (WiP)
+* ~~Load db with more products~~

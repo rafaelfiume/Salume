@@ -6,11 +6,10 @@ import com.googlecode.yatspec.junit.Table;
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
-import com.rafaelfiume.salume.domain.ProductBuilder;
-import com.rafaelfiume.salume.db.SimpleJdbcDatabaseSupport;
-import com.rafaelfiume.salume.domain.FatConverter;
+import com.rafaelfiume.salume.db.advisor.PersistentProductBase;
 import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;
+import com.rafaelfiume.salume.domain.ProductBuilder;
 import com.rafaelfiume.salume.domain.matchers.AbstractAdvisedProductMatcherBuilder;
 import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
 import com.rafaelfiume.salume.support.TestSetupException;
@@ -20,6 +19,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.TestRestTemplate;
@@ -34,7 +34,6 @@ import javax.sql.DataSource;
 import javax.xml.xpath.XPathExpressionException;
 
 import static com.rafaelfiume.salume.domain.ProductBuilder.a;
-import static com.rafaelfiume.salume.domain.Reputation.NORMAL;
 import static com.rafaelfiume.salume.support.Applications.CUSTOMER;
 import static com.rafaelfiume.salume.support.Applications.SUPPLIER;
 import static com.rafaelfiume.salume.support.Xml.*;
@@ -44,23 +43,19 @@ import static org.springframework.http.MediaType.parseMediaType;
 import static org.springframework.test.jdbc.JdbcTestUtils.deleteFromTables;
 
 @Notes("A customer can have whatever they want as long as it is salume. At least for now...\n\n" +
-        "See an explanation about this story <a href=\"https://rafaelfiume.wordpress.com/2013/04/07/dragons-unicorns-and-titans-an-agile-software-developer-tail/\" target=\"blank\">here</a>.")
+        "Gioseppo select the customer profile when serving his customers See an explanation about this story <a href=\"https://rafaelfiume.wordpress.com/2013/04/07/dragons-unicorns-and-titans-an-agile-software-developer-tail/\" target=\"blank\">here</a>.")
 @Transactional
 public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramTestState {
 
     private static final MediaType APPLICATION_XML_CHARSET_UTF8 = parseMediaType("application/xml;charset=utf-8");
 
-    private final SpringCommitsAndClosesTestTransactionTransactor transactor = new SpringCommitsAndClosesTestTransactionTransactor();
+    private ResponseEntity<String> response;
 
     private MoneyDealer moneyDealer;
 
-    private FatConverter fatConverter;
-
-    private ResponseEntity<String> response;
-
+    private final SpringCommitsAndClosesTestTransactionTransactor transactor = new SpringCommitsAndClosesTestTransactionTransactor();
     private JdbcTemplate jdbcTemplate;
-
-    private SimpleJdbcDatabaseSupport db;
+    private PersistentProductBase productBase;
 
     @Autowired
     public void setDataSource(DataSource dataSource) {
@@ -68,61 +63,88 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
     }
 
     @Autowired
-    public void setFatConverter(FatConverter fatConverter) {
-        this.fatConverter = fatConverter;
-    }
-
-    @Autowired
-    public void setSimpleJdbcDatabaseSupport(SimpleJdbcDatabaseSupport db) {
-        this.db = db;
-    }
-
-    @Autowired
     public void setMoneyDealer(MoneyDealer moneyDealer) {
         this.moneyDealer = moneyDealer;
     }
 
-    @Notes("Gioseppo select the customer profile when serving his customers.\n\n" +
-            "" +
-            "After showing a previous version of the acceptance test and having some conversation, it was clear that the\n" +
-            "result should be a list of (3) products instead of a single one.\n\n" +
-            "" +
-            "Special is another word for \"ordinary non tradition product\".")
-    @Table({
-            @Row({"Magic"  , "Cheap Salume"     , "EUR 11,11", "49,99", "NORMAL"}),
-            @Row({"Healthy", "Expensive & Light", "EUR 57,37", "31,00", "NORMAL"}),
-            @Row({"Gourmet", "Premium Salume"   , "EUR 73,23", "38,00", "TRADITIONAL"})
-    })
+    @Autowired
+    public void setProductBase(PersistentProductBase productBase) {
+        this.productBase = productBase;
+    }
+
     @Test
-    public void suggestUpToThreeDifferentProductsAccordingToClientProfile(String profile, String product, String price, String fatPercentage, String productReputation) throws Exception {
+    public void suggestToCustomerWithMagicProfileTheCheapestProducts() throws Exception {
         given(theAvailableProductsAre(
-                a("Cheap Salume")      .at("EUR 11,11").regardedAs("NORMAL")     .with("49,99").percentageOfFat(),
-                a("Light Salume")      .at("EUR 29,55").regardedAs("NORMAL")     .with("31,00").percentageOfFat(),
-                a("Expensive & Light") .at("EUR 57,37").regardedAs("NORMAL")     .with("31,00").percentageOfFat(),
-                a("Traditional Salume").at("EUR 41,60").regardedAs("TRADITIONAL").with("37,00").percentageOfFat(),
-                and(a("Premium Salume").at("EUR 73,23").regardedAs("TRADITIONAL").with("38,00").percentageOfFat())));
+                a("(1st Cheapest) Salume")       .at("EUR 11,11").regardedAs("NORMAL")     .with("49,99").percentageOfFat(),
+                a("(2nd Cheapest) Salume")       .at("EUR 29,55").regardedAs("NORMAL")     .with("31,00").percentageOfFat(),
+                a("(Expensive) & Light")         .at("EUR 57,37").regardedAs("NORMAL")     .with("33,50").percentageOfFat(),
+                a("(3rd Cheapest) Salume")       .at("EUR 41,60").regardedAs("TRADITIONAL").with("37,00").percentageOfFat(),
+                and(a("(Very Expensive) Premium").at("EUR 73,23").regardedAs("TRADITIONAL").with("38,00").percentageOfFat())));
 
-        when(requestingBestOfferFor(aCustomerConsidered(profile)));
+        when(requestingBestOfferFor(aCustomerConsidered("Magic")));
 
-        then(theFirstSuggestionForCustomer(), isThe(product).at(price).regardedAs(productReputation).with(fatPercentage).percentageOfFat());
+        then(theFirstSuggestionForCustomer(), isThe("(1st Cheapest) Salume").at("EUR 11,11").regardedAs("NORMAL")     .with("49,99").percentageOfFat());
+        and(secondSuggestedProduct(),         isThe("(2nd Cheapest) Salume").at("EUR 29,55").regardedAs("NORMAL")     .with("31,00").percentageOfFat());
+        and(thirdSuggestedProduct(),          isThe("(3rd Cheapest) Salume").at("EUR 41,60").regardedAs("TRADITIONAL").with("37,00").percentageOfFat());
+
+        and(numberOfAdvisedProducts(), is(3));
+        and(theContentType(), is(APPLICATION_XML_CHARSET_UTF8));
+    }
+
+    @Test
+    public void suggestToCustomerWithHealthyProfileTheProductsWithLessFat() throws Exception {
+        given(theAvailableProductsAre(
+                a("(Super Fat) Salume")   .at("EUR 11,11").regardedAs("NORMAL")     .with("49,99").percentageOfFat(),
+                a("(Lightest) Salume")    .at("EUR 29,55").regardedAs("NORMAL")     .with("31,00").percentageOfFat(),
+                a("(Light) Salume")       .at("EUR 57,37").regardedAs("NORMAL")     .with("33,50").percentageOfFat(),
+                a("(3rd Lightest) Salume").at("EUR 41,60").regardedAs("TRADITIONAL").with("37,00").percentageOfFat(),
+                and(a("(Fat) Premium")    .at("EUR 73,23").regardedAs("TRADITIONAL").with("38,00").percentageOfFat())));
+
+        when(requestingBestOfferFor(aCustomerConsidered("Healthy")));
+
+        then(theFirstSuggestionForCustomer(), isThe("(Lightest) Salume")    .at("EUR 29,55").regardedAs("NORMAL")     .with("31,00").percentageOfFat());
+        and(secondSuggestedProduct(),         isThe("(Light) Salume")       .at("EUR 57,37").regardedAs("NORMAL")     .with("33,50").percentageOfFat());
+        and(thirdSuggestedProduct(),          isThe("(3rd Lightest) Salume").at("EUR 41,60").regardedAs("TRADITIONAL").with("37,00").percentageOfFat());
+
         and(numberOfAdvisedProducts(), is(3));
         and(theContentType(), is(APPLICATION_XML_CHARSET_UTF8));
     }
 
     @Notes("Expert clients are more demanding and won't accept anything that is not considered traditional long-honored products.")
     @Test
-    public void onlySuggestTraditionalProductsToExperts() throws Exception {
+    public void onlySuggestTraditionalProductsWithCheapestOnesFirstToExperts() throws Exception {
         given(theAvailableProductsAre(
-                a("Cheap Salume")      .at("EUR 11,11").regardedAs("NORMAL")     .with("49,99").percentageOfFat(),
-                a("Light Salume")      .at("EUR 29,55").regardedAs("NORMAL")     .with("31,00").percentageOfFat(),
-                a("Expensive & Light") .at("EUR 57,37").regardedAs("NORMAL")     .with("31,00").percentageOfFat(),
-                a("Traditional Salume").at("EUR 41,60").regardedAs("TRADITIONAL").with("37,00").percentageOfFat(),
-                and(a("Premium Salume").at("EUR 73,23").regardedAs("TRADITIONAL").with("38,00").percentageOfFat())));
+                a("(Normal) Cheap Salume")                   .at("EUR 11,11").regardedAs("NORMAL")     .with("49,99").percentageOfFat(),
+                a("(Normal) Light Salume")                   .at("EUR 29,55").regardedAs("NORMAL")     .with("31,00").percentageOfFat(),
+                a("(Normal) Salume")                         .at("EUR 57,37").regardedAs("NORMAL")     .with("33,50").percentageOfFat(),
+                a("(Traditional Less Expensive) Salume")     .at("EUR 41,60").regardedAs("TRADITIONAL").with("37,00").percentageOfFat(),
+                and(a("(Traditional More Expensive) Premium").at("EUR 73,23").regardedAs("TRADITIONAL").with("38,00").percentageOfFat())));
 
         when(requestingBestOfferFor(aCustomerConsidered("Expert")));
 
-        then(theFirstSuggestionForCustomer(), isThe("Traditional Salume").at("EUR 41,60").regardedAs("TRADITIONAL").with("37,00").percentageOfFat());
+        then(theFirstSuggestionForCustomer(), isThe("(Traditional Less Expensive) Salume") .at("EUR 41,60").regardedAs("TRADITIONAL").with("37,00").percentageOfFat());
+        and(secondSuggestedProduct(),         isThe("(Traditional More Expensive) Premium").at("EUR 73,23").regardedAs("TRADITIONAL").with("38,00").percentageOfFat());
+
         and(numberOfAdvisedProducts(), is(2));
+        and(theContentType(), is(APPLICATION_XML_CHARSET_UTF8));
+    }
+
+    @Test
+    public void suggestToCustomerWithGourmetProfileTheMostExpensiveProducts() throws Exception {
+        given(theAvailableProductsAre(
+                a("(1st Cheapest) Salume")       .at("EUR 11,11").regardedAs("NORMAL")     .with("49,99").percentageOfFat(),
+                a("(2nd Cheapest) Salume")       .at("EUR 29,55").regardedAs("NORMAL")     .with("31,00").percentageOfFat(),
+                a("(Expensive) & Light")         .at("EUR 57,37").regardedAs("NORMAL")     .with("33,50").percentageOfFat(),
+                a("(3rd More Expensive) Salume") .at("EUR 41,60").regardedAs("TRADITIONAL").with("37,00").percentageOfFat(),
+                and(a("(Very Expensive) Premium").at("EUR 73,23").regardedAs("TRADITIONAL").with("38,00").percentageOfFat())));
+
+        when(requestingBestOfferFor(aCustomerConsidered("Gourmet")));
+
+        then(theFirstSuggestionForCustomer(), isThe("(Very Expensive) Premium")   .at("EUR 73,23").regardedAs("TRADITIONAL").with("38,00").percentageOfFat());
+        and(secondSuggestedProduct(),         isThe("(Expensive) & Light")        .at("EUR 57,37").regardedAs("NORMAL")     .with("33,50").percentageOfFat());
+        and(thirdSuggestedProduct(),          isThe("(3rd More Expensive) Salume").at("EUR 41,60").regardedAs("TRADITIONAL").with("37,00").percentageOfFat());
+
+        and(numberOfAdvisedProducts(), is(3));
         and(theContentType(), is(APPLICATION_XML_CHARSET_UTF8));
     }
 
@@ -131,27 +153,13 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
             transactor.perform(() -> {
                 deleteFromTables(jdbcTemplate, "salumistore.products");
 
-                long id = 1;
                 for (ProductBuilder p : products) {
-                    addProduct(p.build(moneyDealer), id);
-                    id++;
+                    productBase.add(p.build(moneyDealer));
                 }
             });
 
             return givens;
         };
-    }
-
-    private void addProduct(Product p, long id) {
-        db.execute(
-                format("INSERT INTO salumistore.products VALUES (%s, '%s', %s, %s, %s);",
-                        id,
-                        p.getName(),
-                        p.getPrice().getNumber(),
-                        fatConverter.theFatOf(p.getFatPercentage()),
-                        (p.getReputation() == NORMAL) ? 2 : 1 // TODO RF 13/12 Blerghhh But focusing on making the test readable first
-                )
-        );
     }
 
     private ActionUnderTest requestingBestOfferFor(final String profile) {
@@ -189,6 +197,12 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
         return inputAndOutputs -> ((NodeList)
                 xpath().evaluate("//product", xmlFrom(response.getBody()), NODESET)
         ).item(1);
+    }
+
+    private StateExtractor<Node> thirdSuggestedProduct() {
+        return inputAndOutputs -> ((NodeList)
+                xpath().evaluate("//product", xmlFrom(response.getBody()), NODESET)
+        ).item(2);
     }
 
     //

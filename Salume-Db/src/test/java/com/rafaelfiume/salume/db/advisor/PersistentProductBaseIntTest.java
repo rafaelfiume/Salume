@@ -134,7 +134,6 @@ public class PersistentProductBaseIntTest {
 
     private void add(ProductBuilder... products) {
         deleteFromTables(jdbcTemplate, "salumistore.products");
-
         for (ProductBuilder p : products) {
             underTest.add(p.build(moneyDealer));
         }

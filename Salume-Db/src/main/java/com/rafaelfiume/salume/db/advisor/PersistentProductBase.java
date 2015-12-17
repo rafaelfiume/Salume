@@ -71,7 +71,7 @@ public class PersistentProductBase { // TODO RF 12/12/2015 implements ProductBas
                 put("name", p.getName());
                 put("price", moneyDealer.numberFrom(p.getPrice()));
                 put("fat", fatConverter.theFatOf(p.getFatPercentage()));
-                put("reputationId", (p.getReputation() == NORMAL) ? 2 : 1); // TODO RF 13/12 Blerghhh But focusing on making the test readable first
+                put("reputationId", (p.getReputation() == NORMAL) ? 2 : 1); // TODO RF 16/12 Blerghhh But focusing on making the test readable first
             }};
         }
     }
