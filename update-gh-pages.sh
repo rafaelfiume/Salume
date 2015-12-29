@@ -18,7 +18,6 @@ if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
   cd gh-pages
   cp -Rf $HOME/spec/index.html index.html
   cp -Rf $HOME/spec/* .
-  
 
   #add, commit and push files
   git add -f .

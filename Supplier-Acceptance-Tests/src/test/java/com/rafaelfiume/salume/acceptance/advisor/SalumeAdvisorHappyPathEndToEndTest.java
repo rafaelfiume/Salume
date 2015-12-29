@@ -37,7 +37,8 @@ import static org.springframework.http.MediaType.parseMediaType;
 import static org.springframework.test.jdbc.JdbcTestUtils.deleteFromTables;
 
 @Notes("A customer can have whatever they want as long as it is salume. At least for now...\n\n" +
-        "Gioseppo select the customer profile when serving his customers See an explanation about this story <a href=\"https://rafaelfiume.wordpress.com/2013/04/07/dragons-unicorns-and-titans-an-agile-software-developer-tail/\" target=\"blank\">here</a>.")
+        "" +
+        "Gioseppo select the customer profile when offering products to his customers. See the details about this story <a href=\"https://rafaelfiume.wordpress.com/2013/04/07/dragons-unicorns-and-titans-an-agile-software-developer-tail/\" target=\"blank\">here</a>.")
 @Transactional
 public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramTestState {
 
@@ -81,7 +82,7 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
         and(secondSuggestedProduct(),         isThe("(2nd Cheapest) Salume").at("EUR 29,55").regardedAs("NORMAL")     .with("31,00").percentageOfFat());
         and(thirdSuggestedProduct(),          isThe("(3rd Cheapest) Salume").at("EUR 41,60").regardedAs("TRADITIONAL").with("37,00").percentageOfFat());
 
-        and(numberOfAdvisedProducts(), is(3));
+        and(numberOfAdvisedProducts(), is(5));
         and(theContentType(), is(APPLICATION_XML_CHARSET_UTF8));
     }
 
@@ -100,7 +101,7 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
         and(secondSuggestedProduct(),         isThe("(Light) Salume")       .at("EUR 57,37").regardedAs("NORMAL")     .with("33,50").percentageOfFat());
         and(thirdSuggestedProduct(),          isThe("(3rd Lightest) Salume").at("EUR 41,60").regardedAs("TRADITIONAL").with("37,00").percentageOfFat());
 
-        and(numberOfAdvisedProducts(), is(3));
+        and(numberOfAdvisedProducts(), is(5));
         and(theContentType(), is(APPLICATION_XML_CHARSET_UTF8));
     }
 
@@ -138,7 +139,7 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
         and(secondSuggestedProduct(),         isThe("(Expensive) & Light")        .at("EUR 57,37").regardedAs("NORMAL")     .with("33,50").percentageOfFat());
         and(thirdSuggestedProduct(),          isThe("(3rd More Expensive) Salume").at("EUR 41,60").regardedAs("TRADITIONAL").with("37,00").percentageOfFat());
 
-        and(numberOfAdvisedProducts(), is(3));
+        and(numberOfAdvisedProducts(), is(5));
         and(theContentType(), is(APPLICATION_XML_CHARSET_UTF8));
     }
 

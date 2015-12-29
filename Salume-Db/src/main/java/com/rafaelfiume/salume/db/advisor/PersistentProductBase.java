@@ -41,9 +41,9 @@ public class PersistentProductBase { // TODO RF 12/12/2015 implements ProductBas
         this.fatConverter = fatConverter;
     }
 
-    public List<Product> productsForMagic() {   return query(MAGIC_PRODUCTS); }
+    public List<Product> productsForMagic()   { return query(MAGIC_PRODUCTS); }
     public List<Product> productsForHealthy() { return query(HEALTHY_PRODUCTS); }
-    public List<Product> productsForExpert() {  return query(TRADITIONAL_PRODUCTS); }
+    public List<Product> productsForExpert()  { return query(TRADITIONAL_PRODUCTS); }
     public List<Product> productsForGourmet() { return query(GOURMET_PRODUCTS); }
 
     private List<Product> query(String query) {
@@ -77,17 +77,16 @@ public class PersistentProductBase { // TODO RF 12/12/2015 implements ProductBas
     }
 
     static final class Queries {
-        private static final int RESULT_LIMIT = 3;  // TODO RF 22/10/2015 Pass the limit as an app configuration
 
         private static final String BASE_PROFILE_QUERY =
                 "SELECT p.*, r.name as reputation_name " +
                         " FROM salumistore.products p, salumistore.reputation r " +
                         " WHERE p.reputation = r.id ";
 
-        static final String MAGIC_PRODUCTS = BASE_PROFILE_QUERY + " ORDER BY price LIMIT " + RESULT_LIMIT;
-        static final String HEALTHY_PRODUCTS = BASE_PROFILE_QUERY + " ORDER BY fat, price DESC LIMIT " + RESULT_LIMIT;
-        static final String TRADITIONAL_PRODUCTS = BASE_PROFILE_QUERY + " AND r.name = 'Traditional' ORDER BY price LIMIT " + RESULT_LIMIT;
-        static final String GOURMET_PRODUCTS = BASE_PROFILE_QUERY + " ORDER BY price DESC LIMIT " + RESULT_LIMIT;
+        static final String MAGIC_PRODUCTS = BASE_PROFILE_QUERY + " ORDER BY price ";
+        static final String HEALTHY_PRODUCTS = BASE_PROFILE_QUERY + " ORDER BY fat, price DESC ";
+        static final String TRADITIONAL_PRODUCTS = BASE_PROFILE_QUERY + " AND r.name = 'Traditional' ORDER BY price ";
+        static final String GOURMET_PRODUCTS = BASE_PROFILE_QUERY + " ORDER BY price DESC ";
     }
 
     static final class ProductRowMapper implements RowMapper<Product> {
