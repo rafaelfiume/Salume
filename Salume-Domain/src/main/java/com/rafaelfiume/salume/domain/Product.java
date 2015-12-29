@@ -1,14 +1,19 @@
 package com.rafaelfiume.salume.domain;
 
+import lombok.Getter;
+import lombok.ToString;
+
 import javax.money.MonetaryAmount;
 
+@ToString(includeFieldNames = true)
+@SuppressWarnings("unused")
 public class Product {
 
-    private final Long id;
-    private final String name;
-    private final MonetaryAmount price;
-    private final String fatPercentage;
-    private final Reputation reputation;
+    @Getter private final Long id;
+    @Getter private final String name;
+    @Getter private final MonetaryAmount price;
+    @Getter private final String fatPercentage;
+    @Getter private final Reputation reputation;
 
     public Product(Long id, String name, MonetaryAmount price, String fatPercentage, Reputation reputation) {
         this.id = id;
@@ -18,23 +23,4 @@ public class Product {
         this.reputation = reputation;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public MonetaryAmount getPrice() {
-        return price;
-    }
-
-    public String getFatPercentage() {
-        return fatPercentage;
-    }
-
-    public Reputation getReputation() {
-        return reputation;
-    }
 }

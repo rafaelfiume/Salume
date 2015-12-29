@@ -4,15 +4,16 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;
+import lombok.Getter;
 
 @JacksonXmlRootElement(localName = "product")
 public class ProductResponse {
 
-    private final long id;
-    private final String name;
-    private final String price;
+    @Getter private final long id;
+    @Getter private final String name;
+    @Getter private final String price;
     private final String fatPercentage;
-    private final String reputation;
+    @Getter private final String reputation;
 
     public ProductResponse(Product product, MoneyDealer moneyDealer) {
         this.id = product.getId();
@@ -23,28 +24,9 @@ public class ProductResponse {
     }
 
     @SuppressWarnings("unused")
-    public long getId() {
-        return id;
-    }
-
-    @SuppressWarnings("unused")
-    public String getName() {
-        return name;
-    }
-
-    @SuppressWarnings("unused")
-    public String getPrice() {
-        return price;
-    }
-
-    @SuppressWarnings("unused")
     @JacksonXmlProperty(localName = "fat-percentage")
     public String getFatPercentage() {
         return fatPercentage;
     }
 
-    @SuppressWarnings("unused")
-    public String getReputation() {
-        return reputation;
-    }
 }

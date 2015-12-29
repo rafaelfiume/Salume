@@ -24,10 +24,12 @@ public class MobileProductAdvisorResponse {
     }
 
     private MobileProductAdvisorResponse() {
+        // Use the method factory #of instead
     }
 
     @JacksonXmlElementWrapper(localName = "products")
     @JacksonXmlProperty(localName = "product")
+    @SuppressWarnings("unused")
     public List<ProductResponse> getProducts() {
         return products;
     }
