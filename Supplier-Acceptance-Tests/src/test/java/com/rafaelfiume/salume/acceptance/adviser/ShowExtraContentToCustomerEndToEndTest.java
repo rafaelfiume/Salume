@@ -65,7 +65,9 @@ public class ShowExtraContentToCustomerEndToEndTest extends AbstractSequenceDiag
 
         when(requestingBestOfferForACustomer());
 
-        then(theSuggestionForCustomer(), containsAn(imageLinkWithUrl("https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg"),
+        then(theSuggestionForCustomer(),
+                isA("Chorizo", typeOfSalumi(),
+                andContainsAnImageLinkWithUrl("https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg"),
                 andAProductDescriptionLinkWithUrl("https://it.wikipedia.org/w/api.php?format=xml&action=query&prop=extracts&exintro=&explaintext=&titles=Chorizo")));
     }
 
@@ -109,7 +111,11 @@ public class ShowExtraContentToCustomerEndToEndTest extends AbstractSequenceDiag
     // Method decorators
     //
 
-    private String imageLinkWithUrl(String url) {
+    private Void typeOfSalumi() {
+        return null;
+    }
+
+    private String andContainsAnImageLinkWithUrl(String url) {
         return url;
     }
 
@@ -121,22 +127,27 @@ public class ShowExtraContentToCustomerEndToEndTest extends AbstractSequenceDiag
     // Matchers
     //
 
-    private TypeSafeMatcher<Node> containsAn(String expectedImageUrl, String expectedDescriptionUrl) {
+    private TypeSafeMatcher<Node> isA(String expectedTypeOfSalumi, @SuppressWarnings("unused") Void blablabla, String expectedImageUrl, String expectedDescriptionUrl) {
         return new TypeSafeMatcher<Node>() {
             @Override
             protected boolean matchesSafely(Node xml) {
-                return expectedImageUrl.equals(actualImageUrlFrom(xml)) && expectedDescriptionUrl.endsWith(actualDescriptionUrlFrom(xml));
+                return  expectedTypeOfSalumi.equals(actualTypeOfSalumiFrom(xml))
+                                && expectedImageUrl.equals(actualImageUrlFrom(xml))
+                                && expectedDescriptionUrl.endsWith(actualDescriptionUrlFrom(xml));
             }
 
             @Override
             public void describeTo(Description description) {
-                description.appendText(format("a product with image url \"%s\", and description url \"%s\"", expectedImageUrl, expectedDescriptionUrl));
+                description.appendText(format(
+                        "a product with variety \"%s\", image url \"%s\", and description url \"%s\"", expectedTypeOfSalumi, expectedImageUrl, expectedDescriptionUrl));
             }
 
             @Override
             protected void describeMismatchSafely(Node xml, Description mismatchDescription) {
-                mismatchDescription.appendText(format("product had image url \"%s\", and description url \"%s\"", actualImageUrlFrom(xml), actualDescriptionUrlFrom(xml)));}
+                mismatchDescription.appendText(format(
+                        "product had variety \"%s\", image url \"%s\", and description url \"%s\"", actualTypeOfSalumiFrom(xml), actualImageUrlFrom(xml), actualDescriptionUrlFrom(xml)));}
 
+            private String actualTypeOfSalumiFrom(Node xml)   { return getValueFrom(xml, "variety"); }
             private String actualImageUrlFrom(Node xml)       { return getValueFrom(xml, "image-url"); }
             private String actualDescriptionUrlFrom(Node xml) { return getValueFrom(xml, "product-description-url"); }
         };
