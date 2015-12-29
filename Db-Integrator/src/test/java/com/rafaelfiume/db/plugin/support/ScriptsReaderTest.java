@@ -13,7 +13,7 @@ public class ScriptsReaderTest {
 
     @Test
     public void retrieveScriptFile() {
-        final String scripts = new ScriptsReader().readScript("scripts/i01/01.create-table.sql");
+        final String scripts = new ScriptsReader().readScript("scripts/i01/01.create-product-and-reputation-tables.sql");
         assertNotNull(scripts);
     }
 

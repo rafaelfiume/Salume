@@ -12,7 +12,15 @@ public class ProductBuilder {
     }
 
     public static ProductBuilder a(String name) {
-        return new ProductBuilder(name);
+        return new ProductBuilder(name).withDefaults();
+    }
+
+    public ProductBuilder withDefaults() {
+        at("EUR 11,11");
+        regardedAs("NORMAL");
+        with("49,99").percentageOfFat();
+        withVariety("Chorizo");
+        return this;
     }
 
     public ProductBuilder at(String price) {
@@ -32,6 +40,10 @@ public class ProductBuilder {
 
     public ProductBuilder percentageOfFat() {
         // Just make the test read nicer. Use it after #with
+        return this;
+    }
+
+    public ProductBuilder withVariety(String variety) {
         return this;
     }
 

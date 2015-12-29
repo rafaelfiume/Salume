@@ -8,6 +8,7 @@ import com.googlecode.yatspec.plugin.sequencediagram.ByNamingConventionMessagePr
 import com.googlecode.yatspec.plugin.sequencediagram.SequenceDiagramGenerator;
 import com.googlecode.yatspec.plugin.sequencediagram.SequenceDiagramMessage;
 import com.googlecode.yatspec.plugin.sequencediagram.SvgWrapper;
+import com.googlecode.yatspec.rendering.LinkingNoteRenderer;
 import com.googlecode.yatspec.rendering.html.DontHighlightRenderer;
 import com.googlecode.yatspec.rendering.html.HtmlResultRenderer;
 import com.googlecode.yatspec.rendering.html.index.HtmlIndexRenderer;
@@ -70,7 +71,7 @@ public class AbstractSequenceDiagramTestState extends TestState implements WithC
         return sequence(
                 new HtmlResultRenderer().
                         withCustomHeaderContent(SequenceDiagramGenerator.getHeaderContentForModalWindows()).
-                        withCustomRenderer(SvgWrapper.class, new DontHighlightRenderer()),
+                        withCustomRenderer(SvgWrapper.class, new DontHighlightRenderer<>()),
                 new HtmlIndexRenderer()).
                 safeCast(SpecResultListener.class);
     }

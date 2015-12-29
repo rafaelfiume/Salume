@@ -1,15 +1,11 @@
 package com.rafaelfiume.salume.matchers;
 
-import com.rafaelfiume.salume.support.TestSetupException;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.w3c.dom.Node;
 
-import javax.xml.xpath.XPathExpressionException;
-
-import static com.rafaelfiume.salume.support.Xml.xpath;
+import static com.rafaelfiume.salume.support.Xml.getValueFrom;
 import static java.lang.String.format;
-import static javax.xml.xpath.XPathConstants.STRING;
 
 public class AdvisedProductMatcher extends TypeSafeMatcher<Node> {
 
@@ -53,11 +49,4 @@ public class AdvisedProductMatcher extends TypeSafeMatcher<Node> {
     private String actualReputationFrom(Node xml) {    return getValueFrom(xml, "reputation"); }
     private String actualFatPercentageFrom(Node xml) { return getValueFrom(xml, "fat-percentage"); }
 
-    private String getValueFrom(Node item, String xpath) {
-        try {
-            return (String) xpath().evaluate(xpath + "/text()", item, STRING);
-        } catch (XPathExpressionException e) {
-            throw new TestSetupException(e);
-        }
-    }
 }

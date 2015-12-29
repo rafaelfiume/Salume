@@ -1,4 +1,4 @@
-package com.rafaelfiume.salume.acceptance.advisor;
+package com.rafaelfiume.salume.acceptance.adviser;
 
 import com.googlecode.yatspec.junit.Notes;
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
@@ -36,11 +36,11 @@ import static javax.xml.xpath.XPathConstants.NUMBER;
 import static org.springframework.http.MediaType.parseMediaType;
 import static org.springframework.test.jdbc.JdbcTestUtils.deleteFromTables;
 
-@Notes("A customer can have whatever they want as long as it is salume. At least for now...\n\n" +
+@Notes("A customer can have whatever they want as long as it is <a href=\"https://it.wikipedia.org/wiki/Salame\" target=\"blank\">Salame</a>. At least for now...\n\n" +
         "" +
-        "Gioseppo select the customer profile when offering products to his customers. See the details about this story <a href=\"https://rafaelfiume.wordpress.com/2013/04/07/dragons-unicorns-and-titans-an-agile-software-developer-tail/\" target=\"blank\">here</a>.")
+        "Gioseppo selects the customer profile when offering products to his customers. See the details about this story <a href=\"https://rafaelfiume.wordpress.com/2013/04/07/dragons-unicorns-and-titans-an-agile-software-developer-tail/\" target=\"blank\">here</a>.")
 @Transactional
-public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramTestState {
+public class AdviseProductBasedOnCustomerProfileEndToEndTest extends AbstractSequenceDiagramTestState {
 
     private static final MediaType APPLICATION_XML_CHARSET_UTF8 = parseMediaType("application/xml;charset=utf-8");
 
@@ -160,11 +160,11 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
     private ActionUnderTest requestingBestOfferFor(final String profile) {
         return (givens, capturedInputAndOutputs1) -> {
             // TODO RF 20/10/2015 Extract the server address to a method in the abstract class
-            final String advisorUrl = "http://localhost:8081/salume/supplier/advise/for/" + profile;
+            final String adviserUrl = "http://localhost:8081/salume/supplier/advise/for/" + profile;
 
-            this.response = new TestRestTemplate().getForEntity(advisorUrl, String.class);
+            this.response = new TestRestTemplate().getForEntity(adviserUrl, String.class);
 
-            capture("Salume advice request", withContent(advisorUrl), from(CUSTOMER), to(SUPPLIER));
+            capture("Salume advice request", withContent(adviserUrl), from(CUSTOMER), to(SUPPLIER));
 
             return capturedInputAndOutputs;
         };
@@ -176,7 +176,7 @@ public class SalumeAdvisorHappyPathEndToEndTest extends AbstractSequenceDiagramT
         ).intValue();
     }
 
-    private StateExtractor<Node> theFirstSuggestionForCustomer() throws Exception {
+    private StateExtractor<Node> theFirstSuggestionForCustomer() {
         capture("Salume advice response", withContent(prettyPrint(xmlFrom(response.getBody()))), from(SUPPLIER), to(CUSTOMER));
 
         return firstSuggestedProduct();
