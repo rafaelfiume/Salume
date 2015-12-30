@@ -309,62 +309,118 @@ dl.index-result {
     </head>
     <body>
 
-        <h1>Status page sad path end to end</h1>
+        <h1>Advise product based on customer profile end to end</h1>
 
+        <pre class="notes">A customer can have whatever they want as long as it is <a href="https://it.wikipedia.org/wiki/Salame" target="blank">Salame</a>. At least for now...
+
+Gioseppo selects the customer profile when offering products to his customers. See the details about this story <a href="https://rafaelfiume.wordpress.com/2013/04/07/dragons-unicorns-and-titans-an-agile-software-developer-tail/" target="blank">here</a>.</pre>
+                <pre class="notes">See also <a href='../../../../../com/rafaelfiume/salume/acceptance/adviser/ShowExtraContentToCustomerEndToEndTest.html'>Show extra content to customer end to end test</a></pre>
+        
 
         <div class="contents">
             <h2>Contents</h2>
 
             <ul class="contents">
-                    <li class='test-passed'><a href="#showStatusFailWhenAppIsUpAndRunningAndDatabaseConnectionFails">Show status fail when app is up and running and database connection fails</a></li>
+                    <li class='test-passed'><a href="#suggestToCustomerWithMagicProfileTheCheapestProducts">Suggest to customer with magic profile the cheapest products</a></li>
+                                    <li class='test-passed'><a href="#suggestToCustomerWithHealthyProfileTheProductsWithLessFat">Suggest to customer with healthy profile the products with less fat</a></li>
+                                    <li class='test-passed'><a href="#onlySuggestTraditionalProductsWithCheapestOnesFirstToExperts">Only suggest traditional products with cheapest ones first to experts</a></li>
+                                    <li class='test-passed'><a href="#suggestToCustomerWithGourmetProfileTheMostExpensiveProducts">Suggest to customer with gourmet profile the most expensive products</a></li>
                 
             </ul>
         </div>
 
             <div class="testmethod section">
-                <a id="showStatusFailWhenAppIsUpAndRunningAndDatabaseConnectionFails"></a>
-                <h2 class="section-header">Show status fail when app is up and running and database connection fails</h2>
+                <a id="suggestToCustomerWithMagicProfileTheCheapestProducts"></a>
+                <h2 class="section-header">Suggest to customer with magic profile the cheapest products</h2>
                 <div class="section-body">
 
 
-                        <div class="scenario" id="263103706_430976509">
+                        <div class="scenario" id="1005928818_2067586671">
                             <a id=""></a>
                             <h2>Specification</h2>
                             <pre class="highlight specification">
-Given salume supplier app is up and running
-And database is down
+Given the available products are
+A &quot;(1st Cheapest) Salume&quot; at &quot;EUR 11,11&quot; regarded as &quot;NORMAL&quot; with &quot;49,99&quot; percentage of fat
+A &quot;(2nd Cheapest) Salume&quot; at &quot;EUR 29,55&quot; regarded as &quot;NORMAL&quot; with &quot;31,00&quot; percentage of fat
+A &quot;(Expensive) &amp; Light&quot; at &quot;EUR 57,37&quot; regarded as &quot;NORMAL&quot; with &quot;33,50&quot; percentage of fat
+A &quot;(3rd Cheapest) Salume&quot; at &quot;EUR 41,60&quot; regarded as &quot;TRADITIONAL&quot; with &quot;37,00&quot; percentage of fat
+And a &quot;(Very Expensive) Premium&quot; at &quot;EUR 73,23&quot; regarded as &quot;TRADITIONAL&quot; with &quot;38,00&quot; percentage of fat
 
-When a client requests status page
+When requesting best offer for a customer considered &quot;Magic&quot;
 
-Then the content type is TEXT_PLAIN_CHARSET_UTF8
-And the status page has http status code OK
-And the applicantion name and version is &quot;Salume Supplier DEV&quot;
-And the status of the app is &quot;FAILING&quot;
-And the app version in the status page is the implementation version in the manifest
-And the database status is &quot;FAILING&quot;</pre>
+Then the first suggestion for customer is the &quot;(1st Cheapest) Salume&quot; at &quot;EUR 11,11&quot; regarded as &quot;NORMAL&quot; with &quot;49,99&quot; percentage of fat
+And second suggested product is the &quot;(2nd Cheapest) Salume&quot; at &quot;EUR 29,55&quot; regarded as &quot;NORMAL&quot; with &quot;31,00&quot; percentage of fat
+And third suggested product is the &quot;(3rd Cheapest) Salume&quot; at &quot;EUR 41,60&quot; regarded as &quot;TRADITIONAL&quot; with &quot;37,00&quot; percentage of fat
+
+And number of advised products is 5
+And the content type is APPLICATION_XML_CHARSET_UTF8</pre>
                             <h3 class="logKey">Test results:</h3>
                                     <pre class='highlight results test-passed'>
 Test passed</pre>
 
-                                         <h3 class="logKey">Interesting Givens</h3>
 
-                                        <table class="interestingGivens logValue">
-                                            <tr>
-                                                <th class="key">Supplier Status Page:</th>
-                                                <td class="interestingGiven">http://localhost:8282/salume/supplier/status</td>
-                                            </tr>
-                                        
-                                        </table>
-
-                                        <h3 class="logKey" logkey="Status_page_request_from_Client_to_Supplier">Status page request from Client to Supplier</h3>
-                                        <div class="logValue highlight String" >http://localhost:8282/salume/supplier/status</div>
-                                                                            <h3 class="logKey" logkey="Status_page_response__from_Supplier_to_Client">Status page response  from Supplier to Client</h3>
-                                        <div class="logValue highlight String" >Salume Supplier DEV is: FAILING
-Version: ${project.version}
-Database connections is: FAILING</div>
+                                        <h3 class="logKey" logkey="Salume_advice_request_from_Customer_to_Supplier">Salume advice request from Customer to Supplier</h3>
+                                        <div class="logValue highlight String" >http://localhost:8081/salume/supplier/advise/for/Magic</div>
+                                                                            <h3 class="logKey" logkey="Salume_advice_response_from_Supplier_to_Customer">Salume advice response from Supplier to Customer</h3>
+                                        <div class="logValue highlight String" >&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;
+&lt;product-advisor&gt;
+    &lt;products&gt;
+        &lt;product&gt;
+            &lt;id&gt;28&lt;/id&gt;
+            &lt;name&gt;(1st Cheapest) Salume&lt;/name&gt;
+            &lt;price&gt;EUR 11,11&lt;/price&gt;
+            &lt;reputation&gt;special&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;49,99&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;29&lt;/id&gt;
+            &lt;name&gt;(2nd Cheapest) Salume&lt;/name&gt;
+            &lt;price&gt;EUR 29,55&lt;/price&gt;
+            &lt;reputation&gt;special&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;31,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;31&lt;/id&gt;
+            &lt;name&gt;(3rd Cheapest) Salume&lt;/name&gt;
+            &lt;price&gt;EUR 41,60&lt;/price&gt;
+            &lt;reputation&gt;traditional&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;37,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;30&lt;/id&gt;
+            &lt;name&gt;(Expensive) &amp;amp; Light&lt;/name&gt;
+            &lt;price&gt;EUR 57,37&lt;/price&gt;
+            &lt;reputation&gt;special&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;33,50&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;32&lt;/id&gt;
+            &lt;name&gt;(Very Expensive) Premium&lt;/name&gt;
+            &lt;price&gt;EUR 73,23&lt;/price&gt;
+            &lt;reputation&gt;traditional&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;38,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+    &lt;/products&gt;
+&lt;/product-advisor&gt;
+</div>
                                                                             <h3 class="logKey" logkey="Sequence_Diagram">Sequence Diagram</h3>
                                         <div class="logValue highlight SvgWrapper" ><div class='nohighlight'><?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="154px" style="width:243px;height:154px;" version="1.1" viewBox="0 0 243 154" width="243px">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="154px" style="width:274px;height:154px;" version="1.1" viewBox="0 0 274 154" width="274px">
   <defs>
     <filter height="300%" id="f1" width="300%" x="-1" y="-1">
       <feGaussianBlur result="blurOut" stdDeviation="2.0" />
@@ -374,24 +430,379 @@ Database connections is: FAILING</div>
     </filter>
   </defs>
   <g>
-    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="36" x2="36" y1="38.2969" y2="116.5625" />
-    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="201.5" x2="201.5" y1="38.2969" y2="116.5625" />
-    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="53" x="8" y="3" />
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="39" x="15" y="22.9951">Client</text>
-    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="53" x="8" y="115.5625" />
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="39" x="15" y="135.5576">Client</text>
-    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="164.5" y="3" />
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="171.5" y="22.9951">Supplier</text>
-    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="164.5" y="115.5625" />
-    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="171.5" y="135.5576">Supplier</text>
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="199.5" x2="189.5" y1="69.2969" y2="65.2969" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="199.5" x2="189.5" y1="69.2969" y2="73.2969" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="36.5" x2="200.5" y1="69.2969" y2="69.2969" />
-    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Status_page_request_from_Client_to_Supplier" textLength="131" x="43.5" y="64.3638">Status page request</text>
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="36.5" x2="46.5" y1="98.4297" y2="94.4297" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="36.5" x2="46.5" y1="98.4297" y2="102.4297" />
-    <line style="stroke: #A80036; stroke-width: 1.0;" x1="36.5" x2="200.5" y1="98.4297" y2="98.4297" />
-    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Status_page_response__from_Supplier_to_Client" textLength="141" x="53.5" y="93.4966">Status page response</text>
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="51" x2="51" y1="38.2969" y2="116.5625" />
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="232" x2="232" y1="38.2969" y2="116.5625" />
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="82" x="8" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="68" x="15" y="22.9951">Customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="82" x="8" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="68" x="15" y="135.5576">Customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="195" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="202" y="22.9951">Supplier</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="195" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="202" y="135.5576">Supplier</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="230" x2="220" y1="69.2969" y2="65.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="230" x2="220" y1="69.2969" y2="73.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="231" y1="69.2969" y2="69.2969" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_request_from_Customer_to_Supplier" textLength="147" x="58" y="64.3638">Salume advice request</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="61" y1="98.4297" y2="94.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="61" y1="98.4297" y2="102.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="231" y1="98.4297" y2="98.4297" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_response_from_Supplier_to_Customer" textLength="157" x="68" y="93.4966">Salume advice response</text>
+  </g>
+</svg>
+
+</div></div>
+                                    
+                    </div>
+                    
+                </div>
+            </div>
+                    <div class="testmethod section">
+                <a id="suggestToCustomerWithHealthyProfileTheProductsWithLessFat"></a>
+                <h2 class="section-header">Suggest to customer with healthy profile the products with less fat</h2>
+                <div class="section-body">
+
+
+                        <div class="scenario" id="902096996_849520318">
+                            <a id=""></a>
+                            <h2>Specification</h2>
+                            <pre class="highlight specification">
+Given the available products are
+A &quot;(Super Fat) Salume&quot; at &quot;EUR 11,11&quot; regarded as &quot;NORMAL&quot; with &quot;49,99&quot; percentage of fat
+A &quot;(Lightest) Salume&quot; at &quot;EUR 29,55&quot; regarded as &quot;NORMAL&quot; with &quot;31,00&quot; percentage of fat
+A &quot;(Light) Salume&quot; at &quot;EUR 57,37&quot; regarded as &quot;NORMAL&quot; with &quot;33,50&quot; percentage of fat
+A &quot;(3rd Lightest) Salume&quot; at &quot;EUR 41,60&quot; regarded as &quot;TRADITIONAL&quot; with &quot;37,00&quot; percentage of fat
+And a &quot;(Fat) Premium&quot; at &quot;EUR 73,23&quot; regarded as &quot;TRADITIONAL&quot; with &quot;38,00&quot; percentage of fat
+
+When requesting best offer for a customer considered &quot;Healthy&quot;
+
+Then the first suggestion for customer is the &quot;(Lightest) Salume&quot; at &quot;EUR 29,55&quot; regarded as &quot;NORMAL&quot; with &quot;31,00&quot; percentage of fat
+And second suggested product is the &quot;(Light) Salume&quot; at &quot;EUR 57,37&quot; regarded as &quot;NORMAL&quot; with &quot;33,50&quot; percentage of fat
+And third suggested product is the &quot;(3rd Lightest) Salume&quot; at &quot;EUR 41,60&quot; regarded as &quot;TRADITIONAL&quot; with &quot;37,00&quot; percentage of fat
+
+And number of advised products is 5
+And the content type is APPLICATION_XML_CHARSET_UTF8</pre>
+                            <h3 class="logKey">Test results:</h3>
+                                    <pre class='highlight results test-passed'>
+Test passed</pre>
+
+
+                                        <h3 class="logKey" logkey="Salume_advice_request_from_Customer_to_Supplier">Salume advice request from Customer to Supplier</h3>
+                                        <div class="logValue highlight String" >http://localhost:8081/salume/supplier/advise/for/Healthy</div>
+                                                                            <h3 class="logKey" logkey="Salume_advice_response_from_Supplier_to_Customer">Salume advice response from Supplier to Customer</h3>
+                                        <div class="logValue highlight String" >&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;
+&lt;product-advisor&gt;
+    &lt;products&gt;
+        &lt;product&gt;
+            &lt;id&gt;39&lt;/id&gt;
+            &lt;name&gt;(Lightest) Salume&lt;/name&gt;
+            &lt;price&gt;EUR 29,55&lt;/price&gt;
+            &lt;reputation&gt;special&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;31,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;40&lt;/id&gt;
+            &lt;name&gt;(Light) Salume&lt;/name&gt;
+            &lt;price&gt;EUR 57,37&lt;/price&gt;
+            &lt;reputation&gt;special&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;33,50&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;41&lt;/id&gt;
+            &lt;name&gt;(3rd Lightest) Salume&lt;/name&gt;
+            &lt;price&gt;EUR 41,60&lt;/price&gt;
+            &lt;reputation&gt;traditional&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;37,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;42&lt;/id&gt;
+            &lt;name&gt;(Fat) Premium&lt;/name&gt;
+            &lt;price&gt;EUR 73,23&lt;/price&gt;
+            &lt;reputation&gt;traditional&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;38,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;38&lt;/id&gt;
+            &lt;name&gt;(Super Fat) Salume&lt;/name&gt;
+            &lt;price&gt;EUR 11,11&lt;/price&gt;
+            &lt;reputation&gt;special&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;49,99&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+    &lt;/products&gt;
+&lt;/product-advisor&gt;
+</div>
+                                                                            <h3 class="logKey" logkey="Sequence_Diagram">Sequence Diagram</h3>
+                                        <div class="logValue highlight SvgWrapper" ><div class='nohighlight'><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="154px" style="width:274px;height:154px;" version="1.1" viewBox="0 0 274 154" width="274px">
+  <defs>
+    <filter height="300%" id="f1" width="300%" x="-1" y="-1">
+      <feGaussianBlur result="blurOut" stdDeviation="2.0" />
+      <feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0" />
+      <feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3" />
+      <feBlend in="SourceGraphic" in2="blurOut3" mode="normal" />
+    </filter>
+  </defs>
+  <g>
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="51" x2="51" y1="38.2969" y2="116.5625" />
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="232" x2="232" y1="38.2969" y2="116.5625" />
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="82" x="8" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="68" x="15" y="22.9951">Customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="82" x="8" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="68" x="15" y="135.5576">Customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="195" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="202" y="22.9951">Supplier</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="195" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="202" y="135.5576">Supplier</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="230" x2="220" y1="69.2969" y2="65.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="230" x2="220" y1="69.2969" y2="73.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="231" y1="69.2969" y2="69.2969" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_request_from_Customer_to_Supplier" textLength="147" x="58" y="64.3638">Salume advice request</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="61" y1="98.4297" y2="94.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="61" y1="98.4297" y2="102.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="231" y1="98.4297" y2="98.4297" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_response_from_Supplier_to_Customer" textLength="157" x="68" y="93.4966">Salume advice response</text>
+  </g>
+</svg>
+
+</div></div>
+                                    
+                    </div>
+                    
+                </div>
+            </div>
+                    <div class="testmethod section">
+                <a id="onlySuggestTraditionalProductsWithCheapestOnesFirstToExperts"></a>
+                <h2 class="section-header">Only suggest traditional products with cheapest ones first to experts</h2>
+                <div class="section-body">
+                        <pre class="notes">Expert clients are more demanding and won't accept anything that is not considered traditional long-honored products.</pre>
+                    
+
+
+                        <div class="scenario" id="1747644505_1597425891">
+                            <a id=""></a>
+                            <h2>Specification</h2>
+                            <pre class="highlight specification">
+Given the available products are
+A &quot;(Normal) Cheap Salume&quot; at &quot;EUR 11,11&quot; regarded as &quot;NORMAL&quot; with &quot;49,99&quot; percentage of fat
+A &quot;(Normal) Light Salume&quot; at &quot;EUR 29,55&quot; regarded as &quot;NORMAL&quot; with &quot;31,00&quot; percentage of fat
+A &quot;(Normal) Salume&quot; at &quot;EUR 57,37&quot; regarded as &quot;NORMAL&quot; with &quot;33,50&quot; percentage of fat
+A &quot;(Traditional Less Expensive) Salume&quot; at &quot;EUR 41,60&quot; regarded as &quot;TRADITIONAL&quot; with &quot;37,00&quot; percentage of fat
+And a &quot;(Traditional More Expensive) Premium&quot; at &quot;EUR 73,23&quot; regarded as &quot;TRADITIONAL&quot; with &quot;38,00&quot; percentage of fat
+
+When requesting best offer for a customer considered &quot;Expert&quot;
+
+Then the first suggestion for customer is the &quot;(Traditional Less Expensive) Salume&quot; at &quot;EUR 41,60&quot; regarded as &quot;TRADITIONAL&quot; with &quot;37,00&quot; percentage of fat
+And second suggested product is the &quot;(Traditional More Expensive) Premium&quot; at &quot;EUR 73,23&quot; regarded as &quot;TRADITIONAL&quot; with &quot;38,00&quot; percentage of fat
+
+And number of advised products is 2
+And the content type is APPLICATION_XML_CHARSET_UTF8</pre>
+                            <h3 class="logKey">Test results:</h3>
+                                    <pre class='highlight results test-passed'>
+Test passed</pre>
+
+
+                                        <h3 class="logKey" logkey="Salume_advice_request_from_Customer_to_Supplier">Salume advice request from Customer to Supplier</h3>
+                                        <div class="logValue highlight String" >http://localhost:8081/salume/supplier/advise/for/Expert</div>
+                                                                            <h3 class="logKey" logkey="Salume_advice_response_from_Supplier_to_Customer">Salume advice response from Supplier to Customer</h3>
+                                        <div class="logValue highlight String" >&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;
+&lt;product-advisor&gt;
+    &lt;products&gt;
+        &lt;product&gt;
+            &lt;id&gt;36&lt;/id&gt;
+            &lt;name&gt;(Traditional Less Expensive) Salume&lt;/name&gt;
+            &lt;price&gt;EUR 41,60&lt;/price&gt;
+            &lt;reputation&gt;traditional&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;37,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;37&lt;/id&gt;
+            &lt;name&gt;(Traditional More Expensive) Premium&lt;/name&gt;
+            &lt;price&gt;EUR 73,23&lt;/price&gt;
+            &lt;reputation&gt;traditional&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;38,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+    &lt;/products&gt;
+&lt;/product-advisor&gt;
+</div>
+                                                                            <h3 class="logKey" logkey="Sequence_Diagram">Sequence Diagram</h3>
+                                        <div class="logValue highlight SvgWrapper" ><div class='nohighlight'><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="154px" style="width:274px;height:154px;" version="1.1" viewBox="0 0 274 154" width="274px">
+  <defs>
+    <filter height="300%" id="f1" width="300%" x="-1" y="-1">
+      <feGaussianBlur result="blurOut" stdDeviation="2.0" />
+      <feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0" />
+      <feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3" />
+      <feBlend in="SourceGraphic" in2="blurOut3" mode="normal" />
+    </filter>
+  </defs>
+  <g>
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="51" x2="51" y1="38.2969" y2="116.5625" />
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="232" x2="232" y1="38.2969" y2="116.5625" />
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="82" x="8" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="68" x="15" y="22.9951">Customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="82" x="8" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="68" x="15" y="135.5576">Customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="195" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="202" y="22.9951">Supplier</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="195" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="202" y="135.5576">Supplier</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="230" x2="220" y1="69.2969" y2="65.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="230" x2="220" y1="69.2969" y2="73.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="231" y1="69.2969" y2="69.2969" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_request_from_Customer_to_Supplier" textLength="147" x="58" y="64.3638">Salume advice request</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="61" y1="98.4297" y2="94.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="61" y1="98.4297" y2="102.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="231" y1="98.4297" y2="98.4297" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_response_from_Supplier_to_Customer" textLength="157" x="68" y="93.4966">Salume advice response</text>
+  </g>
+</svg>
+
+</div></div>
+                                    
+                    </div>
+                    
+                </div>
+            </div>
+                    <div class="testmethod section">
+                <a id="suggestToCustomerWithGourmetProfileTheMostExpensiveProducts"></a>
+                <h2 class="section-header">Suggest to customer with gourmet profile the most expensive products</h2>
+                <div class="section-body">
+
+
+                        <div class="scenario" id="1788036341_1434769862">
+                            <a id=""></a>
+                            <h2>Specification</h2>
+                            <pre class="highlight specification">
+Given the available products are
+A &quot;(1st Cheapest) Salume&quot; at &quot;EUR 11,11&quot; regarded as &quot;NORMAL&quot; with &quot;49,99&quot; percentage of fat
+A &quot;(2nd Cheapest) Salume&quot; at &quot;EUR 29,55&quot; regarded as &quot;NORMAL&quot; with &quot;31,00&quot; percentage of fat
+A &quot;(Expensive) &amp; Light&quot; at &quot;EUR 57,37&quot; regarded as &quot;NORMAL&quot; with &quot;33,50&quot; percentage of fat
+A &quot;(3rd More Expensive) Salume&quot; at &quot;EUR 41,60&quot; regarded as &quot;TRADITIONAL&quot; with &quot;37,00&quot; percentage of fat
+And a &quot;(Very Expensive) Premium&quot; at &quot;EUR 73,23&quot; regarded as &quot;TRADITIONAL&quot; with &quot;38,00&quot; percentage of fat
+
+When requesting best offer for a customer considered &quot;Gourmet&quot;
+
+Then the first suggestion for customer is the &quot;(Very Expensive) Premium&quot; at &quot;EUR 73,23&quot; regarded as &quot;TRADITIONAL&quot; with &quot;38,00&quot; percentage of fat
+And second suggested product is the &quot;(Expensive) &amp; Light&quot; at &quot;EUR 57,37&quot; regarded as &quot;NORMAL&quot; with &quot;33,50&quot; percentage of fat
+And third suggested product is the &quot;(3rd More Expensive) Salume&quot; at &quot;EUR 41,60&quot; regarded as &quot;TRADITIONAL&quot; with &quot;37,00&quot; percentage of fat
+
+And number of advised products is 5
+And the content type is APPLICATION_XML_CHARSET_UTF8</pre>
+                            <h3 class="logKey">Test results:</h3>
+                                    <pre class='highlight results test-passed'>
+Test passed</pre>
+
+
+                                        <h3 class="logKey" logkey="Salume_advice_request_from_Customer_to_Supplier">Salume advice request from Customer to Supplier</h3>
+                                        <div class="logValue highlight String" >http://localhost:8081/salume/supplier/advise/for/Gourmet</div>
+                                                                            <h3 class="logKey" logkey="Salume_advice_response_from_Supplier_to_Customer">Salume advice response from Supplier to Customer</h3>
+                                        <div class="logValue highlight String" >&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;
+&lt;product-advisor&gt;
+    &lt;products&gt;
+        &lt;product&gt;
+            &lt;id&gt;27&lt;/id&gt;
+            &lt;name&gt;(Very Expensive) Premium&lt;/name&gt;
+            &lt;price&gt;EUR 73,23&lt;/price&gt;
+            &lt;reputation&gt;traditional&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;38,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;25&lt;/id&gt;
+            &lt;name&gt;(Expensive) &amp;amp; Light&lt;/name&gt;
+            &lt;price&gt;EUR 57,37&lt;/price&gt;
+            &lt;reputation&gt;special&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;33,50&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;26&lt;/id&gt;
+            &lt;name&gt;(3rd More Expensive) Salume&lt;/name&gt;
+            &lt;price&gt;EUR 41,60&lt;/price&gt;
+            &lt;reputation&gt;traditional&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;37,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;24&lt;/id&gt;
+            &lt;name&gt;(2nd Cheapest) Salume&lt;/name&gt;
+            &lt;price&gt;EUR 29,55&lt;/price&gt;
+            &lt;reputation&gt;special&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;31,00&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+        &lt;product&gt;
+            &lt;id&gt;23&lt;/id&gt;
+            &lt;name&gt;(1st Cheapest) Salume&lt;/name&gt;
+            &lt;price&gt;EUR 11,11&lt;/price&gt;
+            &lt;reputation&gt;special&lt;/reputation&gt;
+            &lt;variety&gt;Chorizo&lt;/variety&gt;
+            &lt;image&gt;https://upload.wikimedia.org/wikipedia/commons/3/3f/Palacioschorizo.jpg&lt;/image&gt;
+            &lt;description&gt;https://it.wikipedia.org/w/api.php?format=xml&amp;amp;action=query&amp;amp;prop=extracts&amp;amp;exintro=&amp;amp;explaintext=&amp;amp;titles=Chorizo&lt;/description&gt;
+            &lt;fat-percentage&gt;49,99&lt;/fat-percentage&gt;
+        &lt;/product&gt;
+    &lt;/products&gt;
+&lt;/product-advisor&gt;
+</div>
+                                                                            <h3 class="logKey" logkey="Sequence_Diagram">Sequence Diagram</h3>
+                                        <div class="logValue highlight SvgWrapper" ><div class='nohighlight'><?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="154px" style="width:274px;height:154px;" version="1.1" viewBox="0 0 274 154" width="274px">
+  <defs>
+    <filter height="300%" id="f1" width="300%" x="-1" y="-1">
+      <feGaussianBlur result="blurOut" stdDeviation="2.0" />
+      <feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0" />
+      <feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3" />
+      <feBlend in="SourceGraphic" in2="blurOut3" mode="normal" />
+    </filter>
+  </defs>
+  <g>
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="51" x2="51" y1="38.2969" y2="116.5625" />
+    <line style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 5.0,5.0;" x1="232" x2="232" y1="38.2969" y2="116.5625" />
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="82" x="8" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="68" x="15" y="22.9951">Customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="82" x="8" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="68" x="15" y="135.5576">Customer</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="195" y="3" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="202" y="22.9951">Supplier</text>
+    <rect fill="#FEFECE" filter="url(#f1)" height="30.2969" style="stroke: #A80036; stroke-width: 1.5;" width="70" x="195" y="115.5625" />
+    <text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="56" x="202" y="135.5576">Supplier</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="230" x2="220" y1="69.2969" y2="65.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="230" x2="220" y1="69.2969" y2="73.2969" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="231" y1="69.2969" y2="69.2969" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_request_from_Customer_to_Supplier" textLength="147" x="58" y="64.3638">Salume advice request</text>
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="61" y1="98.4297" y2="94.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="61" y1="98.4297" y2="102.4297" />
+    <line style="stroke: #A80036; stroke-width: 1.0;" x1="51" x2="231" y1="98.4297" y2="98.4297" />
+    <text class="sequence_diagram_clickable" fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" sequence_diagram_message_id="Salume_advice_response_from_Supplier_to_Customer" textLength="157" x="68" y="93.4966">Salume advice response</text>
   </g>
 </svg>
 
