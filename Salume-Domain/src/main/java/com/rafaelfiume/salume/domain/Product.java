@@ -7,6 +7,7 @@ import javax.money.MonetaryAmount;
 
 import static com.rafaelfiume.salume.domain.Product.UrlLinkBuilder.descriptionUrlFor;
 import static com.rafaelfiume.salume.domain.Product.UrlLinkBuilder.imageUrlFor;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @ToString(includeFieldNames = true)
 @SuppressWarnings("unused")
@@ -42,12 +43,14 @@ public class Product {
 
     static class UrlLinkBuilder {
 
+        private static final String DEFAULT_IMAGE_URL = "https://upload.wikimedia.org/wikipedia/commons/b/b5/Formaggi_e_salumi_sardi.jpg";
+
         private UrlLinkBuilder() {
             // Not intended to be instantiated
         }
 
         static String imageUrlFor(String image) {
-            return "https://upload.wikimedia.org/wikipedia/commons/" + image;
+            return isBlank(image) ? DEFAULT_IMAGE_URL : "https://upload.wikimedia.org/wikipedia/commons/" + image;
         }
 
         static String descriptionUrlFor(String variety) {

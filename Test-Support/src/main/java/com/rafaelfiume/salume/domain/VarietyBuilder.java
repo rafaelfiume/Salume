@@ -31,6 +31,11 @@ public class VarietyBuilder {
         return this;
     }
 
+    public VarietyBuilder withNoImageLink() {
+        this.imageLink = "";
+        return this;
+    }
+
     public Variety build() {
         return new Variety(id, name, imageLink);
     }

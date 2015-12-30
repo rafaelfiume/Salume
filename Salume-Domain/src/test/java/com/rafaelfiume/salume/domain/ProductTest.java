@@ -21,6 +21,16 @@ public class ProductTest {
         assertThat(salame.getDescriptionUrl(), is(equalTo("https://it.wikipedia.org/w/api.php?format=xml&action=query&prop=extracts&exintro=&explaintext=&titles=Skilandis")));
     }
 
+    @Test
+    public void shouldReturnDefaultImageUrlsWhenImageLinkIsNull() {
+        Product salame = a("Salume Gourmet D.O.P")
+                .with(variety("Skilandis").withImageLink(null));
+
+        assertThat(salame.getVarietyName()   , is(equalTo("Skilandis")));
+        assertThat(salame.getImageUrl()      , is(equalTo("https://upload.wikimedia.org/wikipedia/commons/b/b5/Formaggi_e_salumi_sardi.jpg")));
+        assertThat(salame.getDescriptionUrl(), is(equalTo("https://it.wikipedia.org/w/api.php?format=xml&action=query&prop=extracts&exintro=&explaintext=&titles=Skilandis")));
+    }
+
     static class ProductBuilder {
 
         private final String name;

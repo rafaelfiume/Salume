@@ -86,6 +86,19 @@ public class ShowExtraContentToCustomerEndToEndTest extends AbstractSequenceDiag
                 andAProductDescriptionLinkWithUrl("https://it.wikipedia.org/w/api.php?format=xml&action=query&prop=extracts&exintro=&explaintext=&titles=\'Nduja")));
     }
 
+    @Test
+    public void returnDefaultImageUrlWhenThereIsNoImageLink() throws Exception {
+        given(theAvailabilityOf(a("Salame \'Nduja Calabrese")
+                .with(variety(aTypeOfSalumi("\'Nduja").withNoImageLink().withId(2L))))
+        );
+
+        when(requestingBestOfferForACustomer());
+
+        then(theSuggestionForCustomer(), isA("\'Nduja", typeOfSalumi(),
+                andContainsAnImageLinkWithUrl("https://upload.wikimedia.org/wikipedia/commons/b/b5/Formaggi_e_salumi_sardi.jpg"),
+                andAProductDescriptionLinkWithUrl("https://it.wikipedia.org/w/api.php?format=xml&action=query&prop=extracts&exintro=&explaintext=&titles=\'Nduja")));
+    }
+
     private GivensBuilder theAvailabilityOf(ProductBuilder... products) {
         return givens -> {
             transactor.perform(() -> {

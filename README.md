@@ -40,7 +40,7 @@ The following variables are used in this project:
 ### Best Offering According to Customer Profile Rest Service (Salami Product Only)
 * ~~Suggest up to three different products according to client profile~~
 * ~~Only suggest traditional products to experts~~
-* Better product advice using Wikipedia images and descriptions (wip)
+* ~~Better product advice using Wikipedia images and descriptions~~
 
 ## TODO List 2 - aka Non-Functional Requirement Stories ;)
 
