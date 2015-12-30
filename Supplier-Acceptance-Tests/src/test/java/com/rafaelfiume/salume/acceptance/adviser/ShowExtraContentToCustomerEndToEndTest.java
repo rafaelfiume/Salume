@@ -26,7 +26,7 @@ import org.w3c.dom.NodeList;
 import javax.sql.DataSource;
 
 import static com.rafaelfiume.salume.domain.ProductBuilder.a;
-import static com.rafaelfiume.salume.domain.VarietyBuilder.aTypeOfSalumi;
+import static com.rafaelfiume.salume.domain.VarietyBuilder.ofSalumi;
 import static com.rafaelfiume.salume.support.Applications.CUSTOMER;
 import static com.rafaelfiume.salume.support.Applications.SUPPLIER;
 import static com.rafaelfiume.salume.support.Xml.*;
@@ -75,28 +75,28 @@ public class ShowExtraContentToCustomerEndToEndTest extends AbstractSequenceDiag
 
     @Test
     public void showToCustomersProductImageAndDescriptionSoTheyCanHaveABetterIdeaOfWhatTheyAreBuying() throws Exception {
-        given(theAvailabilityOf(a("Salame \'Nduja Calabrese")
-                .with(variety(aTypeOfSalumi("\'Nduja").withImageLink("0/00/Nduja.jpg").withId(2L))))
+        given(theAvailabilityOf(a("Salame 'Nduja Calabrese")
+                .with(variety(ofSalumi("'Nduja").withImageLink("0/00/Nduja.jpg"))))
         );
 
         when(requestingBestOfferForACustomer());
 
-        then(theSuggestionForCustomer(), isA("\'Nduja", typeOfSalumi(),
+        then(theSuggestionForCustomer(), isA("'Nduja", typeOfSalumi(),
                 andContainsAnImageLinkWithUrl("https://upload.wikimedia.org/wikipedia/commons/0/00/Nduja.jpg"),
-                andAProductDescriptionLinkWithUrl("https://it.wikipedia.org/w/api.php?format=xml&action=query&prop=extracts&exintro=&explaintext=&titles=\'Nduja")));
+                andAProductDescriptionLinkWithUrl("https://it.wikipedia.org/w/api.php?format=xml&action=query&prop=extracts&exintro=&explaintext=&titles='Nduja")));
     }
 
     @Test
     public void returnDefaultImageUrlWhenThereIsNoImageLink() throws Exception {
-        given(theAvailabilityOf(a("Salame \'Nduja Calabrese")
-                .with(variety(aTypeOfSalumi("\'Nduja").withNoImageLink().withId(2L))))
+        given(theAvailabilityOf(a("Salame 'Nduja Calabrese")
+                .with(variety(ofSalumi("'Nduja").withNoImageLink())))
         );
 
         when(requestingBestOfferForACustomer());
 
-        then(theSuggestionForCustomer(), isA("\'Nduja", typeOfSalumi(),
+        then(theSuggestionForCustomer(), isA("'Nduja", typeOfSalumi(),
                 andContainsAnImageLinkWithUrl("https://upload.wikimedia.org/wikipedia/commons/b/b5/Formaggi_e_salumi_sardi.jpg"),
-                andAProductDescriptionLinkWithUrl("https://it.wikipedia.org/w/api.php?format=xml&action=query&prop=extracts&exintro=&explaintext=&titles=\'Nduja")));
+                andAProductDescriptionLinkWithUrl("https://it.wikipedia.org/w/api.php?format=xml&action=query&prop=extracts&exintro=&explaintext=&titles='Nduja")));
     }
 
     private GivensBuilder theAvailabilityOf(ProductBuilder... products) {

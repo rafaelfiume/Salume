@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 import java.util.List;
 
 import static com.rafaelfiume.salume.domain.ProductBuilder.a;
-import static com.rafaelfiume.salume.domain.VarietyBuilder.aTypeOfSalumi;
+import static com.rafaelfiume.salume.domain.VarietyBuilder.ofSalumi;
 import static java.lang.String.format;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -143,7 +143,7 @@ public class PersistentProductBaseIntTest {
     @Test
     public void shouldReturnTheTypeVarietyAlongWithAProductImageAndDescriptionUrlsWhenRetrievingOneFromTheProductBase() {
         add(a("Catalano Salame").with(
-                variety(aTypeOfSalumi("Fuet").withImageLink("0/05/Fuet.jpg").withId(2L)))
+                variety(ofSalumi("Fuet").withImageLink("0/05/Fuet.jpg").withId(2L)))
         );
 
         Product suggestedProduct = firstSuggestion(underTest.productsForGourmet() /* it could be any other profile */);
