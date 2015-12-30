@@ -5,7 +5,7 @@ import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
 import com.rafaelfiume.salume.db.PersistentVarietyBase;
-import com.rafaelfiume.salume.db.advisor.PersistentProductBase;
+import com.rafaelfiume.salume.db.PersistentProductBase;
 import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.ProductBuilder;
 import com.rafaelfiume.salume.domain.VarietyBuilder;

@@ -1,6 +1,6 @@
 package com.rafaelfiume.salume.services;
 
-import com.rafaelfiume.salume.db.advisor.PersistentProductBase;
+import com.rafaelfiume.salume.db.PersistentProductBase;
 import com.rafaelfiume.salume.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

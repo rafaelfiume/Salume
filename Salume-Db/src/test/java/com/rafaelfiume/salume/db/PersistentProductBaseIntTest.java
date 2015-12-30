@@ -1,7 +1,5 @@
-package com.rafaelfiume.salume.db.advisor;
+package com.rafaelfiume.salume.db;
 
-import com.rafaelfiume.salume.db.DbApplication;
-import com.rafaelfiume.salume.db.PersistentVarietyBase;
 import com.rafaelfiume.salume.domain.*;
 import com.rafaelfiume.salume.matchers.AbstractAdvisedProductMatcherBuilder;
 import org.hamcrest.Description;

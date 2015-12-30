@@ -1,4 +1,4 @@
-package com.rafaelfiume.salume.db.advisor;
+package com.rafaelfiume.salume.db;
 
 import com.rafaelfiume.salume.domain.*;
 import org.slf4j.Logger;
@@ -15,9 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.rafaelfiume.salume.db.advisor.PersistentProductBase.Inserts.INSERT_INTO_PRODUCTS;
-import static com.rafaelfiume.salume.db.advisor.PersistentProductBase.Inserts.namedParametersFor;
-import static com.rafaelfiume.salume.db.advisor.PersistentProductBase.Queries.*;
+import static com.rafaelfiume.salume.db.PersistentProductBase.Inserts.INSERT_INTO_PRODUCTS;
+import static com.rafaelfiume.salume.db.PersistentProductBase.Inserts.namedParametersFor;
+import static com.rafaelfiume.salume.db.PersistentProductBase.Queries.*;
 import static com.rafaelfiume.salume.domain.Reputation.NORMAL;
 import static java.lang.String.format;
 
