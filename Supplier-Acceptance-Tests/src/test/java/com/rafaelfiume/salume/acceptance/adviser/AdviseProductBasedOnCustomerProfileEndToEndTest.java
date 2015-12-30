@@ -1,13 +1,16 @@
 package com.rafaelfiume.salume.acceptance.adviser;
 
+import com.googlecode.yatspec.junit.LinkingNote;
 import com.googlecode.yatspec.junit.Notes;
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
+import com.rafaelfiume.salume.db.PersistentVarietyBase;
 import com.rafaelfiume.salume.db.advisor.PersistentProductBase;
 import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.domain.Product;
 import com.rafaelfiume.salume.domain.ProductBuilder;
+import com.rafaelfiume.salume.domain.VarietyBuilder;
 import com.rafaelfiume.salume.matchers.AbstractAdvisedProductMatcherBuilder;
 import com.rafaelfiume.salume.matchers.AdvisedProductMatcher;
 import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
@@ -15,6 +18,7 @@ import com.rafaelfiume.salume.support.transactions.SpringCommitsAndClosesTestTra
 import com.rafaelfiume.salume.web.result.ReputationRepresentation;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.TestRestTemplate;
@@ -39,6 +43,7 @@ import static org.springframework.test.jdbc.JdbcTestUtils.deleteFromTables;
 @Notes("A customer can have whatever they want as long as it is <a href=\"https://it.wikipedia.org/wiki/Salame\" target=\"blank\">Salame</a>. At least for now...\n\n" +
         "" +
         "Gioseppo selects the customer profile when offering products to his customers. See the details about this story <a href=\"https://rafaelfiume.wordpress.com/2013/04/07/dragons-unicorns-and-titans-an-agile-software-developer-tail/\" target=\"blank\">here</a>.")
+@LinkingNote(message = "See also %s", links = ShowExtraContentToCustomerEndToEndTest.class)
 @Transactional
 public class AdviseProductBasedOnCustomerProfileEndToEndTest extends AbstractSequenceDiagramTestState {
 
@@ -50,6 +55,7 @@ public class AdviseProductBasedOnCustomerProfileEndToEndTest extends AbstractSeq
 
     private final SpringCommitsAndClosesTestTransactionTransactor transactor = new SpringCommitsAndClosesTestTransactionTransactor();
     private JdbcTemplate jdbcTemplate;
+    private PersistentVarietyBase varietyBase;
     private PersistentProductBase productBase;
 
     @Autowired
@@ -65,6 +71,17 @@ public class AdviseProductBasedOnCustomerProfileEndToEndTest extends AbstractSeq
     @Autowired
     public void setProductBase(PersistentProductBase productBase) {
         this.productBase = productBase;
+    }
+
+    @Autowired
+    public void setVarietyBase(PersistentVarietyBase varietyBase) {
+        this.varietyBase = varietyBase;
+    }
+
+    @Before
+    public void cleanUpTablesAndAddDefaultVariety() {
+        deleteFromTables(jdbcTemplate, "salumistore.products", "salumistore.variety");
+        varietyBase.add(new VarietyBuilder().withDefaults().build());
     }
 
     @Test

@@ -14,11 +14,11 @@ import static java.lang.String.format;
 @Transactional
 public class ProductAdvisor {
 
-    private final PersistentProductBase productAdvisorDao;
+    private final PersistentProductBase productBase;
 
     @Autowired
-    public ProductAdvisor(PersistentProductBase productAdvisorDao) {
-        this.productAdvisorDao = productAdvisorDao;
+    public ProductAdvisor(PersistentProductBase productBase) {
+        this.productBase = productBase;
     }
 
     @Transactional
@@ -26,10 +26,10 @@ public class ProductAdvisor {
         // TODO RF 24/10/2015 First-cut implementation. Improve this non O.O switch impl.
 
         switch (profile) {
-            case "Magic": return productAdvisorDao.productsForMagic();
-            case "Healthy": return productAdvisorDao.productsForHealthy();
-            case "Expert": return productAdvisorDao.productsForExpert();
-            case "Gourmet": return productAdvisorDao.productsForGourmet();
+            case "Magic": return productBase.productsForMagic();
+            case "Healthy": return productBase.productsForHealthy();
+            case "Expert": return productBase.productsForExpert();
+            case "Gourmet": return productBase.productsForGourmet();
 
             default: throw new IllegalArgumentException(format("invalid profile %s", profile)); // // TODO RF 24/10/2015 BLERRGH! Sad path coming soon... eventually
         }

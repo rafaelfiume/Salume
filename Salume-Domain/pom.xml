@@ -23,7 +23,7 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
-        <!-- Test stuff -->
+        <!-- Test -->
 
         <dependency>
             <groupId>junit</groupId>

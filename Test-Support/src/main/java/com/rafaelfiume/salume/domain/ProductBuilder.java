@@ -7,6 +7,8 @@ public class ProductBuilder {
     private String reputation;
     private String fat;
 
+    private VarietyBuilder varietyBuilder = new VarietyBuilder();
+
     public ProductBuilder(String name) {
         this.name = name;
     }
@@ -19,7 +21,7 @@ public class ProductBuilder {
         at("EUR 11,11");
         regardedAs("NORMAL");
         with("49,99").percentageOfFat();
-        withVariety("Chorizo");
+        varietyBuilder.withDefaults();
         return this;
     }
 
@@ -43,7 +45,8 @@ public class ProductBuilder {
         return this;
     }
 
-    public ProductBuilder withVariety(String variety) {
+    public ProductBuilder with(VarietyBuilder variety) {
+        this.varietyBuilder = variety;
         return this;
     }
 
@@ -53,6 +56,8 @@ public class ProductBuilder {
                 this.name,
                 moneyDealer.theAmountOf(this.price),
                 this.fat,
-                Reputation.valueOf(this.reputation));
+                Reputation.valueOf(this.reputation),
+                varietyBuilder.build());
     }
+
 }

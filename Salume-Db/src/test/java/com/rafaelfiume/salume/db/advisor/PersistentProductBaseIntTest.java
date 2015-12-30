@@ -1,14 +1,14 @@
 package com.rafaelfiume.salume.db.advisor;
 
 import com.rafaelfiume.salume.db.DbApplication;
-import com.rafaelfiume.salume.domain.MoneyDealer;
-import com.rafaelfiume.salume.domain.Product;
-import com.rafaelfiume.salume.domain.ProductBuilder;
+import com.rafaelfiume.salume.db.PersistentVarietyBase;
+import com.rafaelfiume.salume.domain.*;
 import com.rafaelfiume.salume.matchers.AbstractAdvisedProductMatcherBuilder;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,7 +23,10 @@ import javax.sql.DataSource;
 import java.util.List;
 
 import static com.rafaelfiume.salume.domain.ProductBuilder.a;
+import static com.rafaelfiume.salume.domain.VarietyBuilder.aTypeOfSalumi;
 import static java.lang.String.format;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.springframework.test.jdbc.JdbcTestUtils.deleteFromTables;
 
@@ -37,31 +40,50 @@ public class PersistentProductBaseIntTest {
     @Rule
     public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
-    private List<Product> actualSuggestions;
-
-    private JdbcTemplate jdbcTemplate;
-
     private MoneyDealer moneyDealer;
-
+    private JdbcTemplate jdbcTemplate;
+    private PersistentVarietyBase varietyBase;
     private PersistentProductBase underTest;
 
-    @Autowired
-    @SuppressWarnings("unused")
+    private List<Product> actualSuggestions;
+
+    @Autowired @SuppressWarnings("unused")
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    @Autowired
-    @SuppressWarnings("unused")
+    @Autowired @SuppressWarnings("unused")
     public void setMoneyDealer(MoneyDealer moneyDealer) {
         this.moneyDealer = moneyDealer;
     }
 
-    @Autowired
-    @SuppressWarnings("unused")
-    public void setAdvisorDao(PersistentProductBase advisorDao) {
-        this.underTest = advisorDao;
+    @Autowired @SuppressWarnings("unused")
+    public void setPersistentVarietyBase(PersistentVarietyBase varietyBase) {
+        this.varietyBase = varietyBase;
     }
+
+    @Autowired @SuppressWarnings("unused")
+    public void setPersistentProductBase(PersistentProductBase persistentProductBase) {
+        this.underTest = persistentProductBase;
+    }
+
+    @Before
+    public void setUp() {
+        cleanUpTables();
+        populateVarietyBase();
+    }
+
+    private void cleanUpTables() {
+        deleteFromTables(jdbcTemplate, "salumistore.products", "salumistore.variety");
+    }
+
+    private void populateVarietyBase() {
+        varietyBase.add(new VarietyBuilder().withDefaults().build()); // used implicitly by the profile tests
+    }
+
+    //
+    // Profile Based Queries
+    //
 
     @Test
     public void shouldReturnTheCheapestProductsForCustomerWithMagicProfile() {
@@ -104,10 +126,10 @@ public class PersistentProductBaseIntTest {
     }
 
     @Test
-    public void shouldReturnMostExpendiveOnesFirstForCustomerWithExpertProfile() {
+    public void shouldReturnMostExpensiveOnesFirstForCustomerWithExpertProfile() {
         add(a("(Second Cheapest) Salume").at("EUR 29,55").regardedAs("NORMAL").with("31,00").percentageOfFat(),
-                a("(Cheapest) Salume")       .at("EUR 11,11").regardedAs("NORMAL").with("49,99").percentageOfFat(),
-                a("(Expensive) & Light")     .at("EUR 57,37").regardedAs("NORMAL").with("37,55").percentageOfFat());
+            a("(Cheapest) Salume")       .at("EUR 11,11").regardedAs("NORMAL").with("49,99").percentageOfFat(),
+            a("(Expensive) & Light")     .at("EUR 57,37").regardedAs("NORMAL").with("37,55").percentageOfFat());
 
         actualSuggestions = underTest.productsForGourmet();
 
@@ -116,8 +138,24 @@ public class PersistentProductBaseIntTest {
         assertThat(thirdSuggestion(),  isThe("(Cheapest) Salume")       .at("EUR 11,11").regardedAs("NORMAL").with("49,99").percentageOfFat());
     }
 
-    private Matcher<? super List<Product>> hasOnlyTraditionalProducts() {
-        return Matchers.hasSize(2);
+    //
+    // Extra content (image and description)
+    //
+
+    @Test
+    public void shouldReturnTheTypeVarietyAlongWithAProductImageAndDescriptionUrlsWhenRetrievingOneFromTheProductBase() {
+        add(a("Catalano Salame").with(
+                variety(aTypeOfSalumi("Fuet").withImageLink("0/05/Fuet.jpg").withId(2L)))
+        );
+
+        Product suggestedProduct = firstSuggestion(underTest.productsForGourmet() /* it could be any other profile */);
+
+        assertThat(suggestedProduct.getVarietyName(), is(equalTo("Fuet")));
+        assertThat(suggestedProduct.getVariety().getImageLink(), is(equalTo("0/05/Fuet.jpg")));
+    }
+
+    private Product firstSuggestion(List<Product> products) {
+        return products.get(0);
     }
 
     private Product firstSuggestion() {
@@ -133,15 +171,23 @@ public class PersistentProductBaseIntTest {
     }
 
     private void add(ProductBuilder... products) {
-        deleteFromTables(jdbcTemplate, "salumistore.products");
         for (ProductBuilder p : products) {
             underTest.add(p.build(moneyDealer));
         }
     }
 
+    private VarietyBuilder variety(VarietyBuilder variety) {
+        varietyBase.add(variety.build());
+        return variety;
+    }
+
     //
     //// Matchers
     //
+
+    private Matcher<? super List<Product>> hasOnlyTraditionalProducts() {
+        return Matchers.hasSize(2);
+    }
 
     private AdvisedProductMatcherBuilder isThe(String productName) {
         return AdvisedProductMatcherBuilder.isThe(moneyDealer, productName);

@@ -2,5 +2,5 @@ package com.rafaelfiume.salume.support;
 
 public interface UnitOfWork {
 
-    void work() throws Exception;
+    void work();
 }

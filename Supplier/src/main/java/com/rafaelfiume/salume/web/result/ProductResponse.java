@@ -14,6 +14,9 @@ public class ProductResponse {
     @Getter private final String price;
     private final String fatPercentage;
     @Getter private final String reputation;
+    @Getter private final String variety;
+    @Getter private final String image;
+    @Getter private final String description;
 
     public ProductResponse(Product product, MoneyDealer moneyDealer) {
         this.id = product.getId();
@@ -21,6 +24,9 @@ public class ProductResponse {
         this.price = moneyDealer.format(product.getPrice());
         this.fatPercentage = product.getFatPercentage();
         this.reputation = ReputationRepresentation.of(product.getReputation());
+        this.variety = product.getVarietyName();
+        this.image = product.getImageUrl();
+        this.description = product.getDescriptionUrl();
     }
 
     @SuppressWarnings("unused")
