@@ -5,7 +5,7 @@
 
     <groupId>com.rafaelfiume</groupId>
     <artifactId>Salume-Parent</artifactId>
-    <version>0.1.10-SNAPSHOT</version>
+    <version>0.1.10</version>
     <packaging>pom</packaging>
 
     <url>http://rafaelfiume.com</url>
