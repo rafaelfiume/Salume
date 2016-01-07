@@ -84,7 +84,7 @@ public class StatusPageSadPathEndToEndTest extends AbstractSequenceDiagramTestSt
         return (givens, capturedInputAndOutputs) -> {
             this.response = new TestRestTemplate().getForEntity(STATUS_PAGE_URI, String.class);
 
-            capture("Status page request", withContent(STATUS_PAGE_URI), from(CLIENT), to(SUPPLIER));
+            capture("request", withContent(STATUS_PAGE_URI), from(CLIENT), to(SUPPLIER));
 
             return capturedInputAndOutputs;
         };
@@ -92,7 +92,7 @@ public class StatusPageSadPathEndToEndTest extends AbstractSequenceDiagramTestSt
 
     private StateExtractor<HttpStatus> theStatusPage() {
         return inputAndOutputs -> {
-            capture("Status page response ", withContent(response.getBody()), from(SUPPLIER), to(CLIENT));
+            capture("response ", withContent(response.getBody()), from(SUPPLIER), to(CLIENT));
 
             return this.response.getStatusCode();
         };

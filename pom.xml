@@ -17,6 +17,7 @@
         <module>Salume-Db</module>
         <module>Supplier-Acceptance-Tests</module>
         <module>Test-Support</module>
+        <module>Supplier-Contract-Example</module>
     </modules>
 
     <properties>

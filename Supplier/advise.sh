@@ -17,5 +17,5 @@ esac
 
 echo `curl \
      -X GET \
-     -H "Accept: application/xml" \
+     -H "Accept: application/xml;charset=utf-8" \
      "$SUPPLIER_BASE_URL"/advise/for/Healthy` | xmllint --format -

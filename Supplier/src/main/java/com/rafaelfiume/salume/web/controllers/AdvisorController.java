@@ -2,7 +2,7 @@ package com.rafaelfiume.salume.web.controllers;
 
 import com.rafaelfiume.salume.domain.MoneyDealer;
 import com.rafaelfiume.salume.services.ProductAdvisor;
-import com.rafaelfiume.salume.web.result.MobileProductAdvisorResponse;
+import com.rafaelfiume.salume.web.result.MobileProductAdviserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,8 +23,8 @@ public class AdvisorController {
     }
 
     @RequestMapping(value = "/advise/for/{profile}", method = GET, produces = "application/xml")
-    public MobileProductAdvisorResponse handle(@PathVariable String profile) {
-        return MobileProductAdvisorResponse.of(productAdvisor.recommendationFor(profile), moneyDealer);
+    public MobileProductAdviserResponse handle(@PathVariable String profile) {
+        return MobileProductAdviserResponse.of(productAdvisor.recommendationFor(profile), moneyDealer);
     }
 
 }

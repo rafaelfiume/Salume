@@ -4,6 +4,8 @@ Check the application spec [here](http://rafaelfiume.github.io/Salume). Access t
 
 ## Running the Application
 
+#### Using Maven
+
 Build with:
 
     $mvn clean install
@@ -18,6 +20,12 @@ Then starts Supplier with:
 
 Use --debug to see DEBUG level messages.
 
+#### Using Intellij IDEA
+
+Because this project uses the [Lombok](https://projectlombok.org) library, follow these steps:
+
+* Select "Enable annotation processing" option at Preferences... > Build, Execution, Deployment > Compiler > Annotation Processors
+* Install the [lombok-intellij-plugin](https://github.com/mplushnikov/lombok-intellij-plugin)
 
 ## Environment Variables
 
@@ -42,7 +50,12 @@ The following variables are used in this project:
 * ~~Only suggest traditional products to experts~~
 * ~~Better product advice using Wikipedia images and descriptions~~
 
-## TODO List 2 - aka Non-Functional Requirement Stories ;)
+## Non-Functional Stories
+
+### Project Configuration
+* ~~Walking Skeleton: a Draft of a Status Page~~
+* ~~Configure Travis CI build and automatic spec publication.~~
+* ~~Deploy app into Heroku~~
 
 ### Provide Status Page
 * ~~Show status Ok when app is up and running and all the resources it depends on are available~~

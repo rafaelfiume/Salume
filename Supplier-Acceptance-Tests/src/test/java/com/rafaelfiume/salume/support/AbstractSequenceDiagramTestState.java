@@ -21,6 +21,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Rule;
+import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
@@ -41,13 +42,16 @@ import static org.apache.commons.lang3.StringUtils.*;
 @ActiveProfiles("dev")
 public class AbstractSequenceDiagramTestState extends TestState implements WithCustomResultListeners {
 
-    private static final String GENERATED_FILES_DIRECTORY = "input-output-examples";
+    private static final String GENERATED_FILES_DIRECTORY = "target/input-output-examples";
 
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
 
     @Rule
     public final SpringMethodRule springMethodRule = new SpringMethodRule();
+
+    @Rule
+    public final TestName name = new TestName();
 
     private SequenceDiagramGenerator sequenceDiagramGenerator;
 
@@ -83,7 +87,7 @@ public class AbstractSequenceDiagramTestState extends TestState implements WithC
     protected void capture(String stuffBeingCaptured, String content, Applications from, Applications to) {
         // this is what makes the sequence diagram magic happens
         capturedInputAndOutputs.add(format("%s from %s to %s", stuffBeingCaptured, from.appName(), to.appName()), content);
-        saveCaptured(content, withNameUsing(stuffBeingCaptured, from, to));
+        saveCaptured(content, withNameUsing(stuffBeingCaptured));
     }
 
     protected <ItemOfInterest> TestState and(StateExtractor<ItemOfInterest> extractor, Matcher<? super ItemOfInterest> matcher) throws Exception {
@@ -92,20 +96,17 @@ public class AbstractSequenceDiagramTestState extends TestState implements WithC
 
     private void saveCaptured(String content, String fileName) {
         try {
-            FileUtils.write(new File(fileName), content, "UTF-8");
+            final File exampleOutputDir = new File(GENERATED_FILES_DIRECTORY + File.separator + getClass().getSimpleName());
+            FileUtils.forceMkdir(exampleOutputDir);
+            FileUtils.write(new File(exampleOutputDir, fileName), content, "UTF-8");
+
         } catch (IOException e) {
-            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
 
-    private String withNameUsing(String stuffBeingCaptured, Applications from, Applications to) {
-        return trim(format("%s/%s_%s_from_%s_to_%s.txt",
-                GENERATED_FILES_DIRECTORY,
-                getClass().getCanonicalName(),
-                replace(stuffBeingCaptured, SPACE, "_"),
-                from.appName(),
-                to.appName()));
+    private String withNameUsing(String stuffBeingCaptured) {
+        return trim(format("%s.%s.txt", stuffBeingCaptured, name.getMethodName()));
     }
 
     protected String withContent(String content) {
