@@ -5,7 +5,7 @@
 
     <groupId>com.rafaelfiume</groupId>
     <artifactId>Salume-Parent</artifactId>
-    <version>0.1.9</version>
+    <version>0.1.10</version>
     <packaging>pom</packaging>
 
     <url>http://rafaelfiume.com</url>
@@ -17,6 +17,7 @@
         <module>Salume-Db</module>
         <module>Supplier-Acceptance-Tests</module>
         <module>Test-Support</module>
+        <module>Supplier-Contract-Example</module>
     </modules>
 
     <properties>
