@@ -122,14 +122,14 @@ public class ShowExtraContentToCustomerEndToEndTest extends AbstractSequenceDiag
 
             this.response = new TestRestTemplate().getForEntity(adviserUrl, String.class);
 
-            capture("request", withContent(adviserUrl), from(CUSTOMER), to(SUPPLIER));
+            captureRequest(withContent(adviserUrl), from(CUSTOMER), to(SUPPLIER));
 
             return capturedInputAndOutputs;
         };
     }
 
     private StateExtractor<Node> theSuggestionForCustomer() throws Exception {
-        capture("response", withContent(prettyPrint(xmlFrom(response.getBody()))), from(SUPPLIER), to(CUSTOMER));
+        captureResponse(withContent(prettyPrint(xmlFrom(response.getBody()))), from(SUPPLIER), to(CUSTOMER));
 
         return inputAndOutputs -> ((NodeList)
                 xpath().evaluate("//product", xmlFrom(response.getBody()), NODESET)

@@ -8,14 +8,12 @@ import com.googlecode.yatspec.plugin.sequencediagram.ByNamingConventionMessagePr
 import com.googlecode.yatspec.plugin.sequencediagram.SequenceDiagramGenerator;
 import com.googlecode.yatspec.plugin.sequencediagram.SequenceDiagramMessage;
 import com.googlecode.yatspec.plugin.sequencediagram.SvgWrapper;
-import com.googlecode.yatspec.rendering.LinkingNoteRenderer;
 import com.googlecode.yatspec.rendering.html.DontHighlightRenderer;
 import com.googlecode.yatspec.rendering.html.HtmlResultRenderer;
 import com.googlecode.yatspec.rendering.html.index.HtmlIndexRenderer;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
 import com.googlecode.yatspec.state.givenwhenthen.TestState;
 import com.rafaelfiume.salume.SupplierApplication;
-import org.apache.commons.io.FileUtils;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
@@ -29,20 +27,16 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
-import java.io.File;
-import java.io.IOException;
-
 import static com.googlecode.totallylazy.Sequences.sequence;
+import static com.rafaelfiume.salume.support.ContractApiWriter.writeApiRequestContractExample;
+import static com.rafaelfiume.salume.support.ContractApiWriter.writeApiResponseContractExample;
 import static java.lang.String.format;
-import static org.apache.commons.lang3.StringUtils.*;
 
 @RunWith(SpecRunner.class)
 @SpringApplicationConfiguration(classes = SupplierApplication.class)
 @WebIntegrationTest(/*"debug=true"*/)
 @ActiveProfiles("dev")
 public class AbstractSequenceDiagramTestState extends TestState implements WithCustomResultListeners {
-
-    private static final String GENERATED_FILES_DIRECTORY = "target/input-output-examples";
 
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
@@ -84,29 +78,22 @@ public class AbstractSequenceDiagramTestState extends TestState implements WithC
     // Helpers
     //
 
-    protected void capture(String stuffBeingCaptured, String content, Applications from, Applications to) {
-        // this is what makes the sequence diagram magic happens
-        capturedInputAndOutputs.add(format("%s from %s to %s", stuffBeingCaptured, from.appName(), to.appName()), content);
-        saveCaptured(content, withNameUsing(stuffBeingCaptured));
+    protected void captureRequest(String content, Applications from, Applications to) {
+        makeSequenceDiagramHappen("request", content, from, to);
+        writeApiRequestContractExample(content, getClass().getSimpleName(), name.getMethodName());
+    }
+
+    protected void captureResponse(String content, Applications from, Applications to) {
+        makeSequenceDiagramHappen("response", content, from, to);
+        writeApiResponseContractExample(content, getClass().getSimpleName(), name.getMethodName());
+    }
+
+    private void makeSequenceDiagramHappen(String requestOrResponse, String content, Applications from, Applications to) {
+        capturedInputAndOutputs.add(format("%s from %s to %s", requestOrResponse, from.appName(), to.appName()), content);
     }
 
     protected <ItemOfInterest> TestState and(StateExtractor<ItemOfInterest> extractor, Matcher<? super ItemOfInterest> matcher) throws Exception {
         return then(extractor, matcher);
-    }
-
-    private void saveCaptured(String content, String fileName) {
-        try {
-            final File exampleOutputDir = new File(GENERATED_FILES_DIRECTORY + File.separator + getClass().getSimpleName());
-            FileUtils.forceMkdir(exampleOutputDir);
-            FileUtils.write(new File(exampleOutputDir, fileName), content, "UTF-8");
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String withNameUsing(String stuffBeingCaptured) {
-        return trim(format("%s.%s.txt", stuffBeingCaptured, name.getMethodName()));
     }
 
     protected String withContent(String content) {

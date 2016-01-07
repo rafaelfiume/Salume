@@ -181,7 +181,7 @@ public class AdviseProductBasedOnCustomerProfileEndToEndTest extends AbstractSeq
 
             this.response = new TestRestTemplate().getForEntity(adviserUrl, String.class);
 
-            capture("request", withContent(adviserUrl), from(CUSTOMER), to(SUPPLIER));
+            captureRequest(withContent(adviserUrl), from(CUSTOMER), to(SUPPLIER));
 
             return capturedInputAndOutputs;
         };
@@ -194,7 +194,7 @@ public class AdviseProductBasedOnCustomerProfileEndToEndTest extends AbstractSeq
     }
 
     private StateExtractor<Node> theFirstSuggestionForCustomer() {
-        capture("response", withContent(prettyPrint(xmlFrom(response.getBody()))), from(SUPPLIER), to(CUSTOMER));
+        captureResponse(withContent(prettyPrint(xmlFrom(response.getBody()))), from(SUPPLIER), to(CUSTOMER));
 
         return firstSuggestedProduct();
     }

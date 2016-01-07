@@ -90,7 +90,7 @@ public class StatusPageHappyPathEndToEndTest extends AbstractSequenceDiagramTest
         return (givens, capturedInputAndOutputs) -> {
             this.response = new TestRestTemplate().getForEntity(STATUS_PAGE_URI, String.class);
 
-            capture("request", withContent(STATUS_PAGE_URI), from(CLIENT), to(SUPPLIER));
+            captureRequest(withContent(STATUS_PAGE_URI), from(CLIENT), to(SUPPLIER));
 
             return capturedInputAndOutputs;
         };
@@ -98,7 +98,7 @@ public class StatusPageHappyPathEndToEndTest extends AbstractSequenceDiagramTest
 
     private StateExtractor<HttpStatus> theStatusPage() {
         return inputAndOutputs -> {
-            capture("response ", withContent(response.getBody()), from(SUPPLIER), to(CLIENT));
+            captureResponse(withContent(response.getBody()), from(SUPPLIER), to(CLIENT));
 
             return this.response.getStatusCode();
         };
