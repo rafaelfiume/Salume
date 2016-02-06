@@ -40,12 +40,9 @@ public class SimpleJdbcDatabaseSupportIntTest extends TestState {
 
     private String dbStatement;
 
-    private SimpleJdbcDatabaseSupport underTest;
-
+    @SuppressWarnings("unused")
     @Autowired
-    public void setSimpleDatabaseSupport(SimpleJdbcDatabaseSupport dbSupport) {
-        this.underTest = dbSupport;
-    }
+    private SimpleJdbcDatabaseSupport underTest;
 
     @Before
     public void dropDb() {

@@ -40,32 +40,21 @@ public class ShowExtraContentToCustomerEndToEndTest extends AbstractSequenceDiag
 
     private ResponseEntity<String> response;
 
-    private MoneyDealer moneyDealer;
+    @SuppressWarnings("unused")
+    @Autowired private MoneyDealer moneyDealer;
 
     private final SpringCommitsAndClosesTestTransactionTransactor transactor = new SpringCommitsAndClosesTestTransactionTransactor();
-
     private JdbcTemplate jdbcTemplate;
-    private PersistentVarietyBase varietyBase;
-    private PersistentProductBase productBase;
 
-    @Autowired
-    public void setMoneyDealer(MoneyDealer moneyDealer) {
-        this.moneyDealer = moneyDealer;
-    }
+    @SuppressWarnings("unused")
+    @Autowired private PersistentVarietyBase varietyBase;
+
+    @SuppressWarnings("unused")
+    @Autowired private PersistentProductBase productBase;
 
     @Autowired
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
-    @Autowired
-    public void setProductBase(PersistentProductBase productBase) {
-        this.productBase = productBase;
-    }
-
-    @Autowired
-    public void setVarietyBase(PersistentVarietyBase varietyBase) {
-        this.varietyBase = varietyBase;
     }
 
     @Before

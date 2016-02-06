@@ -38,31 +38,21 @@ public class PersistentProductBaseIntTest {
     @Rule
     public final SpringMethodRule springMethodRule = new SpringMethodRule();
 
-    private MoneyDealer moneyDealer;
+    @SuppressWarnings("unused")
+    @Autowired private MoneyDealer moneyDealer;
     private JdbcTemplate jdbcTemplate;
-    private PersistentVarietyBase varietyBase;
-    private PersistentProductBase underTest;
+
+    @SuppressWarnings("unused")
+    @Autowired private PersistentVarietyBase varietyBase;
+
+    @SuppressWarnings("unused")
+    @Autowired private PersistentProductBase underTest;
 
     private List<Product> actualSuggestions;
 
     @Autowired @SuppressWarnings("unused")
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
-
-    @Autowired @SuppressWarnings("unused")
-    public void setMoneyDealer(MoneyDealer moneyDealer) {
-        this.moneyDealer = moneyDealer;
-    }
-
-    @Autowired @SuppressWarnings("unused")
-    public void setPersistentVarietyBase(PersistentVarietyBase varietyBase) {
-        this.varietyBase = varietyBase;
-    }
-
-    @Autowired @SuppressWarnings("unused")
-    public void setPersistentProductBase(PersistentProductBase persistentProductBase) {
-        this.underTest = persistentProductBase;
     }
 
     @Before
