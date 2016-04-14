@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+
+    <logger name="audit.log" level="INFO" />
+
+    <logger name="plain.log" level="DEBUG" />
+
+    <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="audit-file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/audit-input-output.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>audit-input-output.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+            <!-- keep 120 days' worth of history -->
+            <maxHistory>120</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="FILE" />
+    </root>
+
+    <springProfile name="staging">
+        <logger name="plain.log" level="WARN"/>
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="plain.log" level="WARN"/>
+    </springProfile>
+
+</configuration>
