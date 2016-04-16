@@ -6,9 +6,11 @@ import com.rafaelfiume.db.plugin.support.ScriptsReader;
 import com.rafaelfiume.db.plugin.support.SimpleJdbcDatabaseSupport;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.TEST_COMPILE;
 
 /**
@@ -18,25 +20,45 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.TEST_COMPILE;
  * It should change the db according with the scripts it finds in the scripts directory.
  */
 @Mojo(name = "recreatedb", threadSafe = false, aggregator = true, defaultPhase = TEST_COMPILE)
-public class DbRecreatorMojo extends AbstractMojo {
+public final class DbRecreatorMojo extends AbstractMojo {
 
     // TODO RF 12/10/2015 pass this as a maven property e.g. ${db.schema.name}
     private static final String SCHEMA = "salumistore";
 
-    private final DbRecreator dbRecreator;
+    private final Log log;
+    private DbRecreator dbRecreator;
 
     @Parameter(property = "databaseUrl", readonly = true, required = false)
     private String databaseUrl;
 
     public DbRecreatorMojo() {
-        this.dbRecreator = new DbRecreator(getLog(), new ScriptFilesNavigator(), new ScriptsReader());
+        this.log = getLog();
+    }
+
+    DbRecreatorMojo(DbRecreator dbRecreator, Log log) {
+        this.dbRecreator = dbRecreator;
+        this.log = log;
     }
 
     public void execute() throws MojoExecutionException {
-        dbRecreator.recreateDb(
-                databaseUrl,
-                SCHEMA,
-                new SimpleJdbcDatabaseSupport(new DataSourceConfig().dataSource(databaseUrl))
+        log.warn("Recreating db now..."); log.warn("Database URL is: ############"); // Can't let the URL to appear in the logs.
+
+        // we need to await till databaseUrl is available, and that does not happen in constructor time
+        initializeDbRecreatorIfThatHasNotBeenDoneYet();
+
+        if (isBlank(databaseUrl)) {
+            log.warn("Skipping db recreation because databaseUrl was not set");
+            return;
+        }
+        dbRecreator.recreateDb(SCHEMA);
+    }
+
+    private void initializeDbRecreatorIfThatHasNotBeenDoneYet() {
+        this.dbRecreator = new DbRecreator(
+                new SimpleJdbcDatabaseSupport(new DataSourceConfig().dataSource(databaseUrl)),
+                new ScriptFilesNavigator(),
+                new ScriptsReader(),
+                this.log
         );
     }
 

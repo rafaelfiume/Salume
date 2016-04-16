@@ -51,16 +51,12 @@ public class AdviseProductBasedOnCustomerProfileEndToEndTest extends AbstractSeq
 
     private ResponseEntity<String> response;
 
-    @SuppressWarnings("unused")
     @Autowired private MoneyDealer moneyDealer;
 
     private final SpringCommitsAndClosesTestTransactionTransactor transactor = new SpringCommitsAndClosesTestTransactionTransactor();
     private JdbcTemplate jdbcTemplate;
 
-    @SuppressWarnings("unused")
     @Autowired private PersistentVarietyBase varietyBase;
-
-    @SuppressWarnings("unused")
     @Autowired private PersistentProductBase productBase;
 
     @Autowired

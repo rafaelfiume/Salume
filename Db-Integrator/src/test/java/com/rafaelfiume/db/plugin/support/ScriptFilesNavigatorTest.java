@@ -13,31 +13,31 @@ public class ScriptFilesNavigatorTest {
 
     private static final String FILE_SEPARATOR = FileSystems.getDefault().getSeparator();
 
-    private ScriptFilesNavigator nav;
+    private ScriptFilesNavigator underTest;
 
     @Test
     public void shouldReturnAllTheScriptFilesUnder_scripts_Directory() throws URISyntaxException {
-        givenAFileNavigatorFor_Scripts_Dir(); // see resources/scripts folder
+        aFileNavigatorFor_Scripts_Dir(); // see resources/scripts folder
 
-        hasAScriptFileNamed("scripts" + FILE_SEPARATOR + "i01" + FILE_SEPARATOR + "01.create-a-table-here.sql");
-        hasAScriptFileNamed("scripts" + FILE_SEPARATOR + "i01" + FILE_SEPARATOR + "02.doing-something-script.sql");
-        hasAScriptFileNamed("scripts" + FILE_SEPARATOR + "i01" + FILE_SEPARATOR + "03.doing-something-else-script.sql");
-        hasAScriptFileNamed("scripts" + FILE_SEPARATOR + "i02" + FILE_SEPARATOR + "01.create-another-table-in-another-iteration.sql");
-
-        hasNoMoreScriptFiles();
+        hasAScriptFileNamed("scripts/i01/01.create-a-table-here.sql");
+        hasAScriptFileNamed("scripts/i01/02.doing-something-script.sql");
+        hasAScriptFileNamed("scripts/i01/03.doing-something-else-script.sql");
+        hasAScriptFileNamed("scripts/i02/01.create-another-table-in-another-iteration.sql");
+        thenHasNoMoreScriptFiles();
     }
 
-    private void givenAFileNavigatorFor_Scripts_Dir() {
-        this.nav = new ScriptFilesNavigator();
+    private void aFileNavigatorFor_Scripts_Dir() {
+        this.underTest = new ScriptFilesNavigator();
     }
 
     private void hasAScriptFileNamed(String scriptName) {
-        assertThat(format("expected script file %s", scriptName), nav.hasNext(), is(true));
-        assertThat(nav.next(), is(scriptName));
+        String scriptNamePlatformIndependent = scriptName.replace("/", FILE_SEPARATOR);
+        assertThat(format("expected script file %s", scriptNamePlatformIndependent), underTest.hasNext(), is(true));
+        assertThat(underTest.next(), is(scriptNamePlatformIndependent));
     }
 
-    private void hasNoMoreScriptFiles() {
-        assertThat("expected no more script files", nav.hasNext(), is(false));
+    private void thenHasNoMoreScriptFiles() {
+        assertThat("expected no more script files", underTest.hasNext(), is(false));
     }
 
 }

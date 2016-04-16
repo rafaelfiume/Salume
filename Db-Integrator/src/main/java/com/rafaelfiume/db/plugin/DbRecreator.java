@@ -10,24 +10,19 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class DbRecreator {
 
-    private final Log log;
+    private final SimpleDatabaseSupport dbSupport;
     private final ScriptsNavigator scriptsNavigator;
     private final ScriptsReader scriptsReader;
+    private final Log log;
 
-    public DbRecreator(Log log, ScriptsNavigator scriptsNavigator, ScriptsReader scriptsReader) {
-        this.log = log;
+    public DbRecreator(SimpleDatabaseSupport dbSupport, ScriptsNavigator scriptsNavigator, ScriptsReader scriptsReader, Log log) {
+        this.dbSupport = dbSupport;
         this.scriptsNavigator = scriptsNavigator;
         this.scriptsReader = scriptsReader;
+        this.log = log;
     }
 
-    public void recreateDb(String databaseUrl, String schema, SimpleDatabaseSupport dbSupport) {
-        if (isEmpty(databaseUrl)) {
-            log.warn("Skipping db recreation because databaseUrl was not set");
-            return;
-        }
-
-        log.warn("Recreating db now..."); log.warn("Database URL is: ############"); // Can't let the URL to appear in the logs.
-
+    public void recreateDb(String schema) {
         dropDatabaseIfItAlreadyExists(schema, dbSupport);
         loadSqlScriptsAndExecuteThem(dbSupport);
     }
@@ -45,11 +40,10 @@ public class DbRecreator {
     private void loadSqlScriptsAndExecuteThem(SimpleDatabaseSupport dbSupport) {
         log.info("Second, loading statements...");
 
-        // Very likely missing a colaborator here. Let's see what happens when adding the next functionalities
         while (scriptsNavigator.hasNext()){
             executeScripts(dbSupport, scriptsNavigator.next());
         }
-        IOUtils.closeQuietly(scriptsNavigator); // TODO RF 10/12/2015 Fix this
+        IOUtils.closeQuietly(scriptsNavigator);
     }
 
     private void executeScripts(SimpleDatabaseSupport dbSupport, String scriptFile) {
@@ -60,7 +54,7 @@ public class DbRecreator {
         try {
             dbSupport.execute(script);
         } catch (Exception e) {
-            log.warn("Failed to execute statements", e);
+            log.error("Failed to execute statements", e);
             throw e;
         }
     }

@@ -61,9 +61,8 @@ public class ScriptFilesNavigator implements ScriptsNavigator {
         }
     }
 
-
     @Override
     public void close() throws IOException {
-        closeQuietly(fileSystem);
+        closeQuietly(fileSystem); // TODO : RF : 16/04/2016 : Why closing as an external call and not right after scriptsDirPath is being invoked?
     }
 }
