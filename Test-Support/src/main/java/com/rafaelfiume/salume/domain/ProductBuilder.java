@@ -1,5 +1,6 @@
 package com.rafaelfiume.salume.domain;
 
+// TODO : RF : 18/04/2016 : Replace it by Make it Easy?
 public class ProductBuilder {
 
     private final String name;

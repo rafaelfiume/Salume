@@ -49,7 +49,7 @@ public class StatusPageSadPathEndToEndTest extends AbstractSequenceDiagramTestSt
 
         then(theContentType(), is(TEXT_PLAIN_CHARSET_UTF8));
         and(theStatusPage(), hasHttpStatusCode(OK));
-        and(theApplicantionNameAndVersion(), is("Salume Supplier DEV"));
+        and(theApplicationNameAndVersion(), is("Salume Supplier DEV"));
         and(theStatusOfTheApp(), is("FAILING"));
         and(theAppVersionInTheStatusPage(), is(theImplementationVersionInTheManifest()));
         and(theDatabaseStatus(), is("FAILING"));
@@ -98,7 +98,7 @@ public class StatusPageSadPathEndToEndTest extends AbstractSequenceDiagramTestSt
         };
     }
 
-    private StateExtractor<String> theApplicantionNameAndVersion() {
+    private StateExtractor<String> theApplicationNameAndVersion() {
         return inputAndOutputs -> {
             String firstLine = this.response.getBody().split(lineSeparator())[0];
             return trim(firstLine.split("is:")[0]);

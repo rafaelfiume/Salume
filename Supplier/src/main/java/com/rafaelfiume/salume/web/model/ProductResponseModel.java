@@ -1,4 +1,4 @@
-package com.rafaelfiume.salume.web.result;
+package com.rafaelfiume.salume.web.model;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
@@ -7,7 +7,7 @@ import com.rafaelfiume.salume.domain.Product;
 import lombok.Getter;
 
 @JacksonXmlRootElement(localName = "product")
-public class ProductResponse {
+public class ProductResponseModel {
 
     @Getter private final long id;
     @Getter private final String name;
@@ -18,12 +18,12 @@ public class ProductResponse {
     @Getter private final String image;
     @Getter private final String description;
 
-    public ProductResponse(Product product, MoneyDealer moneyDealer) {
+    public ProductResponseModel(Product product, MoneyDealer moneyDealer) {
         this.id = product.getId();
         this.name = product.getName();
         this.price = moneyDealer.format(product.getPrice());
         this.fatPercentage = product.getFatPercentage();
-        this.reputation = ReputationRepresentation.of(product.getReputation());
+        this.reputation = ReputationResponseModel.of(product.getReputation());
         this.variety = product.getVarietyName();
         this.image = product.getImageUrl();
         this.description = product.getDescriptionUrl();

@@ -15,7 +15,7 @@ import com.rafaelfiume.salume.matchers.AbstractAdvisedProductMatcherBuilder;
 import com.rafaelfiume.salume.matchers.AdvisedProductMatcher;
 import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
 import com.rafaelfiume.salume.support.transactions.SpringCommitsAndClosesTestTransactionTransactor;
-import com.rafaelfiume.salume.web.result.ReputationRepresentation;
+import com.rafaelfiume.salume.web.model.ReputationResponseModel;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -243,7 +243,7 @@ public class AdviseProductBasedOnCustomerProfileEndToEndTest extends AbstractSeq
             return new AdvisedProductMatcher(
                     product.getName(),
                     moneyDealer().format(product.getPrice()),
-                    ReputationRepresentation.of(product.getReputation()),
+                    ReputationResponseModel.of(product.getReputation()),
                     product.getFatPercentage());
         }
     }

@@ -1,12 +1,12 @@
-package com.rafaelfiume.salume.web.result;
+package com.rafaelfiume.salume.web.model;
 
 import com.rafaelfiume.salume.domain.Reputation;
 
 import static java.lang.String.format;
 
-public final class ReputationRepresentation {
+public final class ReputationResponseModel {
 
-    private ReputationRepresentation() {
+    private ReputationResponseModel() {
         // Not intended to be instantiate
     }
 
