@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.is;
 @Transactional
 public class SimpleJdbcDatabaseSupportIntTest extends TestState {
 
-    public static final String MOVIESTORE_SCHEMA = "moviestore";
+    public static final String MOVIE_STORE_SCHEMA = "moviestore";
 
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
@@ -46,7 +46,7 @@ public class SimpleJdbcDatabaseSupportIntTest extends TestState {
 
     @Before
     public void dropDb() {
-        underTest.dropAndCreate(MOVIESTORE_SCHEMA);
+        underTest.dropAndCreate(MOVIE_STORE_SCHEMA);
     }
 
     @Test
@@ -62,7 +62,7 @@ public class SimpleJdbcDatabaseSupportIntTest extends TestState {
 
         when(executingThatStatement());
 
-        then(theTable(withSchema(MOVIESTORE_SCHEMA), andTableName("films")), exists());
+        then(theTable(withSchema(MOVIE_STORE_SCHEMA), andTableName("films")), exists());
     }
 
     @Test
@@ -76,7 +76,7 @@ public class SimpleJdbcDatabaseSupportIntTest extends TestState {
 
     @After
     public void cleanUpTestData() {
-        underTest.drop(MOVIESTORE_SCHEMA);
+        underTest.drop(MOVIE_STORE_SCHEMA);
     }
 
     private GivensBuilder aStatement(final String statement) {

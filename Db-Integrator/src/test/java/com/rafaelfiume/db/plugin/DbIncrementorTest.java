@@ -28,15 +28,16 @@ public class DbIncrementorTest {
 
     private DbIncrementor underTest;
 
-    @Test  @Ignore // wip
+    private String currentMajorVersion;
+    private String currentMinorVersion;
+
+    @Test @Ignore // wip
     public void updateDatabaseToNewestVersion() {
-        givenDbIncrementorIsSetUpToExecuteScriptsInThe_scripts_Dir();
-
-        given(versionManager.currentMajorVersion()).willReturn("i01");
-        given(versionManager.currentMinorVersion()).willReturn("01");
-
+        given_currentMajorVersionIs("i01");
+        given_currentMinorVersionIs("01");
         given(versionManager.majorVersion()).willReturn("i02");
         given(versionManager.minorVersion()).willReturn("01");
+        givenDbIncrementorIsSetUpToExecuteScriptsInThe_scripts_Dir();
 
         // when...
         underTest.incrementDb(PETITIONS_SCHEMA);
@@ -45,6 +46,14 @@ public class DbIncrementorTest {
         then(dbSupport).should(times(1)).execute(scriptsFrom("scripts/i01/02.doing-something-script.sql"));
         then(dbSupport).should(times(1)).execute(scriptsFrom("scripts/i01/03.doing-something-else-script.sql"));
         then(dbSupport).should(times(1)).execute(scriptsFrom("scripts/i02/01.create-another-table-in-another-iteration.sql"));
+    }
+
+    private void given_currentMajorVersionIs(String currentMajorVersion) {
+        this.currentMajorVersion = currentMajorVersion;
+    }
+
+    private void given_currentMinorVersionIs(String currentMinorVersion) {
+        this.currentMinorVersion = currentMinorVersion;
     }
 
     private void givenDbIncrementorIsSetUpToExecuteScriptsInThe_scripts_Dir() {

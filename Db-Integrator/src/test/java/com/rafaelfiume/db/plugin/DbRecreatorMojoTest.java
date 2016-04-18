@@ -32,7 +32,17 @@ public class DbRecreatorMojoTest {
     //
 
     @Test
-    public void interruptsDbRecreationWhenDbUrlIsEmpty() throws MojoExecutionException, NoSuchFieldException, IllegalAccessException {
+    public void skipsDbRecreationWhenDatabaseUrlIsEmpty() throws MojoExecutionException, NoSuchFieldException, IllegalAccessException {
+        givenDatabaseUrlIsEmpty();
+
+        // when...
+        underTest.execute();
+
+        then(dbRecreator).should(never()).recreateDb(any());
+    }
+
+    @Test
+    public void logsWhenDatabaseRecreationIsSkipped() throws MojoExecutionException, NoSuchFieldException, IllegalAccessException {
         givenDatabaseUrlIsEmpty();
 
         // when...
@@ -41,8 +51,6 @@ public class DbRecreatorMojoTest {
         then(log).should().warn("Recreating db now...");
         then(log).should().warn("Database URL is: ############");
         then(log).should().warn("Skipping db recreation because databaseUrl was not set");
-
-        then(dbRecreator).should(never()).recreateDb(any());
     }
 
     private void givenDatabaseUrlIsEmpty() throws NoSuchFieldException, IllegalAccessException {
