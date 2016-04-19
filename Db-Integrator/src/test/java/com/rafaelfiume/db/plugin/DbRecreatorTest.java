@@ -2,7 +2,7 @@ package com.rafaelfiume.db.plugin;
 
 import com.rafaelfiume.db.plugin.support.ScriptsNavigator;
 import com.rafaelfiume.db.plugin.support.ScriptsReader;
-import com.rafaelfiume.db.plugin.support.SimpleDatabaseSupport;
+import com.rafaelfiume.db.plugin.support.SimpleJdbcDatabaseSupport;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +22,7 @@ public class DbRecreatorTest {
     private static final String A_SQL_SCRIPT = "some SQL here";
     private static final RuntimeException RUNTIME_EXCEPTION = new RuntimeException();
 
-    @Mock private SimpleDatabaseSupport dbSupport;
+    @Mock private SimpleJdbcDatabaseSupport dbSupport;
     @Mock private ScriptsReader scriptsReader;
     @Mock private Log log;
     @Mock private ScriptsNavigator scriptsNavigator;

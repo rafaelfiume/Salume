@@ -13,12 +13,14 @@ import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNoneEmpty;
 
-public class DataSourceConfig {
+public class DataSourceFactory {
 
-    // TODO RF 23/10/2015 Duplicated from Salume-Db
+    private DataSourceFactory() {
+        // Use factory method instead
+    }
 
     // Used by Db-Integrator plugin
-    public DataSource dataSource(String databaseUrl) {
+    public static DataSource newDataSource(String databaseUrl) {
         if (isBlank(databaseUrl)) return new EmptyDataSource(); // let upper classes deal with missing db url
 
         final URI dbUri;

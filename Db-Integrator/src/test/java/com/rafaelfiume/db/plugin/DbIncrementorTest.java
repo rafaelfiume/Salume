@@ -2,7 +2,7 @@ package com.rafaelfiume.db.plugin;
 
 import com.rafaelfiume.db.plugin.support.ScriptFilesNavigator;
 import com.rafaelfiume.db.plugin.support.ScriptsReader;
-import com.rafaelfiume.db.plugin.support.SimpleDatabaseSupport;
+import com.rafaelfiume.db.plugin.support.SimpleJdbcDatabaseSupport;
 import com.rafaelfiume.db.plugin.support.VersionManager;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Ignore;
@@ -21,7 +21,7 @@ public class DbIncrementorTest {
 
     private static final String PETITIONS_SCHEMA = "petitions";
 
-    @Mock private SimpleDatabaseSupport dbSupport;
+    @Mock private SimpleJdbcDatabaseSupport dbSupport;
     @Mock private ScriptsReader scriptsReader;
     @Mock private Log log;
     @Mock private VersionManager versionManager;

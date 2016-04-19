@@ -1,6 +1,6 @@
 package com.rafaelfiume.db.plugin;
 
-import com.rafaelfiume.db.plugin.config.DataSourceConfig;
+import com.rafaelfiume.db.plugin.config.DataSourceFactory;
 import com.rafaelfiume.db.plugin.support.ScriptFilesNavigator;
 import com.rafaelfiume.db.plugin.support.ScriptsReader;
 import com.rafaelfiume.db.plugin.support.SimpleJdbcDatabaseSupport;
@@ -10,6 +10,7 @@ import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+import static com.rafaelfiume.db.plugin.config.DataSourceFactory.newDataSource;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.TEST_COMPILE;
 
@@ -55,7 +56,7 @@ public final class DbRecreatorMojo extends AbstractMojo {
 
     private void initializeDbRecreatorIfThatHasNotBeenDoneYet() {
         this.dbRecreator = new DbRecreator(
-                new SimpleJdbcDatabaseSupport(new DataSourceConfig().dataSource(databaseUrl)),
+                new SimpleJdbcDatabaseSupport(newDataSource(databaseUrl)),
                 new ScriptFilesNavigator(),
                 new ScriptsReader(),
                 this.log

@@ -10,20 +10,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JacksonXmlRootElement(localName = "product-advisor")
-public class MobileProductAdviserResponseModel {
+public class ProductAdviserMobileResponseModel {
 
     @JacksonXmlElementWrapper(useWrapping = false)
     private final List<ProductResponseModel> products = new ArrayList<>();
 
-    public static MobileProductAdviserResponseModel of(List<Product> products, MoneyDealer moneyDealer) {
-        final MobileProductAdviserResponseModel advisorView = new MobileProductAdviserResponseModel();
+    public static ProductAdviserMobileResponseModel of(List<Product> products, MoneyDealer moneyDealer) {
+        final ProductAdviserMobileResponseModel advisorView = new ProductAdviserMobileResponseModel();
         for (Product p : products) {
             advisorView.add(new ProductResponseModel(p, moneyDealer));
         }
         return advisorView;
     }
 
-    private MobileProductAdviserResponseModel() {
+    private ProductAdviserMobileResponseModel() {
         // Use the method factory #of instead
     }
 

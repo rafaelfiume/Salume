@@ -46,6 +46,12 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope> <!-- Used only for testing purpose -->
+        </dependency>
+
         <!-- Maven stuff -->
 
         <dependency>

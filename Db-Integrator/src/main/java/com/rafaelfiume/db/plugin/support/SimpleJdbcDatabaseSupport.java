@@ -6,8 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import javax.sql.DataSource;
 import java.util.List;
 
-// TODO RF 23/10/2015 Duplicated from Salume-Db (test remains in Salume-Db only)
-public class SimpleJdbcDatabaseSupport implements SimpleDatabaseSupport {
+public class SimpleJdbcDatabaseSupport {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -15,13 +14,11 @@ public class SimpleJdbcDatabaseSupport implements SimpleDatabaseSupport {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    @Override
     public void dropAndCreate(String schema) {
         jdbcTemplate.execute("drop schema if exists " + schema + " cascade");
         jdbcTemplate.execute("create schema " + schema);
     }
 
-    @Override
     public void execute(String statement) {
         jdbcTemplate.execute(statement);
     }
@@ -36,6 +33,10 @@ public class SimpleJdbcDatabaseSupport implements SimpleDatabaseSupport {
 
     public void cleanTable(String tableName) {
         jdbcTemplate.execute("delete from " + tableName);
+    }
+
+    public void drop(String schema) {
+        jdbcTemplate.execute("drop schema if exists " + schema + " cascade");
     }
 
 }

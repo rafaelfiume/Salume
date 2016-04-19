@@ -12,12 +12,12 @@ import static java.lang.String.format;
 
 @Service
 @Transactional
-public class ProductAdvisor {
+public class ProductAdviser {
 
     private final PersistentProductBase productBase;
 
     @Autowired
-    public ProductAdvisor(PersistentProductBase productBase) {
+    public ProductAdviser(PersistentProductBase productBase) {
         this.productBase = productBase;
     }
 

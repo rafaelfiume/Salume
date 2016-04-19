@@ -12,7 +12,7 @@ script:
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ]; then chmod 755 ./update-gh-pages.sh; ./update-gh-pages.sh; fi
 after_deploy:
-  - if [ "$TRAVIS_BRANCH" == "staging" -o "$TRAVIS_BRANCH" == "master" ]; then chmod 755 ./trigger-rainbow.sh; ./trigger-rainbow.sh; fi
+  - if [ "$TRAVIS_BRANCH" == "staging" ]; then chmod 755 ./trigger-rainbow.sh; ./trigger-rainbow.sh; fi
 
 cache:
   directories:
