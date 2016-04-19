@@ -1,9 +1,9 @@
 package com.rafaelfiume.db.plugin;
 
-import com.rafaelfiume.db.plugin.support.ScriptFilesNavigator;
-import com.rafaelfiume.db.plugin.support.ScriptsReader;
-import com.rafaelfiume.db.plugin.support.SimpleJdbcDatabaseSupport;
-import com.rafaelfiume.db.plugin.support.VersionManager;
+import com.rafaelfiume.db.plugin.sqlscripts.ScriptFilesNavigator;
+import com.rafaelfiume.db.plugin.sqlscripts.ScriptsReader;
+import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
+import com.rafaelfiume.db.plugin.database.VersionManager;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Ignore;
 import org.junit.Test;

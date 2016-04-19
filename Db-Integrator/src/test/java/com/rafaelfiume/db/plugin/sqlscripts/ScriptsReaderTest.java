@@ -1,6 +1,5 @@
-package com.rafaelfiume.db.plugin.support;
+package com.rafaelfiume.db.plugin.sqlscripts;
 
-import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Rule;

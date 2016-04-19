@@ -1,4 +1,4 @@
-package com.rafaelfiume.db.plugin.config;
+package com.rafaelfiume.db.plugin.database;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.jdbc.datasource.AbstractDataSource;

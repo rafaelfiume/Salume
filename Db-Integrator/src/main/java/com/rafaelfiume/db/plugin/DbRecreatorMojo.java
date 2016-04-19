@@ -1,16 +1,15 @@
 package com.rafaelfiume.db.plugin;
 
-import com.rafaelfiume.db.plugin.config.DataSourceFactory;
-import com.rafaelfiume.db.plugin.support.ScriptFilesNavigator;
-import com.rafaelfiume.db.plugin.support.ScriptsReader;
-import com.rafaelfiume.db.plugin.support.SimpleJdbcDatabaseSupport;
+import com.rafaelfiume.db.plugin.sqlscripts.ScriptFilesNavigator;
+import com.rafaelfiume.db.plugin.sqlscripts.ScriptsReader;
+import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
-import static com.rafaelfiume.db.plugin.config.DataSourceFactory.newDataSource;
+import static com.rafaelfiume.db.plugin.database.DataSourceFactory.newDataSource;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.TEST_COMPILE;
 
@@ -44,7 +43,7 @@ public final class DbRecreatorMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         log.warn("Recreating db now..."); log.warn("Database URL is: ############"); // Can't let the URL to appear in the logs.
 
-        // we need to await till databaseUrl is available, and that does not happen in constructor time
+        // we need to await till databaseUrl is available, and it is injected by Maven after the constructor is invoked
         initializeDbRecreatorIfThatHasNotBeenDoneYet();
 
         if (isBlank(databaseUrl)) {
@@ -55,6 +54,8 @@ public final class DbRecreatorMojo extends AbstractMojo {
     }
 
     private void initializeDbRecreatorIfThatHasNotBeenDoneYet() {
+        if (this.dbRecreator != null) { return; }
+
         this.dbRecreator = new DbRecreator(
                 new SimpleJdbcDatabaseSupport(newDataSource(databaseUrl)),
                 new ScriptFilesNavigator(),

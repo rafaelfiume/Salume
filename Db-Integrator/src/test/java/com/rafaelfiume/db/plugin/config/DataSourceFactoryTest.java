@@ -2,7 +2,7 @@ package com.rafaelfiume.db.plugin.config;
 
 import org.junit.Test;
 
-import static com.rafaelfiume.db.plugin.config.DataSourceFactory.newDataSource;
+import static com.rafaelfiume.db.plugin.database.DataSourceFactory.newDataSource;
 import static org.junit.Assert.fail;
 
 public class DataSourceFactoryTest {

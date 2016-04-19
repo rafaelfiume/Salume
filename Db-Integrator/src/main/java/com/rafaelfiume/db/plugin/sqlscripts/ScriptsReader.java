@@ -1,10 +1,8 @@
-package com.rafaelfiume.db.plugin.support;
+package com.rafaelfiume.db.plugin.sqlscripts;
 
 import org.apache.commons.io.IOUtils;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 
 public class ScriptsReader {
 

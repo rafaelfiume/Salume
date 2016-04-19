@@ -1,8 +1,8 @@
 package com.rafaelfiume.db.plugin;
 
-import com.rafaelfiume.db.plugin.support.ScriptsNavigator;
-import com.rafaelfiume.db.plugin.support.ScriptsReader;
-import com.rafaelfiume.db.plugin.support.SimpleJdbcDatabaseSupport;
+import com.rafaelfiume.db.plugin.sqlscripts.ScriptsNavigator;
+import com.rafaelfiume.db.plugin.sqlscripts.ScriptsReader;
+import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
 

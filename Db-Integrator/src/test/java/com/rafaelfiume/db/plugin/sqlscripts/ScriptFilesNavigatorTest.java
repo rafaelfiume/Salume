@@ -1,4 +1,4 @@
-package com.rafaelfiume.db.plugin.support;
+package com.rafaelfiume.db.plugin.sqlscripts;
 
 import org.junit.Test;
 

@@ -1,5 +1,6 @@
-package com.rafaelfiume.db.plugin.support;
+package com.rafaelfiume.db.plugin.sqlscripts;
 
+import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -11,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-import static com.rafaelfiume.db.plugin.config.DataSourceFactory.newDataSource;
+import static com.rafaelfiume.db.plugin.database.DataSourceFactory.newDataSource;
 import static java.lang.System.getenv;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
@@ -57,7 +58,7 @@ public class SimpleJdbcDatabaseSupportIntTest {
     }
 
     private void given_aStatement(final String statement) {
-        SimpleJdbcDatabaseSupportIntTest.this.dbStatement = statement;
+        this.dbStatement = statement;
     }
 
     private void given_aCustomerTableWithThreeEntries() {
