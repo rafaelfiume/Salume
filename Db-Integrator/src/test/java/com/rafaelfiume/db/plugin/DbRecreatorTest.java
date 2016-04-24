@@ -22,16 +22,16 @@ public class DbRecreatorTest {
     private static final String A_SQL_SCRIPT = "some SQL here";
     private static final RuntimeException RUNTIME_EXCEPTION = new RuntimeException();
 
-    @Mock private SimpleJdbcDatabaseSupport dbSupport;
+    @Mock private SimpleJdbcDatabaseSupport db;
     @Mock private ScriptsReader scriptsReader;
     @Mock private Log log;
     @Mock private ScriptsNavigator scriptsNavigator;
 
-    private DbRecreator underTest;
+    private DbRecreator subject;
 
     @Before
     public void setUp() {
-        underTest = new DbRecreator(dbSupport, scriptsNavigator, scriptsReader, log);
+        subject = new DbRecreator(db, scriptsNavigator, scriptsReader, log);
     }
 
     @Test
@@ -41,10 +41,10 @@ public class DbRecreatorTest {
         given(scriptsReader.readScript("scripts/i01/some-awkward-script.sql")).willReturn(A_SQL_SCRIPT);
 
         // when...
-        underTest.recreateDb(BOOKING_SCHEMA);
+        subject.recreateDb(BOOKING_SCHEMA);
 
-        then(dbSupport).should(times(1)).dropAndCreate(BOOKING_SCHEMA);
-        then(dbSupport).should(times(1)).execute(A_SQL_SCRIPT);
+        then(db).should(times(1)).dropAndCreate(BOOKING_SCHEMA);
+        then(db).should(times(1)).execute(A_SQL_SCRIPT);
     }
 
     @Test // Note : 16/04/2016 : Maybe this behavior will change ounce DbIncrementor is ready
@@ -52,14 +52,14 @@ public class DbRecreatorTest {
         given(scriptsNavigator.hasNext()).willReturn(true, false);
         given(scriptsNavigator.next()).willReturn("scripts/i01/some-awkward-script.sql");
         given(scriptsReader.readScript("scripts/i01/some-awkward-script.sql")).willReturn(A_SQL_SCRIPT);
-        willThrow(RUNTIME_EXCEPTION).given(dbSupport).dropAndCreate(BOOKING_SCHEMA);
+        willThrow(RUNTIME_EXCEPTION).given(db).dropAndCreate(BOOKING_SCHEMA);
 
         // when...
-        underTest.recreateDb(BOOKING_SCHEMA);
+        subject.recreateDb(BOOKING_SCHEMA);
 
-        then(dbSupport).should(times(1)).dropAndCreate(BOOKING_SCHEMA);
+        then(db).should(times(1)).dropAndCreate(BOOKING_SCHEMA);
         then(log).should().warn("Failed to drop schema " + BOOKING_SCHEMA + ". (Maybe the schema was never created?) Trying to proceed with db recreation anyway...", RUNTIME_EXCEPTION);
-        then(dbSupport).should(times(1)).execute(A_SQL_SCRIPT);
+        then(db).should(times(1)).execute(A_SQL_SCRIPT);
     }
 
 }

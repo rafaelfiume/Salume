@@ -20,11 +20,11 @@ public class DbRecreatorMojoTest {
     @Mock private DbRecreator dbRecreator;
     @Mock private Log log;
 
-    private DbRecreatorMojo underTest;
+    private DbRecreatorMojo subject;
 
     @Before
     public void setUp() {
-        this.underTest = new DbRecreatorMojo(dbRecreator, log);
+        this.subject = new DbRecreatorMojo(dbRecreator, log);
     }
 
     //
@@ -36,7 +36,7 @@ public class DbRecreatorMojoTest {
         givenDatabaseUrlIsEmpty();
 
         // when...
-        underTest.execute();
+        subject.execute();
 
         then(dbRecreator).should(never()).recreateDb(any());
     }
@@ -46,7 +46,7 @@ public class DbRecreatorMojoTest {
         givenDatabaseUrlIsEmpty();
 
         // when...
-        underTest.execute();
+        subject.execute();
 
         then(log).should().warn("Recreating db now...");
         then(log).should().warn("Database URL is: ############");
@@ -54,8 +54,8 @@ public class DbRecreatorMojoTest {
     }
 
     private void givenDatabaseUrlIsEmpty() throws NoSuchFieldException, IllegalAccessException {
-        Field databaseUrlField = underTest.getClass().getDeclaredField("databaseUrl");
+        Field databaseUrlField = subject.getClass().getDeclaredField("databaseUrl");
         databaseUrlField.setAccessible(true);
-        databaseUrlField.set(underTest, "");
+        databaseUrlField.set(subject, "");
     }
 }

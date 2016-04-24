@@ -2,7 +2,6 @@ package com.rafaelfiume.db.plugin;
 
 import com.rafaelfiume.db.plugin.database.VersionBase;
 import com.rafaelfiume.db.plugin.sqlscripts.ScriptFilesNavigator;
-import com.rafaelfiume.db.plugin.sqlscripts.ScriptsNavigator;
 import com.rafaelfiume.db.plugin.sqlscripts.ScriptsReader;
 import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
 import org.apache.maven.plugin.logging.Log;
@@ -12,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static com.rafaelfiume.db.plugin.Version.newVersion;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.any;
@@ -33,7 +33,7 @@ public class DbIncrementorTest {
     @Mock private VersionBase versionBase;
 
     private DbIncrementor subject;
-    private ScriptsNavigator scriptsNavigator;
+    private Version updateToVersion;
 
     @Test @Ignore // wip
     public void updateDatabaseFromVersion_i01_01_ToVersion_i02_01() {
@@ -62,16 +62,15 @@ public class DbIncrementorTest {
     }
 
     private void given_current(String currentMajorVersion, String currentMinorVersion) {
-        given(versionBase.majorVersion()).willReturn(currentMajorVersion);
-        given(versionBase.minorVersion()).willReturn(currentMinorVersion);
+        given(versionBase.currentVersion()).willReturn(newVersion(currentMajorVersion, currentMinorVersion));
     }
 
     private void given_updatingTo(String majorVersion, String minorVersion) {
-        scriptsNavigator = new ScriptFilesNavigator(majorVersion, minorVersion);
+        updateToVersion = newVersion(majorVersion, minorVersion);
     }
 
     private void givenDbIncrementorIsSetUpToExecuteScriptsInThe_scripts_Dir() {
-        this.subject = new DbIncrementor(db, scriptsNavigator, scriptsReader, log);
+        this.subject = new DbIncrementor(db, updateToVersion, scriptsReader, log);
     }
 
     // Decorators

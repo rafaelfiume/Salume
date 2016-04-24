@@ -1,5 +1,6 @@
 package com.rafaelfiume.db.plugin.database;
 
+import com.rafaelfiume.db.plugin.Version;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -41,6 +42,10 @@ public class SimpleJdbcDatabaseSupport {
 
     public String queryString(String query) {
         return jdbcTemplate.queryForObject(query, String.class);
+    }
+
+    public <T> T queryObject(String sql, RowMapper<T> rowMapper) {
+        return jdbcTemplate.queryForObject(sql, rowMapper);
     }
 
     public <T> List<T> query(String sql, RowMapper<T> rowMapper) {

@@ -2,7 +2,6 @@ package com.rafaelfiume.db.plugin.sqlscripts;
 
 import org.junit.Test;
 
-import java.net.URISyntaxException;
 import java.nio.file.FileSystems;
 
 import static java.lang.String.format;
@@ -16,7 +15,7 @@ public class ScriptFilesNavigatorTest {
     private ScriptFilesNavigator subject;
 
     @Test
-    public void returnsAllTheScriptFilesUnder_scripts_Directory() throws URISyntaxException {
+    public void returnsAllTheScriptFilesUnder_scripts_DirectoryWhen_No_MajorAndMinorVersionAreSpecified() {
         aFileNavigatorFor_Scripts_Dir(); // see resources/scripts folder
 
         hasAScriptFileNamed("scripts/i01/01.create-a-table-here.sql");
