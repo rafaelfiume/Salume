@@ -1,4 +1,4 @@
-package com.rafaelfiume.db.plugin.sqlscripts;
+package com.rafaelfiume.db.plugin.database;
 
 import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
 import com.rafaelfiume.db.plugin.database.VersionBase;
