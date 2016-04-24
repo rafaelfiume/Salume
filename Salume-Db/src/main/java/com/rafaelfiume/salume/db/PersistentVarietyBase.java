@@ -13,7 +13,7 @@ import static com.rafaelfiume.salume.db.PersistentVarietyBase.Inserts.INSERT_INT
 import static com.rafaelfiume.salume.db.PersistentVarietyBase.Inserts.namedParametersFor;
 
 @Repository
-public class PersistentVarietyBase { // TODO RF 29/12/2015 implements ProductBase
+public class PersistentVarietyBase { // TODO RF 29/12/2015 implements VarietyRepository
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 

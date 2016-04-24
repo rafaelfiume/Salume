@@ -13,10 +13,10 @@ public class ScriptFilesNavigatorTest {
 
     private static final String FILE_SEPARATOR = FileSystems.getDefault().getSeparator();
 
-    private ScriptFilesNavigator underTest;
+    private ScriptFilesNavigator subject;
 
     @Test
-    public void shouldReturnAllTheScriptFilesUnder_scripts_Directory() throws URISyntaxException {
+    public void returnsAllTheScriptFilesUnder_scripts_Directory() throws URISyntaxException {
         aFileNavigatorFor_Scripts_Dir(); // see resources/scripts folder
 
         hasAScriptFileNamed("scripts/i01/01.create-a-table-here.sql");
@@ -27,17 +27,17 @@ public class ScriptFilesNavigatorTest {
     }
 
     private void aFileNavigatorFor_Scripts_Dir() {
-        this.underTest = new ScriptFilesNavigator();
+        this.subject = new ScriptFilesNavigator();
     }
 
     private void hasAScriptFileNamed(String scriptName) {
         String scriptNamePlatformIndependent = scriptName.replace("/", FILE_SEPARATOR);
-        assertThat(format("expected script file %s", scriptNamePlatformIndependent), underTest.hasNext(), is(true));
-        assertThat(underTest.next(), is(scriptNamePlatformIndependent));
+        assertThat(format("expected script file %s", scriptNamePlatformIndependent), subject.hasNext(), is(true));
+        assertThat(subject.next(), is(scriptNamePlatformIndependent));
     }
 
     private void thenHasNoMoreScriptFiles() {
-        assertThat("expected no more script files", underTest.hasNext(), is(false));
+        assertThat("expected no more script files", subject.hasNext(), is(false));
     }
 
 }

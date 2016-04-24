@@ -31,6 +31,11 @@ public class ScriptFilesNavigator implements ScriptsNavigator {
                 .iterator();
     }
 
+    public ScriptFilesNavigator(String majorVersion, String minorVersion) {
+        // TODO RF 24/04/2016 Implement sad path....
+        throw new UnsupportedOperationException("coming soon");
+    }
+
     @Override
     public boolean hasNext() {
         return iterator.hasNext();

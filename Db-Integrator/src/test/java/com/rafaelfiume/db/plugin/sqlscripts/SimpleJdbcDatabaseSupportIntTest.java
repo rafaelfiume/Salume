@@ -13,11 +13,14 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static com.rafaelfiume.db.plugin.database.DataSourceFactory.newDataSource;
+import static java.lang.String.format;
 import static java.lang.System.getenv;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static support.Decorators.majorVersion;
+import static support.Decorators.minorVersion;
+import static support.Decorators.then;
 
 public class SimpleJdbcDatabaseSupportIntTest {
 
@@ -26,6 +29,7 @@ public class SimpleJdbcDatabaseSupportIntTest {
     private final SimpleJdbcDatabaseSupport underTest = new SimpleJdbcDatabaseSupport(newDataSource(getenv("DATABASE_URL")));
 
     private String dbStatement;
+    private String result;
 
     @Before
     public void dropDb() {
@@ -33,7 +37,7 @@ public class SimpleJdbcDatabaseSupportIntTest {
     }
 
     @Test
-    public void createTableStatement() throws Exception {
+    public void createsTableStatement() throws Exception {
         given_aStatement("CREATE TABLE moviestore.films (\n" +
                 "    code        char(5) CONSTRAINT firstkey PRIMARY KEY,\n" +
                 "    title       varchar(40) NOT NULL,\n" +
@@ -49,12 +53,39 @@ public class SimpleJdbcDatabaseSupportIntTest {
     }
 
     @Test
-    public void cleanTable() throws Exception {
+    public void cleansTable() throws Exception {
         given_aCustomerTableWithThreeEntries();
         then(theCustomerTable(), hasSize(3));
 
         when_cleaningTheCustomerTable();
         then(theCustomerTable(), is(empty()));
+    }
+
+    @Test
+    public void retrievesCurrentDatabaseSchemaVersion() {
+        given_aSchemaWithCurrent(majorVersion("i01"), minorVersion("02"));
+
+        when_QueryingMajorVersion();
+        then(result, is("i01"));
+
+        when_QueryingMinorVersion();
+        then(result, is("02"));
+    }
+
+    private void when_QueryingMajorVersion() {
+        this.result = underTest.queryString("SELECT major FROM moviestore.version");
+    }
+
+    private void when_QueryingMinorVersion() {
+        this.result = underTest.queryString("SELECT minor FROM moviestore.version");
+    }
+
+    private void given_aSchemaWithCurrent(String majorVersion, String minorVersion) {
+        underTest.execute("CREATE TABLE moviestore.version (\n" +
+                "    major       varchar(5) NOT NULL,\n" +
+                "    minor       varchar(2) NOT NULL\n" +
+                ");");
+        underTest.execute(format("INSERT INTO moviestore.version VALUES ('%s', '%s');", majorVersion, minorVersion));
     }
 
     private void given_aStatement(final String statement) {
@@ -101,10 +132,6 @@ public class SimpleJdbcDatabaseSupportIntTest {
 
     private String andTableName(String name) {
         return name;
-    }
-
-    public static <T> void then(T actual, Matcher<? super T> matcher) {
-        assertThat(actual, matcher);
     }
 
     // Matchers

@@ -22,7 +22,7 @@ import static com.rafaelfiume.salume.domain.Reputation.NORMAL;
 import static java.lang.String.format;
 
 @Repository
-public class PersistentProductBase { // TODO RF 12/12/2015 implements ProductBase
+public class PersistentProductBase { // TODO RF 12/12/2015 implements ProductRepository
 
     private static final Logger LOG = LoggerFactory.getLogger(PersistentProductBase.class);
 

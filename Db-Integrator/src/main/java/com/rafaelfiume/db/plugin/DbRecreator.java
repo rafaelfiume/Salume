@@ -8,13 +8,13 @@ import org.apache.maven.plugin.logging.Log;
 
 public class DbRecreator {
 
-    private final SimpleJdbcDatabaseSupport dbSupport;
+    private final SimpleJdbcDatabaseSupport db;
     private final ScriptsNavigator scriptsNavigator;
     private final ScriptsReader scriptsReader;
     private final Log log;
 
-    public DbRecreator(SimpleJdbcDatabaseSupport dbSupport, ScriptsNavigator scriptsNavigator, ScriptsReader scriptsReader, Log log) {
-        this.dbSupport = dbSupport;
+    public DbRecreator(SimpleJdbcDatabaseSupport db, ScriptsNavigator scriptsNavigator, ScriptsReader scriptsReader, Log log) {
+        this.db = db;
         this.scriptsNavigator = scriptsNavigator;
         this.scriptsReader = scriptsReader;
         this.log = log;
@@ -28,7 +28,7 @@ public class DbRecreator {
     private void dropDatabaseIfAlreadyExists(String schema) {
         log.info("First, dropping schema " + schema + "...");
         try {
-            dbSupport.dropAndCreate(schema);
+            db.dropAndCreate(schema);
         } catch (Exception e) {
             log.warn("Failed to drop schema " + schema + ". (Maybe the schema was never created?) Trying to proceed with db recreation anyway...", e);
         }
@@ -50,7 +50,7 @@ public class DbRecreator {
         log.info("Executing script: " + scriptFile);
         log.debug("Script is: " + script);
         try {
-            dbSupport.execute(script);
+            db.execute(script);
         } catch (Exception e) {
             log.error("Failed to execute statements", e);
             throw e;

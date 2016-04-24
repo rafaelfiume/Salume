@@ -22,9 +22,10 @@ public class ScriptsReaderTest {
     }
 
     @Test
-    public void throwIrrecoverableExceptionWhenCanNotFindDbScripts() {
+    public void failsWhenCanNotFindDbScripts() {
         thrown.expect(RuntimeException.class);
         thrown.expectMessage("could not load scripts from scripts/inexistent.script.sql");
+
         new ScriptsReader().readScript("scripts/inexistent.script.sql");
     }
 

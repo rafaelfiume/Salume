@@ -15,16 +15,32 @@ public class SimpleJdbcDatabaseSupport {
     }
 
     public void dropAndCreate(String schema) {
-        jdbcTemplate.execute("drop schema if exists " + schema + " cascade");
+        drop(schema);
+        create(schema);
+    }
+
+    public void create(String schema) {
         jdbcTemplate.execute("create schema " + schema);
+    }
+
+    public void drop(String schema) {
+        jdbcTemplate.execute("drop schema if exists " + schema + " cascade");
     }
 
     public void execute(String statement) {
         jdbcTemplate.execute(statement);
     }
 
+    public void update(String statement, Object... args) {
+        jdbcTemplate.update(statement, args);
+    }
+
     public Boolean queryBoolean(String query) {
         return jdbcTemplate.queryForObject(query, Boolean.class);
+    }
+
+    public String queryString(String query) {
+        return jdbcTemplate.queryForObject(query, String.class);
     }
 
     public <T> List<T> query(String sql, RowMapper<T> rowMapper) {
@@ -33,10 +49,6 @@ public class SimpleJdbcDatabaseSupport {
 
     public void cleanTable(String tableName) {
         jdbcTemplate.execute("delete from " + tableName);
-    }
-
-    public void drop(String schema) {
-        jdbcTemplate.execute("drop schema if exists " + schema + " cascade");
     }
 
 }
