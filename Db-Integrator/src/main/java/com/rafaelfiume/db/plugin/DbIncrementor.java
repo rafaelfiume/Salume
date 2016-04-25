@@ -27,12 +27,11 @@ public class DbIncrementor {
         final ScriptsNavigator scriptsNavigator = new ScriptFilesNavigator(from, to);
         while (scriptsNavigator.hasNext()){
             executeScripts(scriptsNavigator.next());
-            //versionBase.updateMajorVersionTo(scriptsNavigator.nextVersion());
         }
         scriptsNavigator.close();
     }
 
-    // TODO RF 25/04/2016 Duplicated
+    // TODO RF 25/04/2016 Duplicated (but slightly different)
     private void executeScripts(Script script) {
         final String sql = script.content();
 
@@ -40,6 +39,7 @@ public class DbIncrementor {
         log.debug("Script is: " + sql);
         try {
             db.execute(sql);
+            versionBase.updateVersionTo(script.version());
         } catch (Exception e) {
             log.error("Failed to execute statements", e);
             throw e;

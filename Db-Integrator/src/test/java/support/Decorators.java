@@ -22,7 +22,7 @@ public final class Decorators {
         return version;
     }
 
-    public static String and(String stuff) {
+    public static <T> T and(T stuff) {
         return stuff;
     }
 

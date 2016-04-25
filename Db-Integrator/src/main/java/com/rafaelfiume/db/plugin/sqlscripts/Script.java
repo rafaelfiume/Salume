@@ -41,6 +41,10 @@ public class Script {
         }
     }
 
+    public boolean isBetween(Version from, Version to) {
+        return version.isBetween(from, to);
+    }
+
     @Override
     public String toString() {
         return name;

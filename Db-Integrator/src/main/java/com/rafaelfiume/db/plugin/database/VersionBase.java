@@ -20,14 +20,8 @@ public class VersionBase { // TODO RF 24/04/2016 implements VersionRepository
         return db.queryObject("SELECT major, minor FROM moviestore.version", new VersionRowMapper());
     }
 
-    public void updateMajorVersionTo(String newMajorVersion) {
-        // assumes newMajorVersion is a valid version
-        db.update("UPDATE moviestore.version set major = ?", newMajorVersion);
-    }
-
-    public void updateMinorVersionTo(String newMinorVersion) {
-        // assumes newMinorVersion is a valid version
-        db.update("UPDATE moviestore.version set minor = ?", newMinorVersion);
+    public void updateVersionTo(Version version) {
+        db.update("UPDATE moviestore.version set major = ?, minor = ?", version.major(), version.minor());
     }
 
     static class VersionRowMapper implements RowMapper<Version> {

@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.is;
 import static support.Decorators.majorVersion;
 import static support.Decorators.minorVersion;
 import static support.Decorators.then;
+import static support.Decorators.version;
 
 public class VersionBaseIntTest {
 
@@ -31,10 +32,9 @@ public class VersionBaseIntTest {
         given_aSchemaWithCurrent(majorVersion("i23"), minorVersion("12"));
 
         // when...
-        underTest.updateMajorVersionTo("i25");
-        underTest.updateMinorVersionTo("05");
+        underTest.updateVersionTo(version("i25", "05"));
 
-        then(underTest.currentVersion(), is(newVersion("i25", "05")));
+        then(underTest.currentVersion(), is(version("i25", "05")));
     }
 
     private void given_aSchemaWithCurrent(String majorVersion, String minorVersion) {

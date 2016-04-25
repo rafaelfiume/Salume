@@ -24,19 +24,22 @@ public class ScriptFilesNavigator implements ScriptsNavigator {
 
     private static final String SCRIPTS_DIR = "scripts";
 
-    private final Iterator<String> iterator;
+    private final Iterator<Script> iterator;
     private FileSystem fileSystem;
 
     public ScriptFilesNavigator() {
         this.iterator = scriptsDirPath()
-                .map(path -> "scripts" + path.toString().split(SCRIPTS_DIR)[1])
+                .map(path -> newScript("scripts" + path.toString().split(SCRIPTS_DIR)[1]))
                 .sequential()
                 .iterator();
     }
 
     public ScriptFilesNavigator(Version from, Version to) {
-        // TODO RF 24/04/2016 Implement sad path....
-        throw new UnsupportedOperationException("coming soon");
+        this.iterator = scriptsDirPath()
+                .map(path -> newScript("scripts" + path.toString().split(SCRIPTS_DIR)[1]))
+                .filter(script -> script.isBetween(from, to))
+                .sequential()
+                .iterator();
     }
 
     @Override
@@ -46,7 +49,7 @@ public class ScriptFilesNavigator implements ScriptsNavigator {
 
     @Override
     public Script next() {
-        return newScript(iterator.next());
+        return iterator.next();
     }
 
     private Stream<Path> scriptsDirPath() {

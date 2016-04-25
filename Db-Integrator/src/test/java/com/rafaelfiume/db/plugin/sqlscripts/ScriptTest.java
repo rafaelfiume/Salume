@@ -1,7 +1,9 @@
 package com.rafaelfiume.db.plugin.sqlscripts;
 
+import com.rafaelfiume.db.plugin.Version;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -12,20 +14,43 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static support.Decorators.script;
-import static support.Decorators.then;
 import static support.Decorators.version;
 
 public class ScriptTest {
 
     @Test
-    public void retrieveScriptFile() {
+    public void canReadContentOfAScriptFile() {
         assertThat(script("scripts/i01/01.create-product-and-reputation-tables.sql").content(), isNotEmpty());
     }
-
 
     @Test
     public void returnsMajorAndMinorVersion() {
         assertThat(script("scripts/i34/02.a-script.sql").version(), is(version("i34", "02")));
+    }
+
+    @Ignore
+    @Test
+    public void from_IsNonInclusive() {
+        assertThat(
+                script("scripts/i34/02.a-script.sql").isBetween(from("i34", "02"), to("i35", "02")), is(false)
+        );
+    }
+
+    @Test
+    public void to_IsInclusive() {
+        assertThat(
+                script("scripts/i34/02.a-script.sql").isBetween(from("i34", "01"), to("i34", "02")), is(true)
+        );
+    }
+
+    @Test
+    public void returnsFalseWhenIntervalIs_bellow_Or_above_Version() {
+        assertThat(
+                script("scripts/i34/02.a-script.sql").isBetween(from("i11", "02"), to("i21", "02")), is(false)
+        );
+        assertThat(
+                script("scripts/i34/02.a-script.sql").isBetween(from("i77", "00"), to("i78", "00")), is(false)
+        );
     }
 
     @Test
@@ -79,6 +104,8 @@ public class ScriptTest {
         Script.newScript("i24/02.does.not.starts.with.scripts.sql");
     }
 
+    // Matcher
+
     private TypeSafeMatcher<String> isNotEmpty() {
         return new TypeSafeMatcher<String>() {
             @Override
@@ -91,6 +118,16 @@ public class ScriptTest {
                 description.appendText("a not empty string");
             }
         };
+    }
+
+    // Decorators
+
+    private Version from(String major, String minor) {
+        return version(major, minor);
+    }
+
+    private Version to(String major, String minor) {
+        return version(major, minor);
     }
 
 }
