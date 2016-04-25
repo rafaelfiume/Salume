@@ -1,11 +1,11 @@
 package com.rafaelfiume.db.plugin.sqlscripts;
 
-import java.io.Closeable;
-
-public interface ScriptsNavigator extends Closeable {
+public interface ScriptsNavigator {
 
     boolean hasNext();
 
-    String next();
+    Script next();
+
+    void close();
 
 }

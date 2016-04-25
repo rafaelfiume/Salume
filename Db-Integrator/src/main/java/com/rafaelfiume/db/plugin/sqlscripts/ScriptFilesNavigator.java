@@ -1,5 +1,7 @@
 package com.rafaelfiume.db.plugin.sqlscripts;
 
+import com.rafaelfiume.db.plugin.Version;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -11,6 +13,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
+import static com.rafaelfiume.db.plugin.sqlscripts.Script.newScript;
 import static java.nio.file.FileSystems.newFileSystem;
 import static org.apache.commons.io.IOUtils.closeQuietly;
 
@@ -31,7 +34,7 @@ public class ScriptFilesNavigator implements ScriptsNavigator {
                 .iterator();
     }
 
-    public ScriptFilesNavigator(String majorVersion, String minorVersion) {
+    public ScriptFilesNavigator(Version from, Version to) {
         // TODO RF 24/04/2016 Implement sad path....
         throw new UnsupportedOperationException("coming soon");
     }
@@ -42,8 +45,8 @@ public class ScriptFilesNavigator implements ScriptsNavigator {
     }
 
     @Override
-    public String next() {
-        return iterator.next();
+    public Script next() {
+        return newScript(iterator.next());
     }
 
     private Stream<Path> scriptsDirPath() {
@@ -67,7 +70,7 @@ public class ScriptFilesNavigator implements ScriptsNavigator {
     }
 
     @Override
-    public void close() throws IOException {
-        closeQuietly(fileSystem); // TODO : RF : 16/04/2016 : Why closing as an external call and not right after scriptsDirPath is being invoked?
+    public void close() {
+        closeQuietly(fileSystem);
     }
 }

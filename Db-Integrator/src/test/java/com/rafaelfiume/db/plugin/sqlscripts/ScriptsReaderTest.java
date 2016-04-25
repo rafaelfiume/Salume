@@ -6,9 +6,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static com.rafaelfiume.db.plugin.sqlscripts.Script.newScript;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static support.Decorators.script;
+import static support.Decorators.then;
 
 public class ScriptsReaderTest {
 
@@ -17,16 +20,23 @@ public class ScriptsReaderTest {
 
     @Test
     public void retrieveScriptFile() {
-        final String scripts = new ScriptsReader().readScript("scripts/i01/01.create-product-and-reputation-tables.sql");
-        assertThat(scripts, isNotEmpty());
+        // given
+        ScriptsReader scriptsReader = new ScriptsReader();
+
+        // when
+        String scripts = scriptsReader.read(newScript("scripts/i01/01.create-product-and-reputation-tables.sql"));
+
+        then(scripts, isNotEmpty());
     }
+
+    ///////////////////////////// Sad path... ///////////////////////////////
 
     @Test
     public void failsWhenCanNotFindDbScripts() {
         thrown.expect(RuntimeException.class);
-        thrown.expectMessage("could not load scripts from scripts/inexistent.script.sql");
+        thrown.expectMessage("could not load scripts from: scripts/i34/08/inexistent.script.sql");
 
-        new ScriptsReader().readScript("scripts/inexistent.script.sql");
+        new ScriptsReader().read(script("scripts/i34/08/inexistent.script.sql"));
     }
 
     private TypeSafeMatcher<String> isNotEmpty() {

@@ -27,9 +27,7 @@ public class DbRecreatorMojoTest {
         this.subject = new DbRecreatorMojo(dbRecreator, log);
     }
 
-    //
-    //// Sad path
-    //
+    ///////////////////////////// Sad path... ///////////////////////////////
 
     @Test
     public void skipsDbRecreationWhenDatabaseUrlIsEmpty() throws MojoExecutionException, NoSuchFieldException, IllegalAccessException {

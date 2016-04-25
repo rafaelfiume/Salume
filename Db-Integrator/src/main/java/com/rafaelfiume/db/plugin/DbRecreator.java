@@ -1,9 +1,9 @@
 package com.rafaelfiume.db.plugin;
 
+import com.rafaelfiume.db.plugin.sqlscripts.Script;
 import com.rafaelfiume.db.plugin.sqlscripts.ScriptsNavigator;
 import com.rafaelfiume.db.plugin.sqlscripts.ScriptsReader;
 import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
-import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.logging.Log;
 
 public class DbRecreator {
@@ -41,16 +41,16 @@ public class DbRecreator {
         while (scriptsNavigator.hasNext()){
             executeScripts(scriptsNavigator.next());
         }
-        IOUtils.closeQuietly(scriptsNavigator);
+        scriptsNavigator.close();
     }
 
-    private void executeScripts(String scriptFile) {
-        final String script = scriptsReader.readScript(scriptFile);
+    private void executeScripts(Script script) {
+        final String sql = scriptsReader.read(script);
 
-        log.info("Executing script: " + scriptFile);
-        log.debug("Script is: " + script);
+        log.info("Executing script: " + script);
+        log.debug("Script is: " + sql);
         try {
-            db.execute(script);
+            db.execute(sql);
         } catch (Exception e) {
             log.error("Failed to execute statements", e);
             throw e;
