@@ -2,7 +2,6 @@ package com.rafaelfiume.db.plugin;
 
 import com.rafaelfiume.db.plugin.sqlscripts.Script;
 import com.rafaelfiume.db.plugin.sqlscripts.ScriptsNavigator;
-import com.rafaelfiume.db.plugin.sqlscripts.ScriptsReader;
 import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
 import org.apache.maven.plugin.logging.Log;
 
@@ -10,13 +9,11 @@ public class DbRecreator {
 
     private final SimpleJdbcDatabaseSupport db;
     private final ScriptsNavigator scriptsNavigator;
-    private final ScriptsReader scriptsReader;
     private final Log log;
 
-    public DbRecreator(SimpleJdbcDatabaseSupport db, ScriptsNavigator scriptsNavigator, ScriptsReader scriptsReader, Log log) {
+    public DbRecreator(SimpleJdbcDatabaseSupport db, ScriptsNavigator scriptsNavigator, Log log) {
         this.db = db;
         this.scriptsNavigator = scriptsNavigator;
-        this.scriptsReader = scriptsReader;
         this.log = log;
     }
 
@@ -45,7 +42,7 @@ public class DbRecreator {
     }
 
     private void executeScripts(Script script) {
-        final String sql = scriptsReader.read(script);
+        final String sql = script.content();
 
         log.info("Executing script: " + script);
         log.debug("Script is: " + sql);

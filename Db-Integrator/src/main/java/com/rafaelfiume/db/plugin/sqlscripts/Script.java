@@ -1,9 +1,11 @@
 package com.rafaelfiume.db.plugin.sqlscripts;
 
 import com.rafaelfiume.db.plugin.Version;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.io.InputStream;
 import java.nio.file.FileSystems;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,7 +13,7 @@ import java.util.regex.Pattern;
 import static com.rafaelfiume.db.plugin.Version.newVersion;
 import static java.lang.String.format;
 
-public final class Script {
+public class Script {
 
     private final String name;
     private final Version version;
@@ -29,6 +31,15 @@ public final class Script {
 
     public String name()     { return name; }
     public Version version() { return version; }
+
+    public String content() {
+        try (final InputStream is = Script.class.getClassLoader().getResourceAsStream(name)) {
+            return IOUtils.toString(is);
+
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("could not load scripts from: %s", name), e);
+        }
+    }
 
     @Override
     public String toString() {
@@ -52,7 +63,5 @@ public final class Script {
 
         return newVersion(m.group(1), m.group(2));
     }
-
-    // TODO RF 25/04/2016 No sad path yet. #matches() ?
 
 }

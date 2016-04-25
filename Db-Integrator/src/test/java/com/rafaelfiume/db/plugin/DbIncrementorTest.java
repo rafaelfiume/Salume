@@ -3,7 +3,6 @@ package com.rafaelfiume.db.plugin;
 import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
 import com.rafaelfiume.db.plugin.database.VersionBase;
 import com.rafaelfiume.db.plugin.sqlscripts.ScriptFilesNavigator;
-import com.rafaelfiume.db.plugin.sqlscripts.ScriptsReader;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -11,12 +10,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static com.rafaelfiume.db.plugin.sqlscripts.Script.newScript;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
-import static support.Decorators.script;
 import static support.Decorators.to;
 import static support.Decorators.version;
 
@@ -26,7 +25,6 @@ public class DbIncrementorTest {
     private static final String PETITIONS_SCHEMA = "petitions";
 
     @Mock private SimpleJdbcDatabaseSupport db;
-    @Mock private ScriptsReader scriptsReader;
     @Mock private Log log;
     @Mock private VersionBase versionBase;
 
@@ -68,13 +66,13 @@ public class DbIncrementorTest {
     }
 
     private void givenDbIncrementorIsSetUpToExecuteScriptsInThe_scripts_Dir() {
-        this.subject = new DbIncrementor(db, versionBase, updateToVersion, scriptsReader, log);
+        this.subject = new DbIncrementor(db, versionBase, updateToVersion, log);
     }
 
     // Decorators
 
     private String scriptFrom(String name) {
-        return new ScriptsReader().read(script(name));
+        return newScript(name).content();
     }
 
     public static void main(String... args) {
