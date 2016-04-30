@@ -1,5 +1,6 @@
 package com.rafaelfiume.db.plugin;
 
+import com.rafaelfiume.db.plugin.database.Schema;
 import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
 import com.rafaelfiume.db.plugin.sqlscripts.Script;
 import com.rafaelfiume.db.plugin.sqlscripts.ScriptsNavigator;
@@ -10,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static com.rafaelfiume.db.plugin.database.Schema.schema;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.BDDMockito.willThrow;
@@ -18,7 +20,7 @@ import static org.mockito.Mockito.times;
 @RunWith(MockitoJUnitRunner.class)
 public class DbRecreatorTest {
 
-    private static final String BOOKING_SCHEMA = "booking_schema";
+    private static final Schema BOOKING_SCHEMA = schema("booking_schema");
     private static final String A_SQL_SCRIPT = "some SQL here";
     private static final RuntimeException RUNTIME_EXCEPTION = new RuntimeException();
 

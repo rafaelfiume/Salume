@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static com.rafaelfiume.db.plugin.database.DataSourceFactory.newDataSource;
+import static com.rafaelfiume.db.plugin.database.Schema.schema;
 import static java.lang.String.format;
 import static java.lang.System.getenv;
 import static org.hamcrest.Matchers.is;
@@ -14,7 +15,7 @@ import static support.Decorators.version;
 
 public class VersionBaseIntTest {
 
-    public static final String MOVIE_STORE_SCHEMA = "moviestore";
+    public static final Schema MOVIE_STORE_SCHEMA = schema("moviestore");
 
     private final SimpleJdbcDatabaseSupport db = new SimpleJdbcDatabaseSupport(newDataSource(getenv("DATABASE_URL")));
     private final VersionBase underTest = new VersionBase(db);

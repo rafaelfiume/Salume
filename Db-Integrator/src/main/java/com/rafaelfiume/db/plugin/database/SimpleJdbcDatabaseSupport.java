@@ -14,16 +14,16 @@ public class SimpleJdbcDatabaseSupport {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public void dropAndCreate(String schema) {
+    public void dropAndCreate(Schema schema) {
         drop(schema);
         create(schema);
     }
 
-    public void create(String schema) {
+    public void create(Schema schema) {
         jdbcTemplate.execute("create schema " + schema);
     }
 
-    public void drop(String schema) {
+    public void drop(Schema schema) {
         jdbcTemplate.execute("drop schema if exists " + schema + " cascade");
     }
 

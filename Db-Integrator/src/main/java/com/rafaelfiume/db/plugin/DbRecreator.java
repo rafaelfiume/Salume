@@ -1,5 +1,6 @@
 package com.rafaelfiume.db.plugin;
 
+import com.rafaelfiume.db.plugin.database.Schema;
 import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
 import com.rafaelfiume.db.plugin.sqlscripts.Script;
 import com.rafaelfiume.db.plugin.sqlscripts.ScriptsNavigator;
@@ -17,12 +18,12 @@ public class DbRecreator {
         this.log = log;
     }
 
-    public void recreateDb(String schema) {
+    public void recreateDb(Schema schema) {
         dropDatabaseIfAlreadyExists(schema);
         loadSqlScriptsAndExecuteThem();
     }
 
-    private void dropDatabaseIfAlreadyExists(String schema) {
+    private void dropDatabaseIfAlreadyExists(Schema schema) {
         log.info("First, dropping schema " + schema + "...");
         try {
             db.dropAndCreate(schema);

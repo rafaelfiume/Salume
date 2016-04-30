@@ -1,5 +1,6 @@
 package com.rafaelfiume.db.plugin;
 
+import com.rafaelfiume.db.plugin.database.Schema;
 import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
 import com.rafaelfiume.db.plugin.sqlscripts.ScriptFilesNavigator;
 import org.apache.maven.plugin.AbstractMojo;
@@ -9,6 +10,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import static com.rafaelfiume.db.plugin.database.DataSourceFactory.newDataSource;
+import static com.rafaelfiume.db.plugin.database.Schema.schema;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.TEST_COMPILE;
 
@@ -22,7 +24,7 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.TEST_COMPILE;
 public final class DbRecreatorMojo extends AbstractMojo {
 
     // TODO RF 12/10/2015 pass this as a maven property e.g. ${db.schema.name}
-    private static final String SCHEMA = "salumistore";
+    private static final Schema SCHEMA = schema("salumistore");
 
     private final Log log;
     private DbRecreator dbRecreator;

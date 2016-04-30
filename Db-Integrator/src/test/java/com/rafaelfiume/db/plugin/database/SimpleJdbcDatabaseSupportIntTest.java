@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static com.rafaelfiume.db.plugin.database.DataSourceFactory.newDataSource;
+import static com.rafaelfiume.db.plugin.database.Schema.schema;
 import static java.lang.String.format;
 import static java.lang.System.getenv;
 import static org.hamcrest.Matchers.empty;
@@ -23,7 +24,7 @@ import static support.Decorators.then;
 
 public class SimpleJdbcDatabaseSupportIntTest {
 
-    public static final String MOVIE_STORE_SCHEMA = "moviestore";
+    public static final String MOVIE_STORE = "moviestore";
 
     private final SimpleJdbcDatabaseSupport underTest = new SimpleJdbcDatabaseSupport(newDataSource(getenv("DATABASE_URL")));
 
@@ -32,7 +33,7 @@ public class SimpleJdbcDatabaseSupportIntTest {
 
     @Before
     public void dropDb() {
-        underTest.dropAndCreate(MOVIE_STORE_SCHEMA);
+        underTest.dropAndCreate(schema(MOVIE_STORE));
     }
 
     @Test
@@ -48,7 +49,7 @@ public class SimpleJdbcDatabaseSupportIntTest {
 
         when_executingThatStatement();
 
-        then(theTable(withSchema(MOVIE_STORE_SCHEMA), andTableName("films")), exists());
+        then(theTable(withSchema(MOVIE_STORE), andTable("films")), exists());
     }
 
     @Test
@@ -106,13 +107,13 @@ public class SimpleJdbcDatabaseSupportIntTest {
         underTest.cleanTable("moviestore.customers");
     }
 
-    private Boolean theTable(String schemaName, String tableName) {
+    private Boolean theTable(Schema schema, String table) {
         String query = "SELECT EXISTS (\n" +
                 "    SELECT 1 \n" +
                 "    FROM   pg_catalog.pg_class c \n" +
                 "    JOIN   pg_catalog.pg_namespace n ON n.oid = c.relnamespace \n" +
-                "    WHERE  n.nspname = '" + schemaName + "' \n" +
-                "    AND    c.relname = '" + tableName + "' \n" +
+                "    WHERE  n.nspname = '" + schema + "' \n" +
+                "    AND    c.relname = '" + table + "' \n" +
                 "    AND    c.relkind = 'r'    -- only tables(?) \n" +
                 ");";
 
@@ -125,11 +126,11 @@ public class SimpleJdbcDatabaseSupportIntTest {
 
     // Decorators
 
-    private String withSchema(String name) {
-        return name;
+    private Schema withSchema(String name) {
+        return schema(name);
     }
 
-    private String andTableName(String name) {
+    private String andTable(String name) {
         return name;
     }
 
