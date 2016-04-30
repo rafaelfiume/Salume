@@ -17,7 +17,7 @@ import static support.Decorators.to;
 import static support.Decorators.version;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DbIncrementorTest {
+public class DbMigrationTest {
 
     private static final String PETITIONS_SCHEMA = "petitions";
 
@@ -25,7 +25,7 @@ public class DbIncrementorTest {
     @Mock private Log log;
     @Mock private VersionBase versionBase;
 
-    private DbIncrementor subject;
+    private DbMigration subject;
     private Version updateToVersion;
 
     @Test
@@ -61,7 +61,7 @@ public class DbIncrementorTest {
     }
 
     private void givenDbIncrementorIsSetUpToExecuteScriptsInThe_scripts_Dir() {
-        this.subject = new DbIncrementor(db, versionBase, updateToVersion, log);
+        this.subject = new DbMigration(db, versionBase, updateToVersion, log);
     }
 
     // Decorators

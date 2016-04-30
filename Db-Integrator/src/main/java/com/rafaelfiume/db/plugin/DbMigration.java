@@ -7,14 +7,14 @@ import com.rafaelfiume.db.plugin.sqlscripts.ScriptFilesNavigator;
 import com.rafaelfiume.db.plugin.sqlscripts.ScriptsNavigator;
 import org.apache.maven.plugin.logging.Log;
 
-public class DbIncrementor {
+public class DbMigration {
 
     private final SimpleJdbcDatabaseSupport db;
     private final VersionBase versionBase;
     private final Version updateToVersion;
     private final Log log;
 
-    public DbIncrementor(SimpleJdbcDatabaseSupport db, VersionBase versionBase, Version updateToVersion, Log log) {
+    public DbMigration(SimpleJdbcDatabaseSupport db, VersionBase versionBase, Version updateToVersion, Log log) {
         this.db = db;
         this.versionBase = versionBase;
         this.updateToVersion = updateToVersion;

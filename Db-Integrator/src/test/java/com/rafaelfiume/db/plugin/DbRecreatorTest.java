@@ -47,7 +47,7 @@ public class DbRecreatorTest {
         then(db).should(times(1)).execute(A_SQL_SCRIPT);
     }
 
-    @Test // Note : 16/04/2016 : Maybe this behavior will change ounce DbIncrementor is ready
+    @Test // Note : 16/04/2016 : Maybe this behavior will change ounce DbMigration is ready
     public void skipsDroppingDatabaseSchemaWhenItFailsButTryToExecuteScriptsAnyway() {
         willThrow(RUNTIME_EXCEPTION).given(db).dropAndCreate(BOOKING_SCHEMA);
         given(scriptsNavigator.hasNext()).willReturn(true, false);
