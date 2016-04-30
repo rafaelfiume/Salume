@@ -3,7 +3,6 @@ package com.rafaelfiume.db.plugin;
 import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
 import com.rafaelfiume.db.plugin.database.VersionBase;
 import org.apache.maven.plugin.logging.Log;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -12,7 +11,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static com.rafaelfiume.db.plugin.sqlscripts.Script.newScript;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static support.Decorators.to;
@@ -30,7 +28,7 @@ public class DbIncrementorTest {
     private DbIncrementor subject;
     private Version updateToVersion;
 
-    @Test @Ignore // wip
+    @Test
     public void updateDatabaseFromVersion_i01_01_ToVersion_i02_01() {
         given_current   (version("i01", "01"));
         given_updatingTo(version("i02", "01"));
@@ -41,7 +39,7 @@ public class DbIncrementorTest {
 
         // then the first script i01.01 shouldn't be executed since it has already been in the past
         then(db).should(never()).execute(scriptFrom("scripts/i01/01.create-a-table-here.sql"));
-        then(versionBase).should(never()).updateVersionTo(to(any()));
+        then(versionBase).should(never()).updateVersionTo(version("i01", "01"));
 
         // then other scripts should be executed till db reaches the desired major/minor version
         then(db).should(times(1)).execute(scriptFrom("scripts/i01/02.doing-something-script.sql"));

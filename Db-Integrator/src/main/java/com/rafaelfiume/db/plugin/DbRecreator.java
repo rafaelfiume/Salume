@@ -1,8 +1,8 @@
 package com.rafaelfiume.db.plugin;
 
+import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
 import com.rafaelfiume.db.plugin.sqlscripts.Script;
 import com.rafaelfiume.db.plugin.sqlscripts.ScriptsNavigator;
-import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
 import org.apache.maven.plugin.logging.Log;
 
 public class DbRecreator {

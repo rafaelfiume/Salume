@@ -3,7 +3,6 @@ package com.rafaelfiume.db.plugin.sqlscripts;
 import com.rafaelfiume.db.plugin.Version;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -28,7 +27,6 @@ public class ScriptTest {
         assertThat(script("scripts/i34/02.a-script.sql").version(), is(version("i34", "02")));
     }
 
-    @Ignore
     @Test
     public void from_IsNonInclusive() {
         assertThat(

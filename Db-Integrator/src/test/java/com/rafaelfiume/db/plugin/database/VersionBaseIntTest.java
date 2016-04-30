@@ -1,11 +1,8 @@
 package com.rafaelfiume.db.plugin.database;
 
-import com.rafaelfiume.db.plugin.database.SimpleJdbcDatabaseSupport;
-import com.rafaelfiume.db.plugin.database.VersionBase;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.rafaelfiume.db.plugin.Version.newVersion;
 import static com.rafaelfiume.db.plugin.database.DataSourceFactory.newDataSource;
 import static java.lang.String.format;
 import static java.lang.System.getenv;

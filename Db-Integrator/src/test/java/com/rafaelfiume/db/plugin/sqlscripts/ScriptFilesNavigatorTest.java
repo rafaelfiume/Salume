@@ -1,7 +1,6 @@
 package com.rafaelfiume.db.plugin.sqlscripts;
 
 import com.rafaelfiume.db.plugin.Version;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.FileSystems;
@@ -31,7 +30,6 @@ public class ScriptFilesNavigatorTest {
         thenNothingElse();
     }
 
-    @Ignore
     @Test
     public void returnsScriptFilesUnder_scripts_DirAndBetweenCurrentAndNewVersions() {
         given_current   (version("i01", "02"));
