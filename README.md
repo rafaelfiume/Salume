@@ -2,7 +2,7 @@
 
 Check the application spec [here](http://rafaelfiume.github.io/Salume). Access the [status page](http://app.rafaelfiume.com/salume/supplier/status) in production.
 
-This application is continuous delivered everytime code it´s pushed into master and the build passes.
+This application is continuous delivered everytime code is pushed into master and the build passes. 
 
 ## Running the Application
 
