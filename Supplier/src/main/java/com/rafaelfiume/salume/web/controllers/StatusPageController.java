@@ -1,6 +1,6 @@
 package com.rafaelfiume.salume.web.controllers;
 
-import com.rafaelfiume.salume.integration.DatabaseProbe;
+import com.rafaelfiume.salume.db.DatabaseProbe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;

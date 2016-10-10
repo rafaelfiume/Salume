@@ -1,4 +1,4 @@
-package com.rafaelfiume.salume.integration;
+package com.rafaelfiume.salume.db;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 
-// // TODO RF 24/10/15 Move it to Salume-Db?
 @Repository
 public class DatabaseProbe {
 
