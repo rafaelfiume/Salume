@@ -2,7 +2,7 @@
 
 Check the application spec [here](http://rafaelfiume.github.io/Salume). Access the [status page](http://app.rafaelfiume.com/salume/supplier/status) in production.
 
-This application is continuous delivered everytime code is pushed into master and the build passes. 
+This application is continuous delivered every time code is pushed into master and the build passes. 
 
 ## Running the Application
 
@@ -46,6 +46,8 @@ The following variables are used in this project:
 
 
 ## TODO List - aka User Stories ;)
+
+Consider to use Kotlin instead of Java.
 
 ### Best Offering According to Customer Profile Rest Service (Salami Product Only)
 * ~~Suggest up to three different products according to client profile~~
