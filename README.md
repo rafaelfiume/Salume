@@ -44,28 +44,3 @@ The following variables are used in this project:
 #### Maven
 * $GITHUB_OAUTH_TOKEN (optional) is necessary when pushing Supplier-Acceptance-Tests into mvn-repo
 
-
-## TODO List - aka User Stories ;)
-
-Consider to use Kotlin instead of Java.
-
-### Best Offering According to Customer Profile Rest Service (Salami Product Only)
-* ~~Suggest up to three different products according to client profile~~
-* ~~Only suggest traditional products to experts~~
-* ~~Better product advice using Wikipedia images and descriptions~~
-
-## Non-Functional Stories
-
-### Project Configuration
-* ~~Walking Skeleton: a Draft of a Status Page~~
-* ~~Configure Travis CI build and automatic spec publication.~~
-* ~~Deploy app into Heroku~~
-
-### Provide Status Page
-* ~~Show status Ok when app is up and running and all the resources it depends on are available~~
-* ~~Show status Fail when app is up and running and database connection fails~~
-
-### Database Recreator Plugin
-* ~~Recrete Db when specifying dbRecreator profile in the maven build~~
-* ~~Possibility of using more than one script file to recreate the db~~
-* ~~Load db with more products~~
