@@ -350,6 +350,7 @@ I recommend reading the excellent <a href="http://www.growing-object-oriented-so
                             <h2>Specification</h2>
                             <pre class="highlight specification">
 Given salume supplier app is up and running
+And last successful build number is 233
 
 When a client requests status page
 
@@ -357,7 +358,7 @@ Then the content type is TEXT_PLAIN_CHARSET_UTF8
 And the status page has http status code OK
 And the applicantion name and version is &quot;Salume Supplier DEV&quot;
 And the status of the app is &quot;OK&quot;
-And the app version in the status page is the implementation version in the manifest
+And the app version in the status page is build number 233
 And the database status is &quot;OK&quot;</pre>
                             <h3 class="logKey">Test results:</h3>
                                     <pre class='highlight results test-passed'>
@@ -377,7 +378,7 @@ Test passed</pre>
                                         <div class="logValue highlight String" >http://localhost:8081/salume/supplier/status</div>
                                                                             <h3 class="logKey" logkey="response_from_Supplier_to_Client">response from Supplier to Client</h3>
                                         <div class="logValue highlight String" >Salume Supplier DEV is: OK
-Version: ${project.version}
+Version: 233
 Database connections is: OK</div>
                                                                             <h3 class="logKey" logkey="Sequence_Diagram">Sequence Diagram</h3>
                                         <div class="logValue highlight SvgWrapper" ><div class='nohighlight'><?xml version="1.0" encoding="UTF-8"?>
