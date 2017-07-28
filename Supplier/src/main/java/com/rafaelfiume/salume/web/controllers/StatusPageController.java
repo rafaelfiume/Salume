@@ -45,23 +45,7 @@ public class StatusPageController {
     }
 
     private String appVersion() {
-        return getManifest(this.getClass()).getMainAttributes().getValue("Implementation-Version");
+        return System.getenv("BUILD_NUMBER");
     }
 
-    public static Manifest getManifest(Class<?> clz) {
-        // Really boring stuff to code! Glad I found it in the web... Source: http://stackoverflow.com/questions/1272648/reading-my-own-jars-manifest/29103019#29103019
-        final String resource = "/" + clz.getName().replace(".", "/") + ".class";
-        final String fullPath = clz.getResource(resource).toString();
-        String archivePath = fullPath.substring(0, fullPath.length() - resource.length());
-        if (archivePath.endsWith("\\WEB-INF\\classes") || archivePath.endsWith("/WEB-INF/classes")) {
-            archivePath = archivePath.substring(0, archivePath.length() - "/WEB-INF/classes".length()); // Required for wars
-        }
-
-        try (InputStream input = new URL(archivePath + "/META-INF/MANIFEST.MF").openStream()) {
-            return new Manifest(input);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Loading MANIFEST for class " + clz + " failed!", e);
-        }
-    }
 }

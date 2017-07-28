@@ -49,15 +49,8 @@ public class StatusPageSadPathEndToEndTest extends AbstractSequenceDiagramTestSt
 
         then(theContentType(), is(TEXT_PLAIN_CHARSET_UTF8));
         and(theStatusPage(), hasHttpStatusCode(OK));
-        and(theApplicationNameAndVersion(), is("Salume Supplier DEV"));
         and(theStatusOfTheApp(), is("FAILING"));
-        and(theAppVersionInTheStatusPage(), is(theImplementationVersionInTheManifest()));
         and(theDatabaseStatus(), is("FAILING"));
-    }
-
-    private String theImplementationVersionInTheManifest() {
-        Manifest manifest = StatusPageController.getManifest(SupplierApplication.class);
-        return "Version: " + manifest.getMainAttributes().getValue("Implementation-Version");
     }
 
     private GivensBuilder salumeSupplierAppIsUpAndRunning() {
@@ -98,22 +91,11 @@ public class StatusPageSadPathEndToEndTest extends AbstractSequenceDiagramTestSt
         };
     }
 
-    private StateExtractor<String> theApplicationNameAndVersion() {
-        return inputAndOutputs -> {
-            String firstLine = this.response.getBody().split(lineSeparator())[0];
-            return trim(firstLine.split("is:")[0]);
-        };
-    }
-
     private StateExtractor<String> theStatusOfTheApp() {
         return inputAndOutputs -> {
             String firstLine = this.response.getBody().split(lineSeparator())[0];
             return trim(firstLine.split("is:")[1]);
         };
-    }
-
-    private StateExtractor<String> theAppVersionInTheStatusPage() {
-        return inputAndOutputs -> this.response.getBody().split(lineSeparator())[1];
     }
 
     private StateExtractor<String> theDatabaseStatus() {

@@ -4,9 +4,7 @@ import com.googlecode.yatspec.junit.Notes;
 import com.googlecode.yatspec.state.givenwhenthen.ActionUnderTest;
 import com.googlecode.yatspec.state.givenwhenthen.GivensBuilder;
 import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
-import com.rafaelfiume.salume.SupplierApplication;
 import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
-import com.rafaelfiume.salume.web.controllers.StatusPageController;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -16,7 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import java.util.jar.Manifest;
+import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.rafaelfiume.salume.support.Applications.CLIENT;
 import static com.rafaelfiume.salume.support.Applications.SUPPLIER;
@@ -50,7 +51,7 @@ import static org.springframework.http.MediaType.parseMediaType;
 )
 public class StatusPageHappyPathEndToEndTest extends AbstractSequenceDiagramTestState {
 
-    public static final String STATUS_PAGE_URI = "http://localhost:8081/salume/supplier/status";
+    private static final String STATUS_PAGE_URI = "http://localhost:8081/salume/supplier/status";
 
     private static final MediaType TEXT_PLAIN_CHARSET_UTF8 = parseMediaType("text/plain;charset=utf-8");
 
@@ -59,6 +60,7 @@ public class StatusPageHappyPathEndToEndTest extends AbstractSequenceDiagramTest
     @Test
     public void showStatusOkWhenAppIsUpAndRunningAndAllTheResourcesItDependsOnAreAvailable() throws Exception {
         given(salumeSupplierAppIsUpAndRunning());
+        and(lastSuccessfulBuildNumberIs(233));
 
         when(aClientRequestsStatusPage());
 
@@ -66,13 +68,8 @@ public class StatusPageHappyPathEndToEndTest extends AbstractSequenceDiagramTest
         and(theStatusPage(), hasHttpStatusCode(OK));
         and(theApplicantionNameAndVersion(), is("Salume Supplier DEV"));
         and(theStatusOfTheApp(), is("OK"));
-        and(theAppVersionInTheStatusPage(), is(theImplementationVersionInTheManifest()));
+        and(theAppVersionInTheStatusPage(), is(buildNumber(233)));
         and(theDatabaseStatus(), is("OK"));
-    }
-
-    private String theImplementationVersionInTheManifest() {
-        final Manifest manifest = StatusPageController.getManifest(SupplierApplication.class);
-        return "Version: " + manifest.getMainAttributes().getValue("Implementation-Version");
     }
 
     private GivensBuilder salumeSupplierAppIsUpAndRunning() {
@@ -82,6 +79,14 @@ public class StatusPageHappyPathEndToEndTest extends AbstractSequenceDiagramTest
 //          App initialized by Spring Boot. Check http://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing.html#boot-features-testing-spring-boot-applications
 //          SupplierApplication.main(new String[]{"--debug", "--profile=dev"});
 
+            return givens;
+        };
+    }
+
+    private GivensBuilder lastSuccessfulBuildNumberIs(Integer build) {
+        return givens -> {
+            Map<String, String> lastBuild = new HashMap<String, String>() {{ put("BUILD_NUMBER", build.toString()); }};
+            setEnv(lastBuild);
             return givens;
         };
     }
@@ -145,6 +150,49 @@ public class StatusPageHappyPathEndToEndTest extends AbstractSequenceDiagramTest
                 description.appendValue(expected);
             }
         };
+    }
+
+    private String buildNumber(int build) {
+        return "Version: " + build;
+    }
+
+    // Really boring stuff to code! Glad I found this massive hack in the web...
+    // Thank you guys => Source: https://stackoverflow.com/a/7201825
+    private void setEnv(Map<String, String> newenv)
+    {
+        try
+        {
+            Class<?> processEnvironmentClass = Class.forName("java.lang.ProcessEnvironment");
+            Field theEnvironmentField = processEnvironmentClass.getDeclaredField("theEnvironment");
+            theEnvironmentField.setAccessible(true);
+            Map<String, String> env = (Map<String, String>) theEnvironmentField.get(null);
+            env.putAll(newenv);
+            Field theCaseInsensitiveEnvironmentField = processEnvironmentClass.getDeclaredField("theCaseInsensitiveEnvironment");
+            theCaseInsensitiveEnvironmentField.setAccessible(true);
+            Map<String, String> cienv = (Map<String, String>)     theCaseInsensitiveEnvironmentField.get(null);
+            cienv.putAll(newenv);
+        }
+        catch (NoSuchFieldException e)
+        {
+            try {
+                Class[] classes = Collections.class.getDeclaredClasses();
+                Map<String, String> env = System.getenv();
+                for(Class cl : classes) {
+                    if("java.util.Collections$UnmodifiableMap".equals(cl.getName())) {
+                        Field field = cl.getDeclaredField("m");
+                        field.setAccessible(true);
+                        Object obj = field.get(env);
+                        Map<String, String> map = (Map<String, String>) obj;
+                        map.clear();
+                        map.putAll(newenv);
+                    }
+                }
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
     }
 
 }
