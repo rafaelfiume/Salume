@@ -41,4 +41,4 @@ deploy:
     secure: f1+vetyOoJyqq4SbN2UFO/DZ9N6srCWYmHX0AC8RgislwefSWzBwKGBLF0ZuYko16eUKbGj2JHh7G91hPnTeVU+bkNPe2EZ4kO2yH5JiLvUVR2XbK6RtN22GHdtSPzKy+YVdMvJ6mG8s4dnTGwl/GYhdTgrZ6bl6kANhT2hZk5n9SvDVJQ+TPotJn8ZyPVnf51//Dhn2acOu6DGV6NuUMQ8pgqlNaQ7UDVc8UzaoxuE6onOQxWrGxksuk/3eWD5vLs+7h+ALGJfPuOSKWoEs41Lw8PtWvsM7vL6ZmXNEXYWbtAjnXBpZWPF5C2F5TE+UJOKPJZID78gaeOkO615KuiC6gLPzLCagiz7h7tcyXqt99YgY84ugH9HqzJUG/3BM88jhCJuqpnp5ykzcWJVCO+0SdCNnZY/OguX2Z6pVDTntq8CIZ5seKGHQT1jHRu19MMCeei8G75mh7Xeq/g4xcGncAsbkMCOtnJ+8VC8uTe7Tvf/Joz+/T7tIaKglBD3P5tZwZX3iF915giN+4JghLcQ6NzrIFL+sbRN76b8XllSaYgK3qSbit7Lh/QjozZBZTjju8gWC2Hn++TDFZwuQPvKRLRAPW0kzdjLhWdDcHomyj4Lb1irQM7jVGMg9C6R/XhAniijWITGzKo4gFC9J5w2zvlNJqyd2HF75ooc/qgM=
   app:
     master: salume-prod
-    staging: sheltered-river-1312
+    staging: salume-staging
