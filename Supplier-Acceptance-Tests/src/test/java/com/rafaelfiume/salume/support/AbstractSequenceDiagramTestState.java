@@ -21,8 +21,7 @@ import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.rules.TestName;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
@@ -31,10 +30,10 @@ import static com.googlecode.totallylazy.Sequences.sequence;
 import static com.rafaelfiume.salume.support.ContractApiWriter.writeApiRequestContractExample;
 import static com.rafaelfiume.salume.support.ContractApiWriter.writeApiResponseContractExample;
 import static java.lang.String.format;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
 @RunWith(SpecRunner.class)
-@SpringApplicationConfiguration(classes = SupplierApplication.class)
-@WebIntegrationTest(/*"debug=true"*/)
+@SpringBootTest(classes = SupplierApplication.class, webEnvironment = DEFINED_PORT)
 @ActiveProfiles("dev")
 public class AbstractSequenceDiagramTestState extends TestState implements WithCustomResultListeners {
 

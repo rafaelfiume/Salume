@@ -6,39 +6,38 @@ import com.googlecode.yatspec.state.givenwhenthen.StateExtractor;
 import com.rafaelfiume.salume.SupplierApplication;
 import com.rafaelfiume.salume.config.MisconfiguredDataSourceConfig;
 import com.rafaelfiume.salume.support.AbstractSequenceDiagramTestState;
-import com.rafaelfiume.salume.web.controllers.StatusPageController;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.TestRestTemplate;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.context.embedded.LocalServerPort;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
-
-import java.util.jar.Manifest;
 
 import static com.rafaelfiume.salume.support.Applications.CLIENT;
 import static com.rafaelfiume.salume.support.Applications.SUPPLIER;
 import static java.lang.System.lineSeparator;
 import static org.apache.commons.lang3.StringUtils.trim;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.parseMediaType;
 
-@SpringApplicationConfiguration(classes = {SupplierApplication.class, MisconfiguredDataSourceConfig.class})
-@WebIntegrationTest(value = "server.port=8282") // It requires another container to run since it's using different configs (see line above)
+// It requires another container to run since it's using different configs (see line above)
+@SpringBootTest(classes = {SupplierApplication.class, MisconfiguredDataSourceConfig.class}, webEnvironment = RANDOM_PORT)
 @DirtiesContext // Closes the context and stops the container
 public class StatusPageSadPathEndToEndTest extends AbstractSequenceDiagramTestState {
-
-    public static final String STATUS_PAGE_URI = "http://localhost:8282/salume/supplier/status"; // using different port
 
     private static final MediaType TEXT_PLAIN_CHARSET_UTF8 = parseMediaType("text/plain;charset=utf-8");
 
     private ResponseEntity<String> response;
+
+    @LocalServerPort
+    private int port;
 
     @Test
     public void showStatusFailWhenAppIsUpAndRunningAndDatabaseConnectionFails() throws Exception {
@@ -55,7 +54,7 @@ public class StatusPageSadPathEndToEndTest extends AbstractSequenceDiagramTestSt
 
     private GivensBuilder salumeSupplierAppIsUpAndRunning() {
         return givens -> {
-            givens.add("Supplier Status Page:", STATUS_PAGE_URI);
+            givens.add("Supplier Status Page:", statusPageUri());
 
 //          App initialized by Spring Boot.
 
@@ -75,9 +74,9 @@ public class StatusPageSadPathEndToEndTest extends AbstractSequenceDiagramTestSt
 
     private ActionUnderTest aClientRequestsStatusPage() {
         return (givens, capturedInputAndOutputs) -> {
-            this.response = new TestRestTemplate().getForEntity(STATUS_PAGE_URI, String.class);
+            this.response = new TestRestTemplate().getForEntity(statusPageUri(), String.class);
 
-            captureRequest(withContent(STATUS_PAGE_URI), from(CLIENT), to(SUPPLIER));
+            captureRequest(withContent(statusPageUri()), from(CLIENT), to(SUPPLIER));
 
             return capturedInputAndOutputs;
         };
@@ -121,6 +120,10 @@ public class StatusPageSadPathEndToEndTest extends AbstractSequenceDiagramTestSt
                 description.appendValue(expected);
             }
         };
+    }
+
+    private String statusPageUri() {
+        return "http://localhost:" + port + "/salume/supplier/status";
     }
 
 }

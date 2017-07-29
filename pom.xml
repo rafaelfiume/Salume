@@ -27,10 +27,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <java.version>1.8</java.version>
-        <jetty.version>9.3.3.v20150827</jetty.version>
+        <jetty.version>9.4.6.v20170531</jetty.version>
         <postgresql.version>9.4-1203-jdbc42</postgresql.version>
-        <spring.boot.version>1.2.6.RELEASE</spring.boot.version>
-        <spring.version>4.2.1.RELEASE</spring.version>
+        <spring.boot.version>1.5.6.RELEASE</spring.boot.version>
+        <spring.version>4.3.10.RELEASE</spring.version>
         <yatspec.version>1.15</yatspec.version>
     </properties>
 
@@ -204,9 +204,9 @@
             <!-- Spring test -->
 
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-test</artifactId>
-                <version>${spring.version}</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.version}</version>
                 <scope>test</scope>
             </dependency>
 
