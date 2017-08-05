@@ -16,9 +16,9 @@ import static java.lang.System.getenv;
 @EnableTransactionManagement
 public class DataSourceConfig {
 
-    private static final String SPRING_DATASOURCE_URL = "SPRING_DATASOURCE_URL";
-    private static final String SPRING_DATASOURCE_USERNAME = "SPRING_DATASOURCE_USERNAME";
-    private static final String SPRING_DATASOURCE_PASSWORD = "SPRING_DATASOURCE_PASSWORD";
+    public static final String SPRING_DATASOURCE_URL = "SPRING_DATASOURCE_URL";
+    public static final String SPRING_DATASOURCE_USERNAME = "SPRING_DATASOURCE_USERNAME";
+    public static final String SPRING_DATASOURCE_PASSWORD = "SPRING_DATASOURCE_PASSWORD";
 
     @Bean
     public DataSource dataSource() {

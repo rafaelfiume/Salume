@@ -1,1 +1,2 @@
-web:    java -Dprofile=${PROFILE} $JAVA_OPTS -cp Supplier/target/classes:Supplier/target/dependency/* com.rafaelfiume.salume.SupplierApplication
+release: java -cp Salume-Db/target/Salume-Db.jar:Salume-Db/target/dependency/* com.rafaelfiume.salume.db.migration.flyway.Migrations
+web: java -Dprofile=${PROFILE} $JAVA_OPTS -cp Supplier/target/classes:Supplier/target/dependency/* com.rafaelfiume.salume.SupplierApplication

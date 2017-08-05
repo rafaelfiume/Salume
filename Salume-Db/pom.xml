@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -12,7 +13,7 @@
     <artifactId>Salume-Db</artifactId>
 
     <properties>
-        <sql.scripts.dir>${project.build.outputDirectory}/scripts/01.create-table.sql</sql.scripts.dir>
+        <flyway.version>4.2.0</flyway.version>
     </properties>
 
     <dependencies>
@@ -40,6 +41,12 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
         </dependency>
 
         <!-- Spring Boot -->
@@ -105,30 +112,22 @@
 
     <profiles>
         <profile>
-            <id>dbRecreate</id>
+            <id>dbMigrate</id>
             <build>
                 <plugins>
-                    <!-- Consider to have a module to specify the order of execution of Db-Integrator -->
-
-                    <!-- Only updates the database if everything is correct -->
                     <plugin>
-                        <groupId>com.rafaelfiume</groupId>
-                        <artifactId>Db-Integrator</artifactId>
-                        <version>${project.version}</version>
-                        <executions>
-                            <execution>
-                                <!-- Recreate local (dev) database before acceptance tests -->
-                                <id>recreating-local-db</id>
-                                <phase>test-compile</phase>
-                                <inherited>true</inherited>
-                                <goals>
-                                    <goal>recreatedb</goal>
-                                </goals>
-                                <configuration>
-                                    <databaseUrl>${env.DATABASE_URL}</databaseUrl>
-                                </configuration>
-                            </execution>
-                        </executions>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-maven-plugin</artifactId>
+                        <version>4.2.0</version>
+                        <configuration>
+                            <url>${env.SPRING_DATASOURCE_URL}</url>
+                            <user>${env.SPRING_DATASOURCE_USERNAME}</user>
+                            <password>${env.SPRING_DATASOURCE_PASSWORD}</password>
+                            <schemas>salumistore</schemas>
+                            <baselineOnMigrate>true</baselineOnMigrate>
+                            <baselineVersion>3</baselineVersion>
+                            <baselineDescription>Baseline version: 3</baselineDescription>
+                        </configuration>
                         <dependencies>
                             <dependency>
                                 <groupId>org.postgresql</groupId>
@@ -137,10 +136,93 @@
                                 <scope>runtime</scope>
                             </dependency>
                         </dependencies>
+                        <executions>
+                            <execution>
+                                <id>migrate-db</id>
+                                <phase>test-compile</phase>
+                                <goals>
+                                    <goal>migrate</goal>
+                                    <goal>info</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>dbRecreate</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.flywaydb</groupId>
+                        <artifactId>flyway-maven-plugin</artifactId>
+                        <version>4.2.0</version>
+                        <configuration>
+                            <url>${env.SPRING_DATASOURCE_URL}</url>
+                            <user>${env.SPRING_DATASOURCE_USERNAME}</user>
+                            <password>${env.SPRING_DATASOURCE_PASSWORD}</password>
+                            <schemas>salumistore</schemas>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.postgresql</groupId>
+                                <artifactId>postgresql</artifactId>
+                                <version>${postgresql.version}</version>
+                                <scope>runtime</scope>
+                            </dependency>
+                        </dependencies>
+                        <executions>
+                            <execution>
+                                <id>recreate-db</id>
+                                <phase>test-compile</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                    <goal>migrate</goal>
+                                    <goal>info</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
         </profile>
     </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <skip>false</skip>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.flywaydb</groupId>
+                                    <artifactId>flyway-core</artifactId>
+                                    <version>${flyway.version}</version>
+                                    <destFileName>flyway.jar</destFileName>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.postgresql</groupId>
+                                    <artifactId>postgresql</artifactId>
+                                    <version>${postgresql.version}</version>
+                                    <destFileName>postgres.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

@@ -7,7 +7,10 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerA
 
 import static org.springframework.boot.Banner.Mode.OFF;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class})
+@SpringBootApplication(exclude = {
+        DataSourceAutoConfiguration.class,
+        DataSourceTransactionManagerAutoConfiguration.class
+})
 public class SupplierApplication {
 
     public static void main(String... args) throws Exception {

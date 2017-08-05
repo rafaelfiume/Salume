@@ -9,3 +9,6 @@ server:
 probe:
   db:
     query: SELECT;
+
+flyway:
+  enabled: false

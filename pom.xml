@@ -13,7 +13,6 @@
     <modules>
         <module>Supplier</module>
         <module>Salume-Domain</module>
-        <module>Db-Integrator</module>
         <module>Salume-Db</module>
         <module>Supplier-Acceptance-Tests</module>
         <module>Test-Support</module>
