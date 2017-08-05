@@ -45,9 +45,9 @@ import static org.springframework.test.jdbc.JdbcTestUtils.deleteFromTables;
 @Notes("A customer can have whatever they want as long as it is <a href=\"https://it.wikipedia.org/wiki/Salame\" target=\"blank\">Salame</a>. At least for now...\n\n" +
         "" +
         "Gioseppo selects the customer profile when offering products to his customers. See the details about this story <a href=\"https://rafaelfiume.wordpress.com/2013/04/07/dragons-unicorns-and-titans-an-agile-software-developer-tail/\" target=\"blank\">here</a>.")
-@LinkingNote(message = "See also %s", links = ShowExtraContentToCustomerEndToEndTest.class)
+@LinkingNote(message = "See also %s", links = ShowExtraContentToCustomerIT.class)
 @Transactional
-public class AdviseProductBasedOnCustomerProfileEndToEndTest extends AbstractSequenceDiagramTestState {
+public class AdviseProductBasedOnCustomerProfileIT extends AbstractSequenceDiagramTestState {
 
     private static final MediaType APPLICATION_XML_CHARSET_UTF8 = parseMediaType("application/xml;charset=utf-8");
 

@@ -49,7 +49,7 @@ import static org.springframework.http.MediaType.parseMediaType;
         "The more experience I have, the more I focus on the way we work instead of the technologies we use.\n" +
         "I recommend reading the excellent <a href=\"http://www.growing-object-oriented-software.com\" target=\"blank\">Growing Object-Oriented Software Guided by Tests</a>."
 )
-public class StatusPageHappyPathEndToEndTest extends AbstractSequenceDiagramTestState {
+public class StatusPageHappyPathIT extends AbstractSequenceDiagramTestState {
 
     private static final String STATUS_PAGE_URI = "http://localhost:8081/salume/supplier/status";
 

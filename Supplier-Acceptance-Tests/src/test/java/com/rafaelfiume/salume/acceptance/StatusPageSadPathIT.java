@@ -30,7 +30,7 @@ import static org.springframework.http.MediaType.parseMediaType;
 // It requires another container to run since it's using different configs (see line above)
 @SpringBootTest(classes = {SupplierApplication.class, MisconfiguredDataSourceConfig.class}, webEnvironment = RANDOM_PORT)
 @DirtiesContext // Closes the context and stops the container
-public class StatusPageSadPathEndToEndTest extends AbstractSequenceDiagramTestState {
+public class StatusPageSadPathIT extends AbstractSequenceDiagramTestState {
 
     private static final MediaType TEXT_PLAIN_CHARSET_UTF8 = parseMediaType("text/plain;charset=utf-8");
 

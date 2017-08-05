@@ -37,9 +37,9 @@ import static java.lang.String.format;
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static org.springframework.test.jdbc.JdbcTestUtils.deleteFromTables;
 
-@LinkingNote(message = "See also %s", links = AdviseProductBasedOnCustomerProfileEndToEndTest.class)
+@LinkingNote(message = "See also %s", links = AdviseProductBasedOnCustomerProfileIT.class)
 @Transactional
-public class ShowExtraContentToCustomerEndToEndTest extends AbstractSequenceDiagramTestState {
+public class ShowExtraContentToCustomerIT extends AbstractSequenceDiagramTestState {
 
     private ResponseEntity<String> response;
 
