@@ -20,7 +20,6 @@ public class Migrations {
         flyway.setBaselineOnMigrate(true);
         flyway.setBaselineVersion(fromVersion("3"));
         flyway.setBaselineDescription("Baseline version: 3");
-        flyway.repair(); // Temporary!! This is only to rename the sql scripts and update the DB metadata table
         flyway.migrate();
     }
 

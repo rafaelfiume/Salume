@@ -143,7 +143,6 @@
                                 <id>migrate-db</id>
                                 <phase>test-compile</phase>
                                 <goals>
-                                    <goal>repair</goal> <!-- Temporary!! This is only to rename the sql scripts and update the DB metadata table -->
                                     <goal>migrate</goal>
                                     <goal>info</goal>
                                 </goals>
