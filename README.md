@@ -37,7 +37,6 @@ The following variables are used in this project:
 * $DATABASE_RELEASE_URL is optional, but recommended. Specify a value to it to run db scripts in the release environment (staging, prod).
 
 #### Travis / Heroku
-* $DATABASE_URL is mandatory and points to the database. It must be set since there's no default value.
 * $PROFILE is mandatory (valid values are: 'dev', 'staging', 'prod').
 * $PORT is mandatory for 'staging' and 'prod' profiles, but set by Heroku. When necessary $PORT can be specified using --PORT=8081, for instance.
 
